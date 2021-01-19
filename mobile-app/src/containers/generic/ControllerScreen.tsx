@@ -52,7 +52,7 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
       />
       <View style={tailwind('py-4')}>
         <Button
-          title={'Reconnect to Raspberry Pi'}
+          title={'Reconnect to Robot'}
           onPress={onReconnectPress}
         />
       </View>
