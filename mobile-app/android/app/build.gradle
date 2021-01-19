@@ -129,7 +129,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.wherewewow"
+        applicationId "com.scraper"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

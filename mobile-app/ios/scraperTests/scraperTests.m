@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface wherewewowTests : XCTestCase
+@interface scraperTests : XCTestCase
 
 @end
 
-@implementation wherewewowTests
+@implementation scraperTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL(^)(UIView *view))test
 {
