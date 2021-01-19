@@ -1,22 +1,33 @@
 import React, { FC } from 'react';
-import { FlatList, ListRenderItem, StyleSheet, View } from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  StyleSheet,
+  View,
+  Button,
+} from 'react-native';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
-import { ControllerOptionType } from '@models';
+import { Diameter, ControllerOptionType, SDR } from '@models';
 
 import { ControllerOption } from '@src/components/controller';
 import { tailwind } from '@styles/tailwind';
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
-  const onOptionPress = (id: string): void => console.log(id);
+  const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
+    console.log(`${diameter}_${sdr}`);
 
   const options: Array<ControllerOptionType> = [
-    { id: 'dn200', optionText: 'DN200' },
-    { id: 'dn250', optionText: 'DN250' },
-    { id: 'dn315', optionText: 'DN315' },
-    { id: 'dn400', optionText: 'DN400' },
-  ].map((option) => ({ ...option, onPress: () => onOptionPress(option.id) }));
+    { diameter: Diameter.DN400, sdr: SDR.TypeA, optionText: 'DN400\nSDR17.6' },
+    { diameter: Diameter.DN315, sdr: SDR.TypeA, optionText: 'DN315\nSDR17.6' },
+    { diameter: Diameter.DN250, sdr: SDR.TypeA, optionText: 'DN250\nSDR17.6' },
+    { diameter: Diameter.DN200, sdr: SDR.TypeA, optionText: 'DN200\nSDR17.6' },
+  ].map((option) => ({
+    ...option,
+    id: `${option.diameter}_${option.sdr}`,
+    onPress: () => onOptionPress(option.diameter, option.sdr),
+  }));
 
   const renderItem: ListRenderItem<ControllerOptionType> = ({
     item: { optionText, onPress },
@@ -26,16 +37,25 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     </View>
   );
 
-  const keyExtractor = (item: ControllerOptionType): string => item.id;
+  const keyExtractor = ({ id }: ControllerOptionType): string => id;
+
+  const onReconnectPress = () => console.log('reconnect clicked!');
 
   return (
     <View style={[StyleSheet.absoluteFillObject, tailwind('p-4')]}>
       <FlatList
+        style={tailwind('flex-1')}
         data={options}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         numColumns={2}
       />
+      <View style={tailwind('py-4')}>
+        <Button
+          title={'Reconnect to Raspberry Pi'}
+          onPress={onReconnectPress}
+        />
+      </View>
     </View>
   );
 };

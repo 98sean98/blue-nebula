@@ -14,10 +14,19 @@ export const ControllerOption: FC<ControllerOptionProps> = ({
   ...props
 }) => {
   return (
-    <Pressable {...props} style={[tailwind('w-full h-full justify-center items-center bg-gray-300 rounded-xl border-2 border-gray-200')]}>
+    <Pressable
+      {...props}
+      style={[
+        tailwind(
+          'w-full h-full justify-center items-center bg-gray-300 rounded-xl border-8 border-gray-200',
+        ),
+      ]}>
       <Text
         {...textProps}
-        style={[tailwind('font-bold text-2xl'), textProps?.style || {}]}>
+        style={[
+          tailwind('font-bold text-2xl text-center'),
+          textProps?.style || {},
+        ]}>
         {text}
       </Text>
     </Pressable>

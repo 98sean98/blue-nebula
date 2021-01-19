@@ -9,6 +9,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: FC = () => (
   <Stack.Navigator>
-    <Stack.Screen name={'Controller'} component={ControllerScreen} options={{headerTitle: 'Scraper Controller'}}/>
+    <Stack.Screen
+      name={'Controller'}
+      component={ControllerScreen}
+      options={{ headerTitle: 'Scraper Controller' }}
+    />
   </Stack.Navigator>
 );
