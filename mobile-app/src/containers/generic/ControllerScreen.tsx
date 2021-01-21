@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   Button,
+  SafeAreaView,
 } from 'react-native';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
@@ -42,20 +43,19 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onReconnectPress = () => console.log('reconnect clicked!');
 
   return (
-    <View style={[StyleSheet.absoluteFillObject, tailwind('p-4')]}>
-      <FlatList
-        style={tailwind('flex-1')}
-        data={options}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        numColumns={2}
-      />
-      <View style={tailwind('py-4')}>
-        <Button
-          title={'Reconnect to Robot'}
-          onPress={onReconnectPress}
+    <SafeAreaView style={[StyleSheet.absoluteFillObject]}>
+      <View style={[StyleSheet.absoluteFillObject, tailwind('p-4')]}>
+        <FlatList
+          style={tailwind('flex-1')}
+          data={options}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          numColumns={2}
         />
+        <View style={tailwind('pt-4')}>
+          <Button title={'Reconnect to Robot'} onPress={onReconnectPress} />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };

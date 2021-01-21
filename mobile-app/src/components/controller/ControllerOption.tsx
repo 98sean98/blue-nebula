@@ -1,5 +1,13 @@
 import React, { FC } from 'react';
-import { Pressable, PressableProps, Text, TextProps } from 'react-native';
+import {
+  Pressable,
+  PressableProps,
+  PressableStateCallbackType,
+  StyleProp,
+  Text,
+  TextProps,
+  ViewStyle,
+} from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -13,14 +21,18 @@ export const ControllerOption: FC<ControllerOptionProps> = ({
   textProps,
   ...props
 }) => {
+  const pressableStyleFunction = ({
+    pressed,
+  }: PressableStateCallbackType): StyleProp<ViewStyle> => [
+    tailwind(
+      'w-full h-full justify-center items-center bg-gray-300 rounded-xl border-8 border-gray-200',
+    ),
+    pressed ? tailwind('opacity-75') : {},
+    typeof props.style === 'object' ? props.style : {},
+  ];
+
   return (
-    <Pressable
-      {...props}
-      style={[
-        tailwind(
-          'w-full h-full justify-center items-center bg-gray-300 rounded-xl border-8 border-gray-200',
-        ),
-      ]}>
+    <Pressable {...props} style={pressableStyleFunction}>
       <Text
         {...textProps}
         style={[
