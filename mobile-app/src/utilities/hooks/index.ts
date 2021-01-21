@@ -1,1 +1,1 @@
-export {};
+export { useBluetoothContext } from './useBluetoothContext';
