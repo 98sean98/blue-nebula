@@ -1,19 +1,21 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import {
+  Button,
   FlatList,
   ListRenderItem,
+  SafeAreaView,
   StyleSheet,
   View,
-  Button,
-  SafeAreaView,
 } from 'react-native';
+import { ScanCallbackType } from 'react-native-ble-plx';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
-import { Diameter, ControllerOptionType, SDR } from '@models';
+import { ControllerOptionType, Diameter, SDR } from '@models';
 
 import { ControllerOption } from '@src/components/controller';
 import { tailwind } from '@styles/tailwind';
+import { useBluetoothContext } from '@utilities/hooks';
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -40,7 +42,40 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const keyExtractor = ({ id }: ControllerOptionType): string => id;
 
-  const onReconnectPress = () => console.log('reconnect clicked!');
+  const [isScanning, setIsScanning] = useState<boolean>(false);
+
+  const onReconnectPress = () => setIsScanning(!isScanning);
+
+  const { bleManager } = useBluetoothContext();
+
+  useEffect(() => {
+    if (isScanning) {
+      bleManager.startDeviceScan(
+        null,
+        {
+          allowDuplicates: false,
+          callbackType: ScanCallbackType.FirstMatch,
+        },
+        (error, scannedDevice) => {
+          error && console.log(error.errorCode);
+          scannedDevice &&
+            console.log(
+              scannedDevice.id,
+              scannedDevice.localName,
+              scannedDevice.serviceUUIDs,
+              scannedDevice.isConnectable,
+            );
+        },
+      );
+      console.log('scanning devices...');
+      const timeout = setTimeout(() => {
+        bleManager.stopDeviceScan();
+        console.log('stopped device scanning');
+        setIsScanning(false);
+      }, 10000);
+      return () => clearTimeout(timeout);
+    }
+  }, [bleManager, isScanning]);
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFillObject]}>
