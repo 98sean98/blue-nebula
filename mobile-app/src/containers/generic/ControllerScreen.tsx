@@ -7,7 +7,13 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { Device, ScanCallbackType } from 'react-native-ble-plx';
+import {
+  Characteristic,
+  Device,
+  ScanCallbackType,
+  Service,
+} from 'react-native-ble-plx';
+import * as base64 from 'base-64';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
@@ -20,6 +26,11 @@ import { ControllerOption } from '@src/components/controller';
 import { useBluetoothContext } from '@utilities/hooks';
 
 const rpiDevice = new RpiDevice();
+
+type BleRpiDeviceServicesAndCharacteristics = {
+  robotControllerService: Service;
+  pipeDiameterCharacteristic: Characteristic;
+};
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -52,6 +63,10 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const { bleManager } = useBluetoothContext();
   const [bleRpiDevice, setBleRpiDevice] = useState<Device>();
+  const [
+    bleRpiDeviceServicesAndCharacteristics,
+    setBleRpiDeviceServicesAndCharacteristics,
+  ] = useState<BleRpiDeviceServicesAndCharacteristics>();
 
   useEffect(() => {
     if (isScanning) {
@@ -63,7 +78,11 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         },
         (error, scannedDevice) => {
           if (error) console.log(error.errorCode);
-          if (scannedDevice && scannedDevice.name === rpiDevice.name) {
+          if (
+            scannedDevice &&
+            scannedDevice.name === rpiDevice.name &&
+            scannedDevice.localName === rpiDevice.localName
+          ) {
             console.log('found rpi device!');
             rpiDevice.setDeviceId(scannedDevice.id);
           }
@@ -93,18 +112,41 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     }
   }, [bleManager, isScanning]);
 
-  const onServicesListPress = async () => {
-    console.log('getting services');
+  const getServicesAndCharacteristics = async () => {
+    console.log('getting services and characteristics');
     const device = await bleRpiDevice?.discoverAllServicesAndCharacteristics();
     const services = await device?.services();
-    console.log(services);
     services?.map(async (service) => {
-      console.log('service:', service.id, service.uuid);
       const characteristics = await service.characteristics();
-      characteristics?.map((characteristic) =>
-        console.log('\tcharacteristic:', characteristic.uuid),
-      );
+      characteristics?.map((characteristic) => {
+        if (
+          service.uuid === rpiDevice.robotControllerServiceUUID &&
+          characteristic.uuid === rpiDevice.pipeDiameterCharacteristicUUID
+        ) {
+          setBleRpiDeviceServicesAndCharacteristics({
+            robotControllerService: service,
+            pipeDiameterCharacteristic: characteristic,
+          });
+          console.log(
+            'obtained robot controller service, and pipe diameter characteristic!',
+          );
+        }
+      });
     });
+    setBleRpiDevice(device);
+  };
+
+  const getPipeDiameter = async () => {
+    try {
+      const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
+      if (characteristic?.value)
+        console.log(
+          'pipe diameter value:',
+          base64.decode(characteristic.value),
+        );
+    } catch (e) {
+      console.log('error reading pipe diameter value:', e);
+    }
   };
 
   return (
@@ -122,8 +164,11 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
           {bleRpiDevice ? (
             <Button
               title={'List services and characteristics'}
-              onPress={onServicesListPress}
+              onPress={getServicesAndCharacteristics}
             />
+          ) : null}
+          {bleRpiDeviceServicesAndCharacteristics ? (
+            <Button title={'Get pipe diameter'} onPress={getPipeDiameter} />
           ) : null}
         </View>
       </View>
