@@ -3,12 +3,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { RootStackParamList } from './navigationTypes';
 
-import { HomeScreen } from '@containers/generic';
+import { ControllerScreen } from '@containers/generic';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: FC = () => (
   <Stack.Navigator>
-    <Stack.Screen name={'Home'} component={HomeScreen} />
+    <Stack.Screen
+      name={'Controller'}
+      component={ControllerScreen}
+      options={{ headerTitle: 'Scraper Controller' }}
+    />
   </Stack.Navigator>
 );

@@ -3,12 +3,12 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'wherewewow' do
+target 'scraper' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'wherewewowTests' do
+  target 'scraperTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -23,10 +23,10 @@ target 'wherewewow' do
   end
 end
 
-target 'wherewewow-tvOS' do
-  # Pods for wherewewow-tvOS
+target 'scraper-tvOS' do
+  # Pods for scraper-tvOS
 
-  target 'wherewewow-tvOSTests' do
+  target 'scraper-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
