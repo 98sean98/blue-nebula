@@ -74,7 +74,6 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         null,
         {
           allowDuplicates: false,
-          callbackType: ScanCallbackType.FirstMatch,
         },
         (error, scannedDevice) => {
           if (error) console.log(error.errorCode);
@@ -136,7 +135,7 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     setBleRpiDevice(device);
   };
 
-  const getPipeDiameter = async () => {
+  const readPipeDiameter = async () => {
     try {
       const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
       if (characteristic?.value)
@@ -146,6 +145,17 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         );
     } catch (e) {
       console.log('error reading pipe diameter value:', e);
+    }
+  };
+
+  const writePipeDiameter = async () => {
+    try {
+      const value = base64.encode('200');
+      await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.writeWithResponse(
+        value,
+      );
+    } catch (e) {
+      console.log('error writing pipe diameter value:', e);
     }
   };
 
@@ -168,7 +178,13 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
             />
           ) : null}
           {bleRpiDeviceServicesAndCharacteristics ? (
-            <Button title={'Get pipe diameter'} onPress={getPipeDiameter} />
+            <>
+              <Button title={'Get pipe diameter'} onPress={readPipeDiameter} />
+              <Button
+                title={'Send pipe diameter'}
+                onPress={writePipeDiameter}
+              />
+            </>
           ) : null}
         </View>
       </View>
