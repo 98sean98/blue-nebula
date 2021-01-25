@@ -17,7 +17,7 @@ class RobotControllerService(Service):
     ROBOT_CONTROLLER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, index):
-        self.pipe_diameter = 0
+        self.pipe_diameter = 400
 
         Service.__init__(self, index, self.ROBOT_CONTROLLER_SVC_UUID, True)
         self.add_characteristic(PipeDiameterCharacteristic(self))
@@ -44,8 +44,10 @@ class PipeDiameterCharacteristic(Characteristic):
 
     def ReadValue(self, options):
         value = []
-        val = self.service.get_pipe_diameter()
-        value.append(dbus.Byte(str(val).encode()))
+        strval = str(self.service.get_pipe_diameter())
+        
+        for c in strval:
+            value.append(dbus.Byte(c.encode()))
 
         return value
 
