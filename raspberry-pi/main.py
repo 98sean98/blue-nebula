@@ -38,13 +38,16 @@ class PipeDiameterCharacteristic(Characteristic):
         self.add_descriptor(PipeDiameterDescriptor(self))
 
     def WriteValue(self, value, options):
-        val = int(value[0])
+        strval = "".join([str(v) for v in value])
+        val = int(strval)
         print("Pipe diameter write value:", val)
-        # self.service.set_pipe_diameter(val)
+        self.service.set_pipe_diameter(val)
 
     def ReadValue(self, options):
         value = []
         strval = str(self.service.get_pipe_diameter())
+
+        print("read pipe diameter value")
         
         for c in strval:
             value.append(dbus.Byte(c.encode()))
