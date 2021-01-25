@@ -7,15 +7,19 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { ScanCallbackType } from 'react-native-ble-plx';
+import { Device, ScanCallbackType } from 'react-native-ble-plx';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
 import { ControllerOptionType, Diameter, SDR } from '@models';
+import { RpiDevice } from '@config/RpiDevice';
+
+import { tailwind } from '@styles/tailwind';
 
 import { ControllerOption } from '@src/components/controller';
-import { tailwind } from '@styles/tailwind';
 import { useBluetoothContext } from '@utilities/hooks';
+
+const rpiDevice = new RpiDevice();
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -44,9 +48,10 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const [isScanning, setIsScanning] = useState<boolean>(false);
 
-  const onReconnectPress = () => setIsScanning(!isScanning);
+  const onReconnectPress = () => setIsScanning(true);
 
   const { bleManager } = useBluetoothContext();
+  const [bleRpiDevice, setBleRpiDevice] = useState<Device>();
 
   useEffect(() => {
     if (isScanning) {
@@ -57,25 +62,50 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
           callbackType: ScanCallbackType.FirstMatch,
         },
         (error, scannedDevice) => {
-          error && console.log(error.errorCode);
-          scannedDevice &&
-            console.log(
-              scannedDevice.id,
-              scannedDevice.localName,
-              scannedDevice.serviceUUIDs,
-              scannedDevice.isConnectable,
-            );
+          if (error) console.log(error.errorCode);
+          if (scannedDevice && scannedDevice.name === rpiDevice.name) {
+            console.log('found rpi device!');
+            rpiDevice.setDeviceId(scannedDevice.id);
+          }
         },
       );
       console.log('scanning devices...');
       const timeout = setTimeout(() => {
         bleManager.stopDeviceScan();
         console.log('stopped device scanning');
+        console.log('rpiDevice id:', rpiDevice.deviceId);
         setIsScanning(false);
+
+        if (rpiDevice.deviceId)
+          bleManager
+            .connectToDevice(rpiDevice.deviceId, {
+              autoConnect: true,
+            })
+            .then((connectedDevice) => {
+              console.log('successfully connected to device');
+              setBleRpiDevice(connectedDevice);
+            })
+            .catch((error) =>
+              console.log('error connecting to device:', error),
+            );
       }, 10000);
       return () => clearTimeout(timeout);
     }
   }, [bleManager, isScanning]);
+
+  const onServicesListPress = async () => {
+    console.log('getting services');
+    const device = await bleRpiDevice?.discoverAllServicesAndCharacteristics();
+    const services = await device?.services();
+    console.log(services);
+    services?.map(async (service) => {
+      console.log('service:', service.id, service.uuid);
+      const characteristics = await service.characteristics();
+      characteristics?.map((characteristic) =>
+        console.log('\tcharacteristic:', characteristic.uuid),
+      );
+    });
+  };
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFillObject]}>
@@ -89,6 +119,12 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         />
         <View style={tailwind('pt-4')}>
           <Button title={'Reconnect to Robot'} onPress={onReconnectPress} />
+          {bleRpiDevice ? (
+            <Button
+              title={'List services and characteristics'}
+              onPress={onServicesListPress}
+            />
+          ) : null}
         </View>
       </View>
     </SafeAreaView>
