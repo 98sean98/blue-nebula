@@ -17,7 +17,7 @@ import { RpiDevice } from '@config/RpiDevice';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControllerOption } from '@src/components/controller';
+import { ControllerOption } from '@components/controller';
 import { useBluetoothContext } from '@utilities/hooks';
 
 const rpiDevice = new RpiDevice();
@@ -74,10 +74,13 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
           if (error) console.log(error.errorCode);
           if (
             scannedDevice &&
-            scannedDevice.name === rpiDevice.name &&
             scannedDevice.localName === rpiDevice.localName
           ) {
-            console.log('found rpi device!');
+            console.log(
+              'found device:',
+              scannedDevice.name,
+              scannedDevice.localName,
+            );
             rpiDevice.setDeviceId(scannedDevice.id);
           }
         },
@@ -107,7 +110,7 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
   }, [bleManager, isScanning]);
 
   const getServicesAndCharacteristics = async () => {
-    console.log('getting services and characteristics');
+    console.log('getting services and characteristics...');
     const device = await bleRpiDevice?.discoverAllServicesAndCharacteristics();
     const services = await device?.services();
     services?.map(async (service) => {
