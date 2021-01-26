@@ -7,12 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  Characteristic,
-  Device,
-  ScanCallbackType,
-  Service,
-} from 'react-native-ble-plx';
+import { Characteristic, Device, Service } from 'react-native-ble-plx';
 import * as base64 from 'base-64';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
