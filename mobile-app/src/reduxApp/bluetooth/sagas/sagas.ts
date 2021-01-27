@@ -20,6 +20,7 @@ import {
 import { RootState } from '@reduxApp/rootReducer';
 
 import { bleScan } from './bleScan';
+import { bleConnect } from './bleConnect';
 
 function* connectAsync({}: ConnectAsyncBluetoothAction): Generator<
   StrictEffect,
@@ -28,6 +29,8 @@ function* connectAsync({}: ConnectAsyncBluetoothAction): Generator<
   const bleManager = yield select(
     (state: RootState) => state.bluetooth.bleManager,
   );
+
+  yield put(setIsScanningConnecting(true));
 
   const raceResults = yield race({
     deviceId: call(bleScan, bleManager as BleManager),
@@ -38,20 +41,15 @@ function* connectAsync({}: ConnectAsyncBluetoothAction): Generator<
 
   console.log('connect async found device id:', deviceId);
 
-  if (deviceId) {
-    // yield;
-    // (bleManager as BleManager)
-    //     .connectToDevice(deviceId, {
-    //       autoConnect: true,
-    //     })
-    //     .then((connectedDevice) => {
-    //       console.log('successfully connected to device!');
-    //       // yield put(setBleRpiDeviceServicesCharacteristics({bleRpiDevice: connectedDevice}))
-    //     })
-    //     .catch((connectError) =>
-    //         console.log('error connecting to device:', connectError),
-    //     );
+  if (!deviceId) {
+    console.log('device could not be found!');
+    yield put(setIsScanningConnecting(false));
+    return;
   }
+
+  yield call(bleConnect, bleManager as BleManager, deviceId);
+
+  // yield put()
 
   yield put(setIsScanningConnecting(false));
 }

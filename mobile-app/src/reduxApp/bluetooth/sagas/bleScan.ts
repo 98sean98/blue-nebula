@@ -1,10 +1,8 @@
 import { buffers, eventChannel } from 'redux-saga';
-import { cancelled, take, put } from 'redux-saga/effects';
+import { cancelled, take } from 'redux-saga/effects';
 import { BleError, BleManager, Device } from 'react-native-ble-plx';
 
 import { RpiDevice } from '@config/RpiDevice';
-
-import { setIsScanningConnecting } from '@reduxApp/bluetooth/actions';
 
 export function* bleScan(
   bleManager: BleManager,
@@ -12,7 +10,6 @@ export function* bleScan(
   const rpiDevice = new RpiDevice();
 
   console.log('started scanning for device...');
-  yield put(setIsScanningConnecting(true));
 
   const scanningChannel: any = yield eventChannel((emit) => {
     bleManager.startDeviceScan(
