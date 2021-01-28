@@ -39,6 +39,7 @@ export function* bleScan(
         console.log('error scanning for device: ', error);
         throw new Error('');
       }
+      // if the device is found during scanning, stop scanning and return the device id
       if (scannedDevice) {
         console.log(
           'found device: ',

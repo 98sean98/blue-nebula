@@ -1,8 +1,12 @@
 import { Characteristic, Service } from 'react-native-ble-plx';
+import { RpiDevice } from '@config/RpiDevice';
+
+const rpiDevice = new RpiDevice();
 
 export type BleRpiDeviceServicesAndCharacteristics = {
-  robotControllerService: Service;
-  characteristics: {
-    motorSpeed1Characteristic: Characteristic;
-  };
+  service: Service;
+  characteristics: Record<
+    keyof typeof rpiDevice.characteristicUUIDs,
+    Characteristic
+  >;
 };

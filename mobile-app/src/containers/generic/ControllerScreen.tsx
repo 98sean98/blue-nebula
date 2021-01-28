@@ -46,8 +46,8 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const keyExtractor = ({ id }: ControllerOptionType): string => id;
 
   const dispatch = useDispatch();
-  const isScanningAndConnecting = useSelector(
-    (state: RootState) => state.bluetooth.isScanningAndConnecting,
+  const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
+    (state: RootState) => state.bluetooth,
   );
 
   const onScanAndConnectPress = () => {
@@ -55,53 +55,29 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     else dispatch(cancelConnect());
   };
 
-  // const getServicesAndCharacteristics = async () => {
-  //   console.log('getting services and characteristics...');
-  //   const device = await bleRpiDevice?.discoverAllServicesAndCharacteristics();
-  //   const services = await device?.services();
-  //   services?.map(async (service) => {
-  //     const characteristics = await service.characteristics();
-  //     characteristics?.map((characteristic) => {
-  //       if (
-  //         service.uuid === rpiDevice.robotControllerServiceUUID &&
-  //         characteristic.uuid === rpiDevice.pipeDiameterCharacteristicUUID
-  //       ) {
-  //         setBleRpiDeviceServicesAndCharacteristics({
-  //           robotControllerService: service,
-  //           pipeDiameterCharacteristic: characteristic,
-  //         });
-  //         console.log(
-  //           'obtained robot controller service, and pipe diameter characteristic!',
-  //         );
-  //       }
-  //     });
-  //   });
-  //   setBleRpiDevice(device);
-  // };
+  const readCharacteristic = async () => {
+    // try {
+    //   const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
+    //   if (characteristic?.value)
+    //     console.log(
+    //       'pipe diameter value:',
+    //       base64.decode(characteristic.value),
+    //     );
+    // } catch (e) {
+    //   console.log('error reading pipe diameter value:', e);
+    // }
+  };
 
-  // const readPipeDiameter = async () => {
-  //   try {
-  //     const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
-  //     if (characteristic?.value)
-  //       console.log(
-  //         'pipe diameter value:',
-  //         base64.decode(characteristic.value),
-  //       );
-  //   } catch (e) {
-  //     console.log('error reading pipe diameter value:', e);
-  //   }
-  // };
-  //
-  // const writePipeDiameter = async () => {
-  //   try {
-  //     const value = base64.encode('200');
-  //     await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.writeWithResponse(
-  //       value,
-  //     );
-  //   } catch (e) {
-  //     console.log('error writing pipe diameter value:', e);
-  //   }
-  // };
+  const writeCharacteristic = async () => {
+    // try {
+    //   const value = base64.encode('200');
+    //   await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.writeWithResponse(
+    //     value,
+    //   );
+    // } catch (e) {
+    //   console.log('error writing pipe diameter value:', e);
+    // }
+  };
 
   return (
     <SafeAreaView style={[StyleSheet.absoluteFillObject]}>
@@ -122,21 +98,18 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
             }
             onPress={onScanAndConnectPress}
           />
-          {/*{bleRpiDevice ? (*/}
-          {/*  <Button*/}
-          {/*    title={'List services and characteristics'}*/}
-          {/*    onPress={getServicesAndCharacteristics}*/}
-          {/*  />*/}
-          {/*) : null}*/}
-          {/*{bleRpiDeviceServicesAndCharacteristics ? (*/}
-          {/*  <>*/}
-          {/*    <Button title={'Get pipe diameter'} onPress={readPipeDiameter} />*/}
-          {/*    <Button*/}
-          {/*      title={'Send pipe diameter'}*/}
-          {/*      onPress={writePipeDiameter}*/}
-          {/*    />*/}
-          {/*  </>*/}
-          {/*) : null}*/}
+          {isBleRpiDeviceConnected ? (
+            <>
+              <Button
+                title={'Get pipe diameter'}
+                onPress={readCharacteristic}
+              />
+              <Button
+                title={'Send pipe diameter'}
+                onPress={writeCharacteristic}
+              />
+            </>
+          ) : null}
         </View>
       </View>
     </SafeAreaView>
