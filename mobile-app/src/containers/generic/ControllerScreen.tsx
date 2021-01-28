@@ -90,14 +90,16 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
           numColumns={2}
         />
         <View style={tailwind('pt-4')}>
-          <Button
-            title={
-              isScanningAndConnecting
-                ? 'Stop scanning and connecting'
-                : 'Scan and connect'
-            }
-            onPress={onScanAndConnectPress}
-          />
+          {!isBleRpiDeviceConnected ? (
+            <Button
+              title={
+                isScanningAndConnecting
+                  ? 'Stop scanning and connecting'
+                  : 'Scan and connect'
+              }
+              onPress={onScanAndConnectPress}
+            />
+          ) : null}
           {isBleRpiDeviceConnected ? (
             <>
               <Button

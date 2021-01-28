@@ -3,10 +3,9 @@ import { RpiDevice } from '@config/RpiDevice';
 
 const rpiDevice = new RpiDevice();
 
+export type BleRpiDeviceCharacteristicKeys = keyof typeof rpiDevice.characteristicUUIDs;
+
 export type BleRpiDeviceServicesAndCharacteristics = {
   service: Service;
-  characteristics: Record<
-    keyof typeof rpiDevice.characteristicUUIDs,
-    Characteristic
-  >;
+  characteristics: Record<BleRpiDeviceCharacteristicKeys, Characteristic>;
 };
