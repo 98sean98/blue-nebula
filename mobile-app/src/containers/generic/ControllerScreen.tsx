@@ -20,6 +20,8 @@ import { RootState } from '@reduxApp/rootReducer';
 
 import { ControllerOption } from '@components/controller';
 
+import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
+
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
     console.log(`${diameter}_${sdr}`);
@@ -55,28 +57,27 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     else dispatch(cancelConnect());
   };
 
+  const { read, write } = useBleRpiDeviceCharacteristic(
+    'motorSpeed1',
+    'number',
+  );
+
   const readCharacteristic = async () => {
-    // try {
-    //   const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
-    //   if (characteristic?.value)
-    //     console.log(
-    //       'pipe diameter value:',
-    //       base64.decode(characteristic.value),
-    //     );
-    // } catch (e) {
-    //   console.log('error reading pipe diameter value:', e);
-    // }
+    try {
+      const value = await read();
+      console.log('read value:', value, 'of type:', typeof value);
+    } catch (e) {
+      console.log('error reading characteristic value:', e);
+    }
   };
 
   const writeCharacteristic = async () => {
-    // try {
-    //   const value = base64.encode('200');
-    //   await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.writeWithResponse(
-    //     value,
-    //   );
-    // } catch (e) {
-    //   console.log('error writing pipe diameter value:', e);
-    // }
+    try {
+      await write(350);
+      console.log('wrote value:', 350);
+    } catch (e) {
+      console.log('error writing pipe diameter value:', e);
+    }
   };
 
   return (

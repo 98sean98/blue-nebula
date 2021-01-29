@@ -1,1 +1,1 @@
-export {};
+export { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
