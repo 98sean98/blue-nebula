@@ -1,2 +1,2 @@
 export * from './BleRpiDevice';
-export * from './Controller';
+export * from './SimpleController';

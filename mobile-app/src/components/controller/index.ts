@@ -1,1 +1,1 @@
-export { ControllerOption } from './ControllerOption';
+export { SimpleControllerOption } from './SimpleControllerOption';

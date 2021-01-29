@@ -1,17 +1,18 @@
 import React, { FC } from 'react';
-import { Button, FlatList, ListRenderItem, View } from 'react-native';
+import { FlatList, ListRenderItem, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@ui-kitten/components';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
-import { ControllerOptionType, Diameter, SDR } from '@models';
+import { SimpleControllerOptionType, Diameter, SDR } from '@models';
 
 import { tailwind } from '@styles/tailwind';
 
 import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
 import { RootState } from '@reduxApp/rootReducer';
 
-import { ControllerOption } from '@components/controller';
+import { SimpleControllerOption } from '@components/controller';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
@@ -19,7 +20,7 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
     console.log(`${diameter}_${sdr}`);
 
-  const options: Array<ControllerOptionType> = [
+  const simpleOptions: Array<SimpleControllerOptionType> = [
     { diameter: Diameter.DN400, sdr: SDR.TypeA, optionText: 'DN400\nSDR17.6' },
     { diameter: Diameter.DN315, sdr: SDR.TypeA, optionText: 'DN315\nSDR17.6' },
     { diameter: Diameter.DN250, sdr: SDR.TypeA, optionText: 'DN250\nSDR17.6' },
@@ -30,15 +31,15 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     onPress: () => onOptionPress(option.diameter, option.sdr),
   }));
 
-  const renderItem: ListRenderItem<ControllerOptionType> = ({
+  const renderItem: ListRenderItem<SimpleControllerOptionType> = ({
     item: { optionText, onPress },
   }) => (
     <View style={tailwind('w-1/2 h-40 p-2')}>
-      <ControllerOption text={optionText} onPress={onPress} />
+      <SimpleControllerOption text={optionText} onPress={onPress} />
     </View>
   );
 
-  const keyExtractor = ({ id }: ControllerOptionType): string => id;
+  const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
 
   const dispatch = useDispatch();
   const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
@@ -77,30 +78,28 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     <View style={[{ flex: 1 }]}>
       <FlatList
         style={tailwind('flex-1 px-4')}
-        data={options}
+        data={simpleOptions}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         numColumns={2}
       />
       {/*<Icon name="facebook" />*/}
-      <View style={tailwind('pt-4')}>
+      <View style={tailwind('p-4')}>
         {!isBleRpiDeviceConnected ? (
-          <Button
-            title={
-              isScanningAndConnecting
-                ? 'Stop scanning and connecting'
-                : 'Scan and connect'
-            }
-            onPress={onScanAndConnectPress}
-          />
+          <Button onPress={onScanAndConnectPress}>
+            {isScanningAndConnecting
+              ? 'Stop scanning and connecting'
+              : 'Scan and connect'}
+          </Button>
         ) : null}
         {isBleRpiDeviceConnected ? (
           <>
-            <Button title={'Get pipe diameter'} onPress={readCharacteristic} />
-            <Button
-              title={'Send pipe diameter'}
-              onPress={writeCharacteristic}
-            />
+            <Button style={tailwind('mt-2')} onPress={readCharacteristic}>
+              Read value
+            </Button>
+            <Button style={tailwind('mt-2')} onPress={writeCharacteristic}>
+              Write value
+            </Button>
           </>
         ) : null}
       </View>

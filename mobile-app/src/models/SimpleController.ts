@@ -10,7 +10,7 @@ export enum SDR {
   TypeB = '11',
 }
 
-export type ControllerOptionType = {
+export type SimpleControllerOptionType = {
   id: string;
   diameter: Diameter;
   sdr: SDR;
