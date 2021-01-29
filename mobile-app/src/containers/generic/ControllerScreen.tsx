@@ -1,12 +1,5 @@
 import React, { FC } from 'react';
-import {
-  Button,
-  FlatList,
-  ListRenderItem,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Button, FlatList, ListRenderItem, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
@@ -81,40 +74,36 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
   };
 
   return (
-    <SafeAreaView style={[StyleSheet.absoluteFillObject]}>
-      <View style={[StyleSheet.absoluteFillObject, tailwind('p-4')]}>
-        <FlatList
-          style={tailwind('flex-1')}
-          data={options}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          numColumns={2}
-        />
-        <View style={tailwind('pt-4')}>
-          {!isBleRpiDeviceConnected ? (
+    <View style={[{ flex: 1 }]}>
+      <FlatList
+        style={tailwind('flex-1 px-4')}
+        data={options}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        numColumns={2}
+      />
+      {/*<Icon name="facebook" />*/}
+      <View style={tailwind('pt-4')}>
+        {!isBleRpiDeviceConnected ? (
+          <Button
+            title={
+              isScanningAndConnecting
+                ? 'Stop scanning and connecting'
+                : 'Scan and connect'
+            }
+            onPress={onScanAndConnectPress}
+          />
+        ) : null}
+        {isBleRpiDeviceConnected ? (
+          <>
+            <Button title={'Get pipe diameter'} onPress={readCharacteristic} />
             <Button
-              title={
-                isScanningAndConnecting
-                  ? 'Stop scanning and connecting'
-                  : 'Scan and connect'
-              }
-              onPress={onScanAndConnectPress}
+              title={'Send pipe diameter'}
+              onPress={writeCharacteristic}
             />
-          ) : null}
-          {isBleRpiDeviceConnected ? (
-            <>
-              <Button
-                title={'Get pipe diameter'}
-                onPress={readCharacteristic}
-              />
-              <Button
-                title={'Send pipe diameter'}
-                onPress={writeCharacteristic}
-              />
-            </>
-          ) : null}
-        </View>
+          </>
+        ) : null}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
