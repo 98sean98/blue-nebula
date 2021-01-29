@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import {
   Button,
   FlatList,
@@ -7,30 +7,20 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  Characteristic,
-  Device,
-  ScanCallbackType,
-  Service,
-} from 'react-native-ble-plx';
-import * as base64 from 'base-64';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
 import { ControllerOptionType, Diameter, SDR } from '@models';
-import { RpiDevice } from '@config/RpiDevice';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControllerOption } from '@src/components/controller';
-import { useBluetoothContext } from '@utilities/hooks';
+import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
+import { RootState } from '@reduxApp/rootReducer';
 
-const rpiDevice = new RpiDevice();
+import { ControllerOption } from '@components/controller';
 
-type BleRpiDeviceServicesAndCharacteristics = {
-  robotControllerService: Service;
-  pipeDiameterCharacteristic: Characteristic;
-};
+import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -57,103 +47,34 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const keyExtractor = ({ id }: ControllerOptionType): string => id;
 
-  const [isScanning, setIsScanning] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
+    (state: RootState) => state.bluetooth,
+  );
 
-  const onReconnectPress = () => setIsScanning(true);
-
-  const { bleManager } = useBluetoothContext();
-  const [bleRpiDevice, setBleRpiDevice] = useState<Device>();
-  const [
-    bleRpiDeviceServicesAndCharacteristics,
-    setBleRpiDeviceServicesAndCharacteristics,
-  ] = useState<BleRpiDeviceServicesAndCharacteristics>();
-
-  useEffect(() => {
-    if (isScanning) {
-      bleManager.startDeviceScan(
-        null,
-        {
-          allowDuplicates: false,
-        },
-        (error, scannedDevice) => {
-          if (error) console.log(error.errorCode);
-          if (
-            scannedDevice &&
-            scannedDevice.name === rpiDevice.name &&
-            scannedDevice.localName === rpiDevice.localName
-          ) {
-            console.log('found rpi device!');
-            rpiDevice.setDeviceId(scannedDevice.id);
-          }
-        },
-      );
-      console.log('scanning devices...');
-      const timeout = setTimeout(() => {
-        bleManager.stopDeviceScan();
-        console.log('stopped device scanning');
-        console.log('rpiDevice id:', rpiDevice.deviceId);
-        setIsScanning(false);
-
-        if (rpiDevice.deviceId)
-          bleManager
-            .connectToDevice(rpiDevice.deviceId, {
-              autoConnect: true,
-            })
-            .then((connectedDevice) => {
-              console.log('successfully connected to device');
-              setBleRpiDevice(connectedDevice);
-            })
-            .catch((error) =>
-              console.log('error connecting to device:', error),
-            );
-      }, 10000);
-      return () => clearTimeout(timeout);
-    }
-  }, [bleManager, isScanning]);
-
-  const getServicesAndCharacteristics = async () => {
-    console.log('getting services and characteristics');
-    const device = await bleRpiDevice?.discoverAllServicesAndCharacteristics();
-    const services = await device?.services();
-    services?.map(async (service) => {
-      const characteristics = await service.characteristics();
-      characteristics?.map((characteristic) => {
-        if (
-          service.uuid === rpiDevice.robotControllerServiceUUID &&
-          characteristic.uuid === rpiDevice.pipeDiameterCharacteristicUUID
-        ) {
-          setBleRpiDeviceServicesAndCharacteristics({
-            robotControllerService: service,
-            pipeDiameterCharacteristic: characteristic,
-          });
-          console.log(
-            'obtained robot controller service, and pipe diameter characteristic!',
-          );
-        }
-      });
-    });
-    setBleRpiDevice(device);
+  const onScanAndConnectPress = () => {
+    if (!isScanningAndConnecting) dispatch(connectAsync());
+    else dispatch(cancelConnect());
   };
 
-  const readPipeDiameter = async () => {
+  const { read, write } = useBleRpiDeviceCharacteristic(
+    'motorSpeed1',
+    'number',
+  );
+
+  const readCharacteristic = async () => {
     try {
-      const characteristic = await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.read();
-      if (characteristic?.value)
-        console.log(
-          'pipe diameter value:',
-          base64.decode(characteristic.value),
-        );
+      const value = await read();
+      console.log('read value:', value, 'of type:', typeof value);
     } catch (e) {
-      console.log('error reading pipe diameter value:', e);
+      console.log('error reading characteristic value:', e);
     }
   };
 
-  const writePipeDiameter = async () => {
+  const writeCharacteristic = async () => {
     try {
-      const value = base64.encode('200');
-      await bleRpiDeviceServicesAndCharacteristics?.pipeDiameterCharacteristic.writeWithResponse(
-        value,
-      );
+      await write(350);
+      console.log('wrote value:', 350);
     } catch (e) {
       console.log('error writing pipe diameter value:', e);
     }
@@ -170,19 +91,25 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
           numColumns={2}
         />
         <View style={tailwind('pt-4')}>
-          <Button title={'Reconnect to Robot'} onPress={onReconnectPress} />
-          {bleRpiDevice ? (
+          {!isBleRpiDeviceConnected ? (
             <Button
-              title={'List services and characteristics'}
-              onPress={getServicesAndCharacteristics}
+              title={
+                isScanningAndConnecting
+                  ? 'Stop scanning and connecting'
+                  : 'Scan and connect'
+              }
+              onPress={onScanAndConnectPress}
             />
           ) : null}
-          {bleRpiDeviceServicesAndCharacteristics ? (
+          {isBleRpiDeviceConnected ? (
             <>
-              <Button title={'Get pipe diameter'} onPress={readPipeDiameter} />
+              <Button
+                title={'Get pipe diameter'}
+                onPress={readCharacteristic}
+              />
               <Button
                 title={'Send pipe diameter'}
-                onPress={writePipeDiameter}
+                onPress={writeCharacteristic}
               />
             </>
           ) : null}

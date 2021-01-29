@@ -1,1 +1,1 @@
-export { useBluetoothContext } from './useBluetoothContext';
+export { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
