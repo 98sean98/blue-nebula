@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import { FlatList, ListRenderItem, View } from 'react-native';
+import React, { FC, useState } from 'react';
+import { Alert, FlatList, ListRenderItem, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@ui-kitten/components';
+import { Button, Input } from '@ui-kitten/components';
 
 import { ControllerScreenProps } from '@navigation/navigationTypes';
 
@@ -41,6 +41,8 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
 
+  const [writeValue, setWriteValue] = useState<number>();
+
   const dispatch = useDispatch();
   const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
     (state: RootState) => state.bluetooth,
@@ -60,17 +62,24 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     try {
       const value = await read();
       console.log('read value:', value, 'of type:', typeof value);
+      Alert.alert('Read value', value.toString());
     } catch (e) {
       console.log('error reading characteristic value:', e);
+      Alert.alert(e);
     }
   };
 
   const writeCharacteristic = async () => {
     try {
-      await write(350);
-      console.log('wrote value:', 350);
+      if (writeValue) {
+        await write(writeValue);
+        console.log('wrote value:', writeValue);
+        Alert.alert('Wrote value', writeValue.toString());
+        setWriteValue(undefined);
+      } else throw new Error('write value is undefined');
     } catch (e) {
-      console.log('error writing pipe diameter value:', e);
+      console.log('error writing characteristic value:', e);
+      Alert.alert(e);
     }
   };
 
@@ -83,7 +92,6 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         keyExtractor={keyExtractor}
         numColumns={2}
       />
-      {/*<Icon name="facebook" />*/}
       <View style={tailwind('p-4')}>
         {!isBleRpiDeviceConnected ? (
           <Button onPress={onScanAndConnectPress}>
@@ -94,6 +102,12 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         ) : null}
         {isBleRpiDeviceConnected ? (
           <>
+            <Input
+              keyboardType={'numeric'}
+              placeholder={'Write a value to send to ble rpi device'}
+              value={writeValue?.toString()}
+              onChangeText={(newValue) => setWriteValue(parseFloat(newValue))}
+            />
             <Button style={tailwind('mt-2')} onPress={readCharacteristic}>
               Read value
             </Button>
