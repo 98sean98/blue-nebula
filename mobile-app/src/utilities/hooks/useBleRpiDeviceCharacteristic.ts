@@ -7,11 +7,11 @@ import { RootState } from '@reduxApp/rootReducer';
 import { Characteristic } from 'react-native-ble-plx';
 import { setBleRpiDeviceServicesCharacteristics } from '@reduxApp/bluetooth/actions';
 
-type ValueType = 'string' | 'number';
+type ValueType = 'string' | 'number' | 'boolean';
 
 type UseBleRpiDeviceCharacteristic = {
-  read: () => Promise<string | number>;
-  write: (value: string | number) => Promise<void>;
+  read: () => Promise<string | number | boolean>;
+  write: (value: string | number | boolean) => Promise<void>;
 };
 
 export function useBleRpiDeviceCharacteristic(
@@ -61,6 +61,8 @@ export function useBleRpiDeviceCharacteristic(
         return decoded;
       case 'number':
         return parseFloat(decoded);
+      case 'boolean':
+        return decoded === '1';
       default:
         return decoded;
     }
@@ -77,6 +79,9 @@ export function useBleRpiDeviceCharacteristic(
         break;
       case 'number':
         stringValue = value.toString();
+        break;
+      case 'boolean':
+        stringValue = value ? '1' : '0';
         break;
       default:
         throw new Error('the value is not a string, nor a number');

@@ -15,6 +15,7 @@ import { RootState } from '@reduxApp/rootReducer';
 import { SimpleControllerOption } from '@components/controller';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
+import { BleRunIdleButton } from '@components/shared/bluetooth';
 
 export const ControllerScreen: FC<ControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -114,6 +115,7 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
             <Button style={tailwind('mt-2')} onPress={writeCharacteristic}>
               Write value
             </Button>
+            <BleRunIdleButton style={tailwind('mt-2')} />
           </>
         ) : null}
       </View>

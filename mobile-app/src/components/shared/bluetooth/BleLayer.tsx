@@ -4,7 +4,7 @@ import { BleManager } from 'react-native-ble-plx';
 
 import { setBleManager, setBleManagerState } from '@reduxApp/bluetooth/actions';
 
-export const BluetoothLayer: FC = ({ children }) => {
+export const BleLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const bleManager = useMemo(() => new BleManager(), []);

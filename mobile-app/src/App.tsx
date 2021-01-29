@@ -13,7 +13,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { store } from '@reduxApp/store';
 import { RootNavigator } from '@navigation';
 
-import { BluetoothLayer } from '@components/shared/BluetoothLayer';
+import { BleLayer } from '@components/shared/bluetooth';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
 
@@ -32,7 +32,7 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      <BluetoothLayer>
+      <BleLayer>
         <IconRegistry icons={EvaIconsPack} />
         <ApplicationProvider {...eva} theme={themes.eva}>
           <NavigationContainer theme={themes.navigation}>
@@ -40,7 +40,7 @@ export const App: FC = () => {
             <RootNavigator />
           </NavigationContainer>
         </ApplicationProvider>
-      </BluetoothLayer>
+      </BleLayer>
     </ReduxProvider>
   );
 };
