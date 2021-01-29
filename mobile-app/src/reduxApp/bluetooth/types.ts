@@ -1,4 +1,5 @@
 import { BleManager, Device, State } from 'react-native-ble-plx';
+
 import { BleRpiDeviceServicesAndCharacteristics } from '@models/BleRpiDevice';
 
 // types and interfaces for feature
@@ -14,10 +15,15 @@ export type SetIsScanningAndConnecting = boolean;
 
 export type SetIsBleRpiDeviceConnected = boolean;
 
-export type SetBleRpiDeviceServicesCharacteristics = {
+export type SetBleRpiDeviceServicesCharacteristics = Partial<{
   bleRpiDevice: Device;
-  bleRpiDeviceServicesAndCharacteristics: BleRpiDeviceServicesAndCharacteristics;
-};
+  bleRpiDeviceServicesAndCharacteristics: Partial<{
+    service: BleRpiDeviceServicesAndCharacteristics['service'];
+    characteristics: Partial<
+      BleRpiDeviceServicesAndCharacteristics['characteristics']
+    >;
+  }>;
+}>;
 
 export type ReadCharacteristicValueAsync = BleRpiDeviceCharacteristics;
 

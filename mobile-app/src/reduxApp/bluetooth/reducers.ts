@@ -1,7 +1,10 @@
 import { BleManager, State } from 'react-native-ble-plx';
+
 import { BluetoothConstants } from './constants';
 import { BluetoothState } from './types';
 import { BluetoothActionTypes } from './actions';
+
+import { BleRpiDeviceServicesAndCharacteristics } from '@models/BleRpiDevice';
 
 const initialState: BluetoothState = {
   bleManager: new BleManager(),
@@ -28,7 +31,27 @@ export const bluetoothReducer = (
         bleRpiDevice,
         bleRpiDeviceServicesAndCharacteristics,
       } = action.payload;
-      return { ...state, bleRpiDevice, bleRpiDeviceServicesAndCharacteristics };
+      const combinedBleRpiDeviceServicesAndCharacteristics = {
+        ...state.bleRpiDeviceServicesAndCharacteristics,
+        service:
+          bleRpiDeviceServicesAndCharacteristics?.service ||
+          state.bleRpiDeviceServicesAndCharacteristics?.service,
+        characteristics: {
+          ...state.bleRpiDeviceServicesAndCharacteristics?.characteristics,
+          ...bleRpiDeviceServicesAndCharacteristics?.characteristics,
+        },
+      };
+      console.log(combinedBleRpiDeviceServicesAndCharacteristics);
+      return {
+        ...state,
+        bleRpiDevice,
+        bleRpiDeviceServicesAndCharacteristics:
+          // check if the combined state has keys
+          Object.keys(combinedBleRpiDeviceServicesAndCharacteristics).length > 0
+            ? // it is safe to take the combined state to be fully populated with services and characteristics as this reducer should never be called if the device is not connected
+              (combinedBleRpiDeviceServicesAndCharacteristics as BleRpiDeviceServicesAndCharacteristics)
+            : undefined,
+      };
     default:
       // saga actions would just return the state
       return state;

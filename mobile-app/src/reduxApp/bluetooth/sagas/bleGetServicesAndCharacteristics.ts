@@ -34,7 +34,7 @@ export const bleGetServicesAndCharacteristics = async (
     bleRpiDevice: device,
     bleRpiDeviceServicesAndCharacteristics: {
       service: foundService,
-      characteristics: mappedCharacteristics as SetBleRpiDeviceServicesCharacteristics['bleRpiDeviceServicesAndCharacteristics']['characteristics'],
+      characteristics: mappedCharacteristics,
     },
   };
 };
