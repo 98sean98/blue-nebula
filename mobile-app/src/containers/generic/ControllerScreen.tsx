@@ -42,7 +42,9 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
 
-  const [writeValue, setWriteValue] = useState<number>();
+  const [writeValue, setWriteValue] = useState<string>(
+    'motor_1, 10, 2203.24, 1, 0',
+  );
 
   const dispatch = useDispatch();
   const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
@@ -54,16 +56,13 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     else dispatch(cancelConnect());
   };
 
-  const { read, write } = useBleRpiDeviceCharacteristic(
-    'motorSpeed1',
-    'number',
-  );
+  const { read, write } = useBleRpiDeviceCharacteristic('stepMotors', 'string');
 
   const readCharacteristic = async () => {
     try {
       const value = await read();
       console.log('read value:', value, 'of type:', typeof value);
-      Alert.alert('Read value', value.toString());
+      Alert.alert('Read value', value as string);
     } catch (e) {
       console.log('error reading characteristic value:', e);
       Alert.alert(e);
@@ -72,11 +71,11 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   const writeCharacteristic = async () => {
     try {
-      if (writeValue) {
+      if (typeof writeValue !== 'undefined') {
         await write(writeValue);
         console.log('wrote value:', writeValue);
-        Alert.alert('Wrote value', writeValue.toString());
-        setWriteValue(undefined);
+        Alert.alert('Wrote value', writeValue);
+        // setWriteValue('');
       } else throw new Error('write value is undefined');
     } catch (e) {
       console.log('error writing characteristic value:', e);
@@ -86,13 +85,13 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   return (
     <View style={[{ flex: 1 }]}>
-      <FlatList
-        style={tailwind('flex-1 px-4')}
-        data={simpleOptions}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        numColumns={2}
-      />
+      {/*<FlatList*/}
+      {/*  style={tailwind('flex-1 px-4')}*/}
+      {/*  data={simpleOptions}*/}
+      {/*  renderItem={renderItem}*/}
+      {/*  keyExtractor={keyExtractor}*/}
+      {/*  numColumns={2}*/}
+      {/*/>*/}
       <View style={tailwind('p-4')}>
         {!isBleRpiDeviceConnected ? (
           <Button onPress={onScanAndConnectPress}>
@@ -104,10 +103,9 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
         {isBleRpiDeviceConnected ? (
           <>
             <Input
-              keyboardType={'numeric'}
               placeholder={'Write a value to send to ble rpi device'}
-              value={writeValue?.toString()}
-              onChangeText={(newValue) => setWriteValue(parseFloat(newValue))}
+              value={writeValue}
+              onChangeText={(newValue) => setWriteValue(newValue)}
             />
             <Button style={tailwind('mt-2')} onPress={readCharacteristic}>
               Read value

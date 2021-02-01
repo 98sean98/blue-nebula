@@ -41,7 +41,8 @@ export function useBleRpiDeviceCharacteristic(
       throw new Error('characteristic could not be read');
 
     const returnedCharacteristic = await characteristic.read();
-    if (!returnedCharacteristic?.value) throw new Error('value is undefined');
+    if (!returnedCharacteristic?.value)
+      throw new Error('read value is undefined');
 
     // save the newly returned characteristic in redux
     dispatch(
@@ -84,7 +85,9 @@ export function useBleRpiDeviceCharacteristic(
         stringValue = value ? '1' : '0';
         break;
       default:
-        throw new Error('the value is not a string, nor a number');
+        throw new Error(
+          'the value is an invalid data type, valid types are string, number, and boolean',
+        );
     }
 
     const encoded = base64.encode(stringValue);
