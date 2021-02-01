@@ -1,6 +1,6 @@
 import dbus
 
-def parse_string(x):
+def parse_string_to_number(x):
     def is_float(x):
         try: a = float(x)
         except (TypeError, ValueError): return False
@@ -33,7 +33,7 @@ def decode_motor_info(encoded, parameters_keys):
 
     parameters = {}
     for i, parameters_key in enumerate(parameters_keys):
-        parameters[parameters_key] = parse_string(decoded_list[i+1])
+        parameters[parameters_key] = parse_string_to_number(decoded_list[i+1])
 
     return {'motor_name': decoded_list[0], 'parameters': parameters}
 

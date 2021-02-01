@@ -1,4 +1,6 @@
-class StepMotor:
+from motor import Motor
+
+class StepMotor(Motor):
     '''A step motor instance connected to the device'''
 
     # parameters (order of the dictionary keys is important)
@@ -9,15 +11,13 @@ class StepMotor:
         'enable': 0 # 0 is LOW, 1 is HIGH
     }
 
-    # is running
-    is_running = False
-
     def __init__(self, motor_name, direction_pin, step_pin, enable_pin):
         self.motor_name = motor_name
         # pins
         self.direction_pin = direction_pin
         self.step_pin = step_pin
         self.enable_pin = enable_pin
+        super().__init__(motor_name)
 
     def get_pins(self):
         pins = {'direction_pin': self.direction_pin, 'step_pin': self.step_pin, 'enable_pin': self.enable_pin}
@@ -29,14 +29,7 @@ class StepMotor:
     def get_parameters(self):
         return self.parameters
 
-    def set_is_running(self, is_running):
-        if (type(is_running) is not bool):
-            print('is_running is not a boolean, motor control is not changed.')
-        elif (is_running == self.is_running):
-            print('is_running is the same as before, motor control is not changed.')
-        else:
-            self.is_running = is_running
+    def set_gpio(self):
+        # todo
 
-            # todo: set gpio pins
-
-            print(f'motor control has been changed, is_running is now {is_running}')
+        super().set_gpio()
