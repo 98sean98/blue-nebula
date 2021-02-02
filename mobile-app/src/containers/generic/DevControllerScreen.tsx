@@ -1,51 +1,20 @@
 import React, { FC, useState } from 'react';
-import { Alert, FlatList, ListRenderItem, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Input } from '@ui-kitten/components';
 
-import { ControllerScreenProps } from '@navigation/navigationTypes';
-
-import { SimpleControllerOptionType, Diameter, SDR } from '@models';
+import { DevControllerScreenProps } from '@navigation/navigationTypes';
 
 import { tailwind } from '@styles/tailwind';
 
-import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
 import { RootState } from '@reduxApp/rootReducer';
+import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
 
-import { SimpleControllerOption } from '@components/controller';
-
-import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { BleRunIdleButton } from '@components/shared/bluetooth';
 
-export const ControllerScreen: FC<ControllerScreenProps> = () => {
-  const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
-    console.log(`${diameter}_${sdr}`);
+import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
-  const simpleOptions: Array<SimpleControllerOptionType> = [
-    { diameter: Diameter.DN400, sdr: SDR.TypeA, optionText: 'DN400\nSDR17.6' },
-    { diameter: Diameter.DN315, sdr: SDR.TypeA, optionText: 'DN315\nSDR17.6' },
-    { diameter: Diameter.DN250, sdr: SDR.TypeA, optionText: 'DN250\nSDR17.6' },
-    { diameter: Diameter.DN200, sdr: SDR.TypeA, optionText: 'DN200\nSDR17.6' },
-  ].map((option) => ({
-    ...option,
-    id: `${option.diameter}_${option.sdr}`,
-    onPress: () => onOptionPress(option.diameter, option.sdr),
-  }));
-
-  const renderItem: ListRenderItem<SimpleControllerOptionType> = ({
-    item: { optionText, onPress },
-  }) => (
-    <View style={tailwind('w-1/2 h-40 p-2')}>
-      <SimpleControllerOption text={optionText} onPress={onPress} />
-    </View>
-  );
-
-  const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
-
-  const [writeValue, setWriteValue] = useState<string>(
-    'motor_1, 10, 2203.24, 1, 0',
-  );
-
+export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
   const dispatch = useDispatch();
   const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
     (state: RootState) => state.bluetooth,
@@ -55,6 +24,10 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
     if (!isScanningAndConnecting) dispatch(connectAsync());
     else dispatch(cancelConnect());
   };
+
+  const [writeValue, setWriteValue] = useState<string>(
+    'motor_1, 10, 2203.24, 1, 0',
+  );
 
   const { read, write } = useBleRpiDeviceCharacteristic('stepMotors', 'string');
 
@@ -85,13 +58,6 @@ export const ControllerScreen: FC<ControllerScreenProps> = () => {
 
   return (
     <View style={[{ flex: 1 }]}>
-      {/*<FlatList*/}
-      {/*  style={tailwind('flex-1 px-4')}*/}
-      {/*  data={simpleOptions}*/}
-      {/*  renderItem={renderItem}*/}
-      {/*  keyExtractor={keyExtractor}*/}
-      {/*  numColumns={2}*/}
-      {/*/>*/}
       <View style={tailwind('p-4')}>
         {!isBleRpiDeviceConnected ? (
           <Button onPress={onScanAndConnectPress}>
