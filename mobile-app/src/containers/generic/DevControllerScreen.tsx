@@ -61,7 +61,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
   return (
     <View style={[{ flex: 1 }]}>
       <TabView
-        style={{ flex: 1 }}
+        style={[{ flex: 1 }, tailwind('pt-2')]}
         tabBarStyle={tailwind('p-2')}
         selectedIndex={selectedIndex}
         onSelect={setSelectedIndex}>
