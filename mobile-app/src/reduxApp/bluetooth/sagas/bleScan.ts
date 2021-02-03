@@ -51,7 +51,8 @@ export function* bleScan(
       }
     }
   } catch (error) {
-    return '';
+    console.log('caught unknown error while scanning for devices:', error);
+    return;
   } finally {
     if (yield cancelled()) {
       scanningChannel.close();

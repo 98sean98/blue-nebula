@@ -41,16 +41,18 @@ export const bluetoothReducer = (
           ...bleRpiDeviceServicesAndCharacteristics?.characteristics,
         },
       };
-      console.log(combinedBleRpiDeviceServicesAndCharacteristics);
       return {
         ...state,
-        bleRpiDevice,
+        bleRpiDevice:
+          typeof bleRpiDevice !== 'undefined'
+            ? bleRpiDevice
+            : state.bleRpiDevice,
         bleRpiDeviceServicesAndCharacteristics:
           // check if the combined state has keys
           Object.keys(combinedBleRpiDeviceServicesAndCharacteristics).length > 0
             ? // it is safe to take the combined state to be fully populated with services and characteristics as this reducer should never be called if the device is not connected
               (combinedBleRpiDeviceServicesAndCharacteristics as BleRpiDeviceServicesAndCharacteristics)
-            : undefined,
+            : state.bleRpiDeviceServicesAndCharacteristics,
       };
     default:
       // saga actions would just return the state
