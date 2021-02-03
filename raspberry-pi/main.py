@@ -22,11 +22,10 @@ class RobotControllerService(Service):
 
     def __init__(self, index):
         self.step_motors = {
-            'motor_1': StepMotor('motor_1', 0,1,2),
-            'motor_2': StepMotor('motor_2', 3,4,5),
+            'wheel_motor': StepMotor('wheel_motor', 0,1,2),
+            'screw_motor': StepMotor('screw_motor', 3,4,5),
         }
         self.dc_motors = {
-            'motor_1': DCMotor('motor_1')
         }
         self.is_running = False
 
