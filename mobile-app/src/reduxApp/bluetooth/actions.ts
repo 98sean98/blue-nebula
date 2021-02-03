@@ -6,6 +6,7 @@ import {
   SetBleManagerState,
   SetBleRpiDeviceServicesCharacteristics,
   SetIsBleRpiDeviceConnected,
+  SetIsMonitoringBleRpiDeviceConnection,
   SetIsScanningAndConnecting,
   WriteCharacteristicValueAsync,
 } from './types';
@@ -41,6 +42,20 @@ export const cancelConnect = () =>
 export const setIsScanningConnecting = (payload: SetIsScanningAndConnecting) =>
   ({
     type: BluetoothConstants.SET_IS_SCANNING_AND_CONNECTING,
+    payload,
+  } as const);
+
+export const startMonitoringConnectionAsync = () =>
+  ({ type: BluetoothConstants.START_MONITORING_CONNECTION_ASYNC } as const);
+
+export const stopMonitoringConnection = () =>
+  ({ type: BluetoothConstants.STOP_MONITORING_CONNECTION } as const);
+
+export const setIsMonitoringBleRpiDeviceConnection = (
+  payload: SetIsMonitoringBleRpiDeviceConnection,
+) =>
+  ({
+    type: BluetoothConstants.SET_IS_MONITORING_BLE_RPI_DEVICE_CONNECTION,
     payload,
   } as const);
 
@@ -81,6 +96,17 @@ export type CancelConnectBluetoothAction = ReturnType<typeof cancelConnect>;
 export type SetIsScanningAndConnectingBluetoothAction = ReturnType<
   typeof setIsScanningConnecting
 >;
+
+export type StartMonitoringConnectionAsyncBluetoothAction = ReturnType<
+  typeof startMonitoringConnectionAsync
+>;
+export type StopMonitoringConnectionBluetoothAction = ReturnType<
+  typeof stopMonitoringConnection
+>;
+export type SetIsMonitoringBleRpiDeviceConnectionBluetoothAction = ReturnType<
+  typeof setIsMonitoringBleRpiDeviceConnection
+>;
+
 export type ReadCharacteristicValueAsyncBluetoothAction = ReturnType<
   typeof readCharacteristicValueAsync
 >;
@@ -96,5 +122,8 @@ export type BluetoothActionTypes =
   | ConnectAsyncBluetoothAction
   | CancelConnectBluetoothAction
   | SetIsScanningAndConnectingBluetoothAction
+  | StartMonitoringConnectionAsyncBluetoothAction
+  | StopMonitoringConnectionBluetoothAction
+  | SetIsMonitoringBleRpiDeviceConnectionBluetoothAction
   | ReadCharacteristicValueAsyncBluetoothAction
   | WriteCharacteristicValueAsyncBluetoothAction;

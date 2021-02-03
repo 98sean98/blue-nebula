@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import { Alert, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Input, Text } from '@ui-kitten/components';
 
 import { DevControllerScreenProps } from '@navigation/navigationTypes';
@@ -8,15 +8,21 @@ import { DevControllerScreenProps } from '@navigation/navigationTypes';
 import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp/rootReducer';
+import {
+  startMonitoringConnectionAsync,
+  stopMonitoringConnection,
+} from '@reduxApp/bluetooth/actions';
 
 import { BleRunIdleButton } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
 export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
-  const { isBleRpiDeviceConnected } = useSelector(
-    (state: RootState) => state.bluetooth,
-  );
+  const dispatch = useDispatch();
+  const {
+    isBleRpiDeviceConnected,
+    isMonitoringBleRpiDeviceConnection,
+  } = useSelector((state: RootState) => state.bluetooth);
 
   const [writeValue, setWriteValue] = useState<string>(
     'motor_1, 10, 2203.24, 1, 0',
@@ -54,7 +60,20 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
       <View style={tailwind('p-4')}>
         {isBleRpiDeviceConnected ? (
           <>
+            <Button
+              style={tailwind('mt-2')}
+              status={isMonitoringBleRpiDeviceConnection ? 'danger' : 'success'}
+              onPress={() => {
+                isMonitoringBleRpiDeviceConnection
+                  ? dispatch(stopMonitoringConnection())
+                  : dispatch(startMonitoringConnectionAsync());
+              }}>
+              {`${
+                isMonitoringBleRpiDeviceConnection ? 'stop' : 'start'
+              } monitoring connection`}
+            </Button>
             <Input
+              style={tailwind('mt-8')}
               placeholder={'Write a value to send to ble rpi device'}
               value={writeValue}
               onChangeText={(newValue) => setWriteValue(newValue)}

@@ -13,6 +13,8 @@ export type SetBleManagerState = State;
 
 export type SetIsScanningAndConnecting = boolean;
 
+export type SetIsMonitoringBleRpiDeviceConnection = boolean;
+
 export type SetIsBleRpiDeviceConnected = boolean;
 
 export type SetBleRpiDeviceServicesCharacteristics = Partial<{
@@ -34,6 +36,7 @@ export type BluetoothState = {
   readonly bleManager: BleManager;
   readonly bleManagerState: State;
   readonly isScanningAndConnecting: SetIsScanningAndConnecting;
+  readonly isMonitoringBleRpiDeviceConnection: SetIsMonitoringBleRpiDeviceConnection;
   readonly isBleRpiDeviceConnected: SetIsBleRpiDeviceConnected;
   readonly bleRpiDevice?: Device;
   readonly bleRpiDeviceServicesAndCharacteristics?: BleRpiDeviceServicesAndCharacteristics;
