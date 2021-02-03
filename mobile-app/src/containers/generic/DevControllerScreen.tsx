@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Input, Text } from '@ui-kitten/components';
+import { Button, Input, Tab, TabView, Text } from '@ui-kitten/components';
 
 import { DevControllerScreenProps } from '@navigation/navigationTypes';
 
@@ -13,6 +13,7 @@ import {
   stopMonitoringConnection,
 } from '@reduxApp/bluetooth/actions';
 
+import { TestingMode, RealTimeControlMode } from '@components/controller/dev';
 import { BleRunIdleButton } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
@@ -55,8 +56,27 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
     }
   };
 
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+
   return (
     <View style={[{ flex: 1 }]}>
+      <TabView
+        style={{ flex: 1 }}
+        tabBarStyle={tailwind('p-2')}
+        selectedIndex={selectedIndex}
+        onSelect={setSelectedIndex}>
+        <Tab title={'Testing'}>
+          <ScrollView style={tailwind('p-4')}>
+            <TestingMode />
+          </ScrollView>
+        </Tab>
+        <Tab title={'Real Time Control'}>
+          <ScrollView style={tailwind('p-4')}>
+            <RealTimeControlMode />
+          </ScrollView>
+        </Tab>
+      </TabView>
+
       <View style={tailwind('p-4')}>
         {isBleRpiDeviceConnected ? (
           <>

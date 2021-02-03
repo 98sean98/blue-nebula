@@ -7,7 +7,7 @@ import {
 } from '@models/SimpleController';
 import { ListRenderItem, View, FlatList } from 'react-native';
 import { tailwind } from '@styles/tailwind';
-import { SimpleControllerOption } from '@components/controller';
+import { SimpleControllerOption } from '@components/controller/simple';
 
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
