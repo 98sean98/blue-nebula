@@ -4,8 +4,10 @@ import { ControlConstants } from './constants';
 import { ControlState } from './types';
 import { ControlActionTypes } from './actions';
 
-import { declaredControlEntities } from '@config/declaredControlEntities';
-import { ControlEntities } from '@models/ControlEntities';
+import {
+  DeclaredControlEntities,
+  declaredControlEntities,
+} from '@config/declaredControlEntities';
 
 const initialState: ControlState = {
   controlEntities: declaredControlEntities,
@@ -22,7 +24,7 @@ export const controlReducer = (
         controlEntities: deepmerge(
           state.controlEntities,
           action.payload,
-        ) as ControlEntities,
+        ) as DeclaredControlEntities,
       };
     default:
       // saga actions would just return the state

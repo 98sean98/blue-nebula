@@ -1,12 +1,12 @@
 import { DeepPartial } from 'redux';
-import { ControlEntities } from '@models/ControlEntities';
+import { DeclaredControlEntities } from '@config/declaredControlEntities';
 
 // types and interfaces for feature
 
 // action payload
-export type SetControlEntities = DeepPartial<ControlEntities>;
+export type SetControlEntities = DeepPartial<DeclaredControlEntities>;
 
 // feature state
 export type ControlState = {
-  readonly controlEntities: ControlEntities;
+  readonly controlEntities: DeclaredControlEntities;
 };

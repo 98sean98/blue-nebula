@@ -1,12 +1,15 @@
+import { Characteristic } from 'react-native-ble-plx';
 import { useSelector } from 'react-redux';
 import * as base64 from 'base-64';
 
 import { BleRpiDeviceCharacteristicKeys } from '@models/BleRpiDevice';
+import { BluetoothValueType } from '@models/BluetoothValueType';
 
 import { RootState } from '@reduxApp/rootReducer';
-import { Characteristic } from 'react-native-ble-plx';
-
-type ValueType = 'string' | 'number' | 'boolean';
+import {
+  parseFromTypeToString,
+  parseStringToType,
+} from '@utilities/functions/parse';
 
 type UseBleRpiDeviceCharacteristic = {
   read: () => Promise<string | number | boolean>;
@@ -15,7 +18,7 @@ type UseBleRpiDeviceCharacteristic = {
 
 export function useBleRpiDeviceCharacteristic(
   characteristicKey: BleRpiDeviceCharacteristicKeys,
-  valueType: ValueType,
+  valueType: BluetoothValueType,
 ): UseBleRpiDeviceCharacteristic {
   const { bleRpiDeviceServicesAndCharacteristics } = useSelector(
     (state: RootState) => state.bluetooth,
@@ -44,38 +47,15 @@ export function useBleRpiDeviceCharacteristic(
 
     const decoded = base64.decode(returnedCharacteristic.value);
 
-    switch (valueType) {
-      case 'string':
-        return decoded;
-      case 'number':
-        return parseFloat(decoded);
-      case 'boolean':
-        return decoded === '1';
-      default:
-        return decoded;
-    }
+    const value = parseStringToType(decoded, valueType);
+
+    return value ?? '';
   };
 
   const write: UseBleRpiDeviceCharacteristic['write'] = async (value) => {
     const characteristic = getCharacteristic();
 
-    let stringValue: string;
-
-    switch (typeof value) {
-      case 'string':
-        stringValue = value;
-        break;
-      case 'number':
-        stringValue = value.toString();
-        break;
-      case 'boolean':
-        stringValue = value ? '1' : '0';
-        break;
-      default:
-        throw new Error(
-          'the value is an invalid data type, valid types are string, number, and boolean',
-        );
-    }
+    const stringValue = parseFromTypeToString(value);
 
     const encoded = base64.encode(stringValue);
 

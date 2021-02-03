@@ -1,18 +1,18 @@
-import { ControlEntities } from '@models/ControlEntities';
-
-export const declaredControlEntities: ControlEntities = {
+export const declaredControlEntities = {
   wheelMotor: {
-    name: 'Wheel motor',
+    name: 'wheel_motor',
+    pulseInterval: 0,
     degree: 0,
-    speed: 0,
     direction: 0,
     enable: 0,
   },
   screwMotor: {
-    name: 'Screw motor',
+    name: 'screw_motor',
+    pulseInterval: 0,
     degree: 0,
-    speed: 0,
     direction: 0,
     enable: 0,
   },
 };
+
+export type DeclaredControlEntities = typeof declaredControlEntities;
