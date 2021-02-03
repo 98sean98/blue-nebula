@@ -14,9 +14,10 @@ export const BleLayer: FC = ({ children }) => {
   }, [dispatch, bleManager]);
 
   useEffect(() => {
-    bleManager.onStateChange((newState) => {
+    const subscription = bleManager.onStateChange((newState) => {
       dispatch(setBleManagerState(newState));
     });
+    return () => subscription.remove();
   }, [dispatch, bleManager]);
 
   return <>{children}</>;
