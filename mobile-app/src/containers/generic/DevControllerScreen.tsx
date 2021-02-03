@@ -1,29 +1,22 @@
 import React, { FC, useState } from 'react';
 import { Alert, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Input } from '@ui-kitten/components';
+import { useSelector } from 'react-redux';
+import { Button, Input, Text } from '@ui-kitten/components';
 
 import { DevControllerScreenProps } from '@navigation/navigationTypes';
 
 import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp/rootReducer';
-import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
 
 import { BleRunIdleButton } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
 export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
-  const dispatch = useDispatch();
-  const { isScanningAndConnecting, isBleRpiDeviceConnected } = useSelector(
+  const { isBleRpiDeviceConnected } = useSelector(
     (state: RootState) => state.bluetooth,
   );
-
-  const onScanAndConnectPress = () => {
-    if (!isScanningAndConnecting) dispatch(connectAsync());
-    else dispatch(cancelConnect());
-  };
 
   const [writeValue, setWriteValue] = useState<string>(
     'motor_1, 10, 2203.24, 1, 0',
@@ -59,13 +52,6 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
   return (
     <View style={[{ flex: 1 }]}>
       <View style={tailwind('p-4')}>
-        {!isBleRpiDeviceConnected ? (
-          <Button onPress={onScanAndConnectPress}>
-            {isScanningAndConnecting
-              ? 'Stop scanning and connecting'
-              : 'Scan and connect'}
-          </Button>
-        ) : null}
         {isBleRpiDeviceConnected ? (
           <>
             <Input
@@ -81,7 +67,12 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
             </Button>
             <BleRunIdleButton style={tailwind('mt-2')} />
           </>
-        ) : null}
+        ) : (
+          <Text>
+            Bluetooth is not connected, please press the bluetooth icon in the
+            navigation bar.
+          </Text>
+        )}
       </View>
     </View>
   );

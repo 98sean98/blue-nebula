@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import { ImageProps, Platform } from 'react-native';
+import { ImageProps, Platform, View } from 'react-native';
 import { StackHeaderProps } from '@react-navigation/stack/lib/typescript/src/types';
 import {
   Icon,
@@ -11,6 +11,10 @@ import {
   Divider,
 } from '@ui-kitten/components';
 import { RenderProp } from '@ui-kitten/components/devsupport';
+
+import { tailwind } from '@styles/tailwind';
+
+import { BleConnectIcon } from '@components/shared/bluetooth';
 
 const renderIcon = (
   iconName: string,
@@ -33,9 +37,11 @@ export const CustomHeader: FC<StackHeaderProps> = ({
       ? options.title
       : route.name;
 
-  const renderBackAction = () => (
+  const iconProps = { width: 20, height: 20 };
+
+  const renderLeftAction = () => (
     <TopNavigationAction
-      icon={(props) => <Icon {...props} name={'arrow-back'} />}
+      icon={renderIcon('arrow-back', iconProps)}
       onPress={() => navigation.goBack()}
     />
   );
@@ -54,17 +60,14 @@ export const CustomHeader: FC<StackHeaderProps> = ({
 
   const renderMenuAction = () => (
     <TopNavigationAction
-      icon={renderIcon('more-vertical')}
+      icon={renderIcon('more-vertical', iconProps)}
       onPress={toggleMenu}
     />
   );
 
   const renderRightActions = () => (
-    <>
-      <TopNavigationAction
-        icon={renderIcon('bluetooth')}
-        onPress={() => navigation.navigate('DevController')}
-      />
+    <View style={tailwind('flex-row items-center')}>
+      <BleConnectIcon iconProps={iconProps} style={tailwind('w-10 h-10')} />
       <OverflowMenu
         anchor={renderMenuAction}
         visible={isMenuVisible}
@@ -73,7 +76,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
         {menuItems.map(({ iconName, text, routeName }, index) => (
           <MenuItem
             key={index}
-            accessoryLeft={renderIcon(iconName)}
+            accessoryLeft={renderIcon(iconName, iconProps)}
             title={text}
             onPress={() => {
               setIsMenuVisible(false);
@@ -82,7 +85,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
           />
         ))}
       </OverflowMenu>
-    </>
+    </View>
   );
 
   const marginTop = Platform.OS === 'ios' ? top : 0; // only on ios to give space to status bar
@@ -92,7 +95,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
       <TopNavigation
         title={title as string}
         alignment={'center'}
-        accessoryLeft={previous ? renderBackAction : undefined}
+        accessoryLeft={previous ? renderLeftAction : undefined}
         accessoryRight={renderRightActions}
         style={{ marginTop }}
       />
