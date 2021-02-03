@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as base64 from 'base-64';
 
 import { BleRpiDeviceCharacteristicKeys } from '@models/BleRpiDevice';
 
 import { RootState } from '@reduxApp/rootReducer';
 import { Characteristic } from 'react-native-ble-plx';
-import { setBleRpiDeviceServicesCharacteristics } from '@reduxApp/bluetooth/actions';
 
 type ValueType = 'string' | 'number' | 'boolean';
 
@@ -21,7 +20,6 @@ export function useBleRpiDeviceCharacteristic(
   const { bleRpiDeviceServicesAndCharacteristics } = useSelector(
     (state: RootState) => state.bluetooth,
   );
-  const dispatch = useDispatch();
 
   const getCharacteristic = (): Characteristic => {
     if (!bleRpiDeviceServicesAndCharacteristics)
@@ -43,17 +41,6 @@ export function useBleRpiDeviceCharacteristic(
     const returnedCharacteristic = await characteristic.read();
     if (!returnedCharacteristic?.value)
       throw new Error('read value is undefined');
-
-    // save the newly returned characteristic in redux
-    dispatch(
-      setBleRpiDeviceServicesCharacteristics({
-        bleRpiDeviceServicesAndCharacteristics: {
-          characteristics: {
-            [characteristicKey]: returnedCharacteristic,
-          },
-        },
-      }),
-    );
 
     const decoded = base64.decode(returnedCharacteristic.value);
 
