@@ -1,4 +1,4 @@
-import { all, fork, takeLatest, take, cancel } from 'redux-saga/effects';
+import { fork, takeLatest, take, cancel } from 'redux-saga/effects';
 
 import { BluetoothConstants } from '../constants';
 
@@ -22,5 +22,6 @@ function* watchMonitorConnection() {
 }
 
 export function* bluetoothSagas() {
-  yield all([fork(watchConnectAsync), fork(watchMonitorConnection)]);
+  yield fork(watchConnectAsync);
+  yield fork(watchMonitorConnection);
 }

@@ -5,6 +5,7 @@ import { BleError, Device } from 'react-native-ble-plx';
 import {
   setIsBleRpiDeviceConnected,
   setIsMonitoringBleRpiDeviceConnection,
+  stopMonitoringConnection,
 } from '../actions';
 import { BluetoothState } from '../types';
 
@@ -52,6 +53,7 @@ export function* monitorConnection(): Generator<any, void> {
     if (yield cancelled()) {
       monitoringChannel.close();
       yield put(setIsMonitoringBleRpiDeviceConnection(false));
+      yield put(stopMonitoringConnection());
     }
   }
 }

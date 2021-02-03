@@ -1,8 +1,9 @@
 import { buffers, eventChannel } from 'redux-saga';
-import { cancelled, take } from 'redux-saga/effects';
+import { cancelled, put, take } from 'redux-saga/effects';
 import { BleError, BleManager, Device } from 'react-native-ble-plx';
 
 import { RpiDevice } from '@config/RpiDevice';
+import { cancelConnect } from '@reduxApp/bluetooth/actions';
 
 export function* bleScan(
   bleManager: BleManager,
@@ -52,6 +53,7 @@ export function* bleScan(
     }
   } catch (error) {
     console.log('caught unknown error while scanning for devices:', error);
+    yield put(cancelConnect());
     return;
   } finally {
     if (yield cancelled()) {
