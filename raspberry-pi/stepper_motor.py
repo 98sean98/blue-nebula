@@ -1,7 +1,7 @@
 from motor import Motor
 
-class StepMotor(Motor):
-    '''A step motor instance connected to the device'''
+class StepperMotor(Motor):
+    '''A stepper motor instance connected to the device'''
 
     # parameters (order of the dictionary keys is important)
     parameters = {
@@ -11,16 +11,15 @@ class StepMotor(Motor):
         'enable': 0 # 0 is LOW, 1 is HIGH
     }
 
-    def __init__(self, motor_name, direction_pin, step_pin, enable_pin):
-        self.motor_name = motor_name
+    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin):
         # pins
+        self.pulse_pin = pulse_pin
         self.direction_pin = direction_pin
-        self.step_pin = step_pin
         self.enable_pin = enable_pin
         super().__init__(motor_name)
 
     def get_pins(self):
-        pins = {'direction_pin': self.direction_pin, 'step_pin': self.step_pin, 'enable_pin': self.enable_pin}
+        pins = {'pulse_pin': self.pulse_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin}
         return pins
 
     def set_parameters(self, parameters):

@@ -5,8 +5,9 @@ import dbus
 from advertisement import Advertisement
 from service import Application, Service, Characteristic, Descriptor
 
-from stepmotor import StepMotor
-from dcmotor import DCMotor
+from stepper_motor import StepperMotor
+from dc_motor import DCMotor
+
 import utilities
 
 GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"
@@ -21,9 +22,9 @@ class RobotControllerService(Service):
     ROBOT_CONTROLLER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, index):
-        self.step_motors = {
-            'wheel_motor': StepMotor('wheel_motor', 0,1,2),
-            'screw_motor': StepMotor('screw_motor', 3,4,5),
+        self.stepper_motors = {
+            'wheel_motor': StepperMotor('wheel_motor', 0, 1, 2),
+            'screw_motor': StepperMotor('screw_motor', 3, 4, 5)
         }
         self.dc_motors = {
         }
@@ -31,7 +32,7 @@ class RobotControllerService(Service):
 
         Service.__init__(self, index, self.ROBOT_CONTROLLER_SVC_UUID, True)
         self.add_characteristic(RunIdleCharacteristic(self))
-        self.add_characteristic(StepMotorsCharacteristic(self))
+        self.add_characteristic(StepperMotorsCharacteristic(self))
         self.add_characteristic(DCMotorsCharacteristic(self))
 
     def get_is_running(self):
@@ -46,11 +47,11 @@ class RobotControllerService(Service):
                 motor.set_is_running(is_running)
 
     def get_all_motors(self):
-        return {'step_motors': self.step_motors, 'dc_motors': self.dc_motors}
+        return {'stepper_motors': self.stepper_motors, 'dc_motors': self.dc_motors}
 
     def get_motor(self, motor_type, motor_name):
         motors_of_type = None
-        if motor_type == 'step_motor': motors_of_type = self.step_motors
+        if motor_type == 'stepper_motor': motors_of_type = self.stepper_motors
         if motor_type == 'dc_motor': motors_of_type = self.dc_motors
 
         if motors_of_type is None:
@@ -101,32 +102,32 @@ class RunIdleDescriptor(Descriptor):
         desc = self.DESCRIPTOR_VALUE
         return utilities.encode_base64(desc)
 
-class StepMotorsCharacteristic(Characteristic):
+class StepperMotorsCharacteristic(Characteristic):
     CHARACTERISTIC_UUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
 
     def __init__(self, service):
         Characteristic.__init__(
                 self, self.CHARACTERISTIC_UUID,
                 ["read", "write"], service)
-        self.add_descriptor(StepMotorsDescriptor(self))
+        self.add_descriptor(StepperMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
-        parameters_keys = list(StepMotor('blank', 0, 0, 0).get_parameters().keys())
+        parameters_keys = list(StepperMotor('blank', 0, 0, 0).get_parameters().keys())
         decoded = utilities.decode_motor_info(value, parameters_keys)
         print("Write step motor:", decoded)
-        self.service.set_motor('step_motor', decoded['motor_name'], decoded['parameters'])
+        self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
 
     def ReadValue(self, options):
         # encode the motor info for each step motor in the service
-        all_step_motors = self.service.get_all_motors()['step_motors']
-        list_of_motors = list(all_step_motors.items())
+        all_stepper_motors = self.service.get_all_motors()['stepper_motors']
+        list_of_motors = list(all_stepper_motors.items())
         encoded_info_list = [utilities.encode_motor_info(motor.motor_name, motor.get_parameters()) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
         # combine motor info into one long list
         combined = [item for sublist in encoded_info_list for item in sublist]
         print("read step motors:", utilities.decode_base64(combined))
         return combined
 
-class StepMotorsDescriptor(Descriptor):
+class StepperMotorsDescriptor(Descriptor):
     DESCRIPTOR_UUID = "2902"
     DESCRIPTOR_VALUE = "Step motors control"
 
