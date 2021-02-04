@@ -1,10 +1,12 @@
+import { DeclarableValueType, Value } from '@models/ValueType';
+
 import { parseStringToNumber } from './parseStringToNumber';
 import { parseStringToBoolean } from './parseStringToBoolean';
 
 export const parseStringToType = (
   value: string,
-  valueType: 'string' | 'number' | 'boolean',
-): string | number | boolean | undefined => {
+  valueType: DeclarableValueType,
+): Value | undefined => {
   let parsedValue;
 
   switch (valueType) {

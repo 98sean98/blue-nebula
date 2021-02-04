@@ -1,12 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardProps, Input, Text, Button } from '@ui-kitten/components';
+import { Card, CardProps, Text } from '@ui-kitten/components';
 import { RenderProp } from '@ui-kitten/components/devsupport';
 
 import { tailwind } from '@styles/tailwind';
 
-import { BluetoothValueType } from '@models/BluetoothValueType';
+import { DeclarableValueType } from '@models/ValueType';
 
 import { DeclaredControlEntities } from '@config/declaredControlEntities';
 import { Direction } from '@config/Direction';
@@ -14,7 +14,15 @@ import { Direction } from '@config/Direction';
 import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
 
-import { parseStringToType } from '@utilities/functions/parse';
+import {
+  ControlEntityParameterButton,
+  ControlEntityParameterInput,
+} from '@components/shared/actionable';
+
+import {
+  parseFromTypeToString,
+  parseStringToType,
+} from '@utilities/functions/parse';
 
 interface StepMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof DeclaredControlEntities;
@@ -30,28 +38,10 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
 
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
-  const [degree, setDegree] = useState<string>(
-    controlEntities[entity].degree?.toString(),
-  );
-  const [pulseInterval, setPulseInterval] = useState<string>(
-    controlEntities[entity].pulseInterval?.toString(),
-  );
-
-  const onInputBlur = () => {
-    dispatch(
-      setControlEntities({
-        [entity]: {
-          degree: parseStringToType(degree || '0', 'number'),
-          pulseInterval: parseStringToType(pulseInterval || '0', 'number'),
-        },
-      }),
-    );
-  };
-
-  const onButtonChange = (
+  const onParameterChange = (
     param: string,
     value: string,
-    valueType: BluetoothValueType,
+    valueType: DeclarableValueType,
   ) => {
     dispatch(
       setControlEntities({
@@ -62,11 +52,6 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
     );
   };
 
-  useEffect(() => {
-    setDegree(controlEntities[entity].degree.toString());
-    setPulseInterval(controlEntities[entity].pulseInterval.toString());
-  }, [controlEntities, entity]);
-
   const renderHeader: RenderProp<ViewProps> = (headerViewProps) => (
     <View {...headerViewProps}>
       <View style={tailwind('flex-row justify-between')}>
@@ -75,33 +60,29 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
           <Text category={'label'}>{subtitle ?? 'Step motor control'}</Text>
         </View>
         <View style={tailwind('flex-row items-center')}>
-          <Button
-            size={'small'}
-            status={'info'}
-            appearance={
-              controlEntities[entity].direction === Direction.CW
-                ? 'outline'
-                : 'ghost'
-            }
-            onPress={() =>
-              onButtonChange('direction', Direction.CW.toString(), 'number')
+          <ControlEntityParameterButton
+            isSelected={controlEntities[entity].direction === Direction.CW}
+            onSelected={() =>
+              onParameterChange(
+                'direction',
+                parseFromTypeToString(Direction.CW),
+                'number',
+              )
             }>
             CW
-          </Button>
-          <Button
+          </ControlEntityParameterButton>
+          <ControlEntityParameterButton
             style={tailwind('ml-1')}
-            size={'small'}
-            status={'info'}
-            appearance={
-              controlEntities[entity].direction === Direction.CCW
-                ? 'outline'
-                : 'ghost'
-            }
-            onPress={() =>
-              onButtonChange('direction', Direction.CCW.toString(), 'number')
+            isSelected={controlEntities[entity].direction === Direction.CCW}
+            onSelected={() =>
+              onParameterChange(
+                'direction',
+                parseFromTypeToString(Direction.CCW),
+                'number',
+              )
             }>
             CCW
-          </Button>
+          </ControlEntityParameterButton>
         </View>
       </View>
     </View>
@@ -109,23 +90,25 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
 
   return (
     <Card disabled header={renderHeader} {...props}>
-      <Input
+      <ControlEntityParameterInput
         keyboardType={'decimal-pad'}
         label={'Degree'}
         placeholder={'radial distance to be travelled by the motor'}
-        value={degree}
-        onChangeText={setDegree}
-        onBlur={onInputBlur}
+        reduxValue={controlEntities[entity].degree}
+        onInputBlur={(value) =>
+          onParameterChange('degree', value || '0', 'number')
+        }
       />
-      <Input
+      <ControlEntityParameterInput
         keyboardType={'decimal-pad'}
         label={'Pulse Interval'}
         placeholder={
           'step pulse (the lower this value, the faster the motor runs)'
         }
-        value={pulseInterval}
-        onChangeText={setPulseInterval}
-        onBlur={onInputBlur}
+        reduxValue={controlEntities[entity].pulseInterval}
+        onInputBlur={(value) =>
+          onParameterChange('pulseInterval', value || '0', 'number')
+        }
       />
     </Card>
   );

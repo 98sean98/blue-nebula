@@ -1,4 +1,4 @@
-import { BluetoothValueType } from '@models/BluetoothValueType';
+import { DeclarableValueType, Value } from '@models/ValueType';
 
 import { parseStringToType } from '@utilities/functions/parse';
 
@@ -6,7 +6,7 @@ export const mapArrayToObject = (
   values: Array<string>,
   objectKeys: Array<{
     key: string;
-    valueType: BluetoothValueType;
+    valueType: DeclarableValueType;
   }>,
 ) => {
   if (values.length !== objectKeys.length)
@@ -14,7 +14,7 @@ export const mapArrayToObject = (
       'mapArrayToObject does not receive the same number of elements in the values array, and the objectKeys array',
     );
 
-  const object: Record<string, string | number | boolean | undefined> = {};
+  const object: Record<string, Value | undefined> = {};
 
   objectKeys.forEach(({ key, valueType }, index) => {
     const rawValue = values[index];

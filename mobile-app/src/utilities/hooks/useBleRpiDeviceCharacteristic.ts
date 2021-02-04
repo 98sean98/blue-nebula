@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import * as base64 from 'base-64';
 
 import { BleRpiDeviceCharacteristicKeys } from '@models/BleRpiDevice';
-import { BluetoothValueType } from '@models/BluetoothValueType';
+import { DeclarableValueType } from '@models/ValueType';
 
 import { RootState } from '@reduxApp/rootReducer';
 import {
@@ -18,7 +18,7 @@ type UseBleRpiDeviceCharacteristic = {
 
 export function useBleRpiDeviceCharacteristic(
   characteristicKey: BleRpiDeviceCharacteristicKeys,
-  valueType: BluetoothValueType,
+  valueType: DeclarableValueType,
 ): UseBleRpiDeviceCharacteristic {
   const { bleRpiDeviceServicesAndCharacteristics } = useSelector(
     (state: RootState) => state.bluetooth,

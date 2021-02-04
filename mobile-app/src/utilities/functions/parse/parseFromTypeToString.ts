@@ -1,6 +1,6 @@
-export const parseFromTypeToString = (
-  value: string | number | boolean | undefined,
-): string => {
+import { Value } from '@models/ValueType';
+
+export const parseFromTypeToString = (value: Value | undefined): string => {
   let stringValue: string;
 
   switch (typeof value) {

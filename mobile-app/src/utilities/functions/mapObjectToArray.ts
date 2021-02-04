@@ -1,12 +1,12 @@
-import { BluetoothValueType } from '@models/BluetoothValueType';
+import { DeclarableValueType, Value } from '@models/ValueType';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
 
 export const mapObjectToArray = (
-  object: Record<string, string | number | boolean | undefined>,
+  object: Record<string, Value | undefined>,
   objectKeys: Array<{
     key: string;
-    valueType: BluetoothValueType;
+    valueType: DeclarableValueType;
   }>,
 ): Array<string> =>
   objectKeys.map(({ key }) => parseFromTypeToString(object[key]));
