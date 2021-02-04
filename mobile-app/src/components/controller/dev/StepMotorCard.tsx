@@ -17,6 +17,7 @@ import { setControlEntities } from '@reduxApp/control/actions';
 import {
   ControlEntityParameterButton,
   ControlEntityParameterInput,
+  ControlEntityParameterToggle,
 } from '@components/shared/actionable';
 
 import {
@@ -54,37 +55,8 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
 
   const renderHeader: RenderProp<ViewProps> = (headerViewProps) => (
     <View {...headerViewProps}>
-      <View style={tailwind('flex-row justify-between')}>
-        <View>
-          <Text category={'h4'}>{title}</Text>
-          <Text category={'label'}>{subtitle ?? 'Step motor control'}</Text>
-        </View>
-        <View style={tailwind('flex-row items-center')}>
-          <ControlEntityParameterButton
-            isSelected={controlEntities[entity].direction === Direction.CW}
-            onSelected={() =>
-              onParameterChange(
-                'direction',
-                parseFromTypeToString(Direction.CW),
-                'number',
-              )
-            }>
-            CW
-          </ControlEntityParameterButton>
-          <ControlEntityParameterButton
-            style={tailwind('ml-1')}
-            isSelected={controlEntities[entity].direction === Direction.CCW}
-            onSelected={() =>
-              onParameterChange(
-                'direction',
-                parseFromTypeToString(Direction.CCW),
-                'number',
-              )
-            }>
-            CCW
-          </ControlEntityParameterButton>
-        </View>
-      </View>
+      <Text category={'h4'}>{title}</Text>
+      <Text category={'label'}>{subtitle ?? 'Step motor control'}</Text>
     </View>
   );
 
@@ -110,6 +82,40 @@ export const StepMotorCard: FC<StepMotorCardProps> = ({
           onParameterChange('pulseInterval', value || '0', 'number')
         }
       />
+      <View style={tailwind('mt-3 flex-row justify-between items-center')}>
+        <View style={tailwind('flex-row items-center')}>
+          <ControlEntityParameterButton
+            isSelected={controlEntities[entity].direction === Direction.CW}
+            onSelected={() =>
+              onParameterChange(
+                'direction',
+                parseFromTypeToString(Direction.CW),
+                'number',
+              )
+            }>
+            CW
+          </ControlEntityParameterButton>
+          <ControlEntityParameterButton
+            isSelected={controlEntities[entity].direction === Direction.CCW}
+            onSelected={() =>
+              onParameterChange(
+                'direction',
+                parseFromTypeToString(Direction.CCW),
+                'number',
+              )
+            }>
+            CCW
+          </ControlEntityParameterButton>
+        </View>
+        <ControlEntityParameterToggle
+          style={tailwind('ml-1')}
+          checked={controlEntities[entity].enable === 1}
+          onChange={(checked) =>
+            onParameterChange('enable', checked ? '1' : '0', 'number')
+          }>
+          Enable
+        </ControlEntityParameterToggle>
+      </View>
     </Card>
   );
 };
