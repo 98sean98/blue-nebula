@@ -1,13 +1,20 @@
 import React, { FC } from 'react';
-import { SimpleControllerScreenProps } from '@navigation/navigationTypes';
 import {
   Diameter,
   SDR,
   SimpleControllerOptionType,
 } from '@models/SimpleController';
 import { ListRenderItem, View, FlatList } from 'react-native';
+
 import { tailwind } from '@styles/tailwind';
+
+import { SimpleControllerScreenProps } from '@navigation/navigationTypes';
+
 import { SimpleControllerOption } from '@components/controller/simple';
+import {
+  BleRunIdleButton,
+  RenderBleComponent,
+} from '@components/shared/bluetooth';
 
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
@@ -35,14 +42,17 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
 
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        style={tailwind('flex-1 px-4')}
-        data={simpleOptions}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        numColumns={2}
-      />
-    </View>
+    <RenderBleComponent>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          style={tailwind('flex-1 px-4')}
+          data={simpleOptions}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          numColumns={2}
+        />
+        <BleRunIdleButton style={tailwind('m-4')} />
+      </View>
+    </RenderBleComponent>
   );
 };

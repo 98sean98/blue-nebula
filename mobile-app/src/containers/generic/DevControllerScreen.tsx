@@ -8,7 +8,7 @@ import { tailwind } from '@styles/tailwind';
 
 import { TestingMode, RealTimeControlMode } from '@components/controller/dev';
 import {
-  BleRefreshStateButton,
+  BleReadDeviceButton,
   BleRunIdleButton,
   RenderBleComponent,
 } from '@components/shared/bluetooth';
@@ -37,7 +37,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
         </TabView>
 
         <View style={tailwind('m-4 flex-row justify-between')}>
-          <BleRefreshStateButton style={{ width: '49%' }} />
+          <BleReadDeviceButton style={{ width: '49%' }} />
           <BleRunIdleButton style={{ width: '49%' }} />
         </View>
       </View>

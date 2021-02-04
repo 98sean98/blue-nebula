@@ -2,12 +2,13 @@ import React, { FC } from 'react';
 import { GestureResponderEvent } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
 
-import { useControlEntities } from '@utilities/hooks';
 import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
 
-interface BleRefreshStateButtonProps extends ButtonProps {}
+import { useControlEntities } from '@utilities/hooks';
 
-export const BleRefreshStateButton: FC<BleRefreshStateButtonProps> = ({
+interface BleReadDeviceButtonProps extends ButtonProps {}
+
+export const BleReadDeviceButton: FC<BleReadDeviceButtonProps> = ({
   onPress: onHigherOrderPress,
   ...props
 }) => {
@@ -31,7 +32,7 @@ export const BleRefreshStateButton: FC<BleRefreshStateButtonProps> = ({
 
   return (
     <Button {...props} onPress={onPress}>
-      Refresh State
+      Read Device
     </Button>
   );
 };

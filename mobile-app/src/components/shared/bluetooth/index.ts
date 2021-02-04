@@ -1,6 +1,6 @@
 export { BleLayer } from './BleLayer';
 export { BleConnectIcon } from './BleConnectIcon';
-export { BleRefreshStateButton } from './BleRefreshStateButton';
+export { BleReadDeviceButton } from './BleReadDeviceButton';
 export { BleRunIdleButton } from './BleRunIdleButton';
 
 export { RenderBleComponent } from './RenderBleComponent';

@@ -25,12 +25,12 @@ import {
   parseStringToType,
 } from '@utilities/functions/parse';
 
-interface StepMotorCardProps extends Omit<CardProps, 'header'> {
+interface StepperMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof DeclaredControlEntities;
   header: { title: string; subtitle?: string };
 }
 
-export const StepMotorCard: FC<StepMotorCardProps> = ({
+export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   entity,
   header: { title, subtitle },
   ...props
