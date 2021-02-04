@@ -1,12 +1,17 @@
 from multiprocessing import Process
 from time import sleep, time
+import RPi.GPIO as GPIO
 
-from motor import Motor
+from stepper_motor import StepperMotor
 
-p = Process(target=sleep, args=(60,))
+GPIO.setmode(GPIO.BCM)
+
+p = Process(target=sleep, args=(180,))
 p.start()
 
-motor = Motor('motor')
+motor = StepperMotor('motor', 17, 27, 22)
+
+motor.set_parameters({'pulse_interval': 300, 'degree': 250000, 'direction': 0, 'enable': 1})
 
 while p.is_alive():
     user_prompt = input('Enter command: ')

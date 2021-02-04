@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import dbus
+import RPi.GPIO as GPIO
 
 from advertisement import Advertisement
 from service import Application, Service, Characteristic, Descriptor
@@ -23,8 +24,8 @@ class RobotControllerService(Service):
 
     def __init__(self, index):
         self.stepper_motors = {
-            'wheel_motor': StepperMotor('wheel_motor', 0, 1, 2),
-            'screw_motor': StepperMotor('screw_motor', 3, 4, 5)
+            'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22)
+            # 'screw_motor': StepperMotor('screw_motor', 14, 15, 18)
         }
         self.dc_motors = {
         }
@@ -179,6 +180,8 @@ class DCMotorsDescriptor(Descriptor):
         desc = self.DESCRIPTOR_VALUE
         return utilities.encode_base64(desc)
 
+GPIO.setmode(GPIO.BCM)
+
 app = Application()
 app.add_service(RobotControllerService(0))
 app.register()
@@ -190,3 +193,4 @@ try:
     app.run()
 except KeyboardInterrupt:
     app.quit()
+    GPIO.cleanup()

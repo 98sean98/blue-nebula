@@ -36,10 +36,14 @@ class Motor:
         self.process = Process(target=self.run)
 
     def terminate_process(self):
+        self.stop_running()
         if (self.process is not None and self.process.is_alive()):
             self.process.terminate()
             self.process.join()
 
     def run(self):
         sleep(10)
-        print(f"{motor_name} finished running after 10 seconds!"")
+        print(f"{motor_name} finished running after 10 seconds!")
+
+    def stop_running(self):
+        print(f"{motor_name} has been stopped.")
