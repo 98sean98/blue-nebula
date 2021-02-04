@@ -1,7 +1,12 @@
+from multiprocessing import Process
+from time import sleep
+
 class Motor:
     '''This is a generic motor connected to the device.'''
 
     is_running = False
+
+    process = None
 
     def __init__(self, motor_name):
         self.motor_name = motor_name
@@ -18,8 +23,23 @@ class Motor:
             self.is_running = is_running
             print(f"{self.motor_name} control has been changed, is_running is now {is_running}.")
 
-            # call set_gpio
-            self.set_gpio()
+            # terminate the process if it is alive
+            self.terminate_process()
 
-    def set_gpio(self):
-        print(f"{self.motor_name} control gpio has been set.")
+            if is_running:
+                # spawn a new process
+                self.spawn_process()
+                # start the process
+                self.process.start()
+
+    def spawn_process(self):
+        self.process = Process(target=self.run)
+
+    def terminate_process(self):
+        if (self.process is not None and self.process.is_alive()):
+            self.process.terminate()
+            self.process.join()
+
+    def run(self):
+        sleep(10)
+        print(f"{motor_name} finished running after 10 seconds!"")
