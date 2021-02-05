@@ -1,76 +1,51 @@
-import React, { FC } from 'react';
-import { View, ViewProps } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardProps, Text } from '@ui-kitten/components';
-import { RenderProp } from '@ui-kitten/components/devsupport';
+import React, { ComponentProps, FC, useCallback } from 'react';
+import { View } from 'react-native';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { DeclarableValueType } from '@models/ValueType';
-
 import { DeclaredControlEntities } from '@config/declaredControlEntities';
-import { Direction } from '@config/Direction';
+
+import { DeclarableValueType } from '@models/ValueType';
+import { ControlInterface } from '@models/ControlInterface';
+import { Direction, Enable } from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
-import { setControlEntities } from '@reduxApp/control/actions';
 
+import { ControlEntityCard } from '@components/shared/interface';
 import {
   ControlEntityParameterButton,
   ControlEntityParameterInput,
   ControlEntityParameterToggle,
 } from '@components/shared/actionable';
+import { StepperMotorContinuousControlButtons } from './StepperMotorContinuousControlButtons';
 
-import {
-  parseFromTypeToString,
-  parseStringToType,
-} from '@utilities/functions/parse';
+import { useControlEntities } from '@utilities/hooks';
+import { parseFromTypeToString } from '@utilities/functions/parse';
 
-interface StepperMotorCardProps extends Omit<CardProps, 'header'> {
+interface StepperMotorCardProps
+  extends ComponentProps<typeof ControlEntityCard> {
   entity: keyof DeclaredControlEntities;
-  header: { title: string; subtitle?: string };
+  controlInterface: ControlInterface;
 }
 
 export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   entity,
-  header: { title, subtitle },
+  controlInterface,
   ...props
 }) => {
-  const dispatch = useDispatch();
-
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
-  const onParameterChange = (
-    param: string,
-    value: string,
-    valueType: DeclarableValueType,
-  ) => {
-    dispatch(
-      setControlEntities({
-        [entity]: {
-          [param]: parseStringToType(value, valueType),
-        },
-      }),
-    );
-  };
+  const { setControlEntityByParameter } = useControlEntities();
 
-  const renderHeader: RenderProp<ViewProps> = (headerViewProps) => (
-    <View {...headerViewProps}>
-      <Text category={'h4'}>{title}</Text>
-      <Text category={'label'}>{subtitle ?? 'Step motor control'}</Text>
-    </View>
+  const onParameterChange = useCallback(
+    (param: string, value: string, valueType: DeclarableValueType) =>
+      setControlEntityByParameter(entity, param, value, valueType),
+    [entity, setControlEntityByParameter],
   );
 
   return (
-    <Card disabled header={renderHeader} {...props}>
-      <ControlEntityParameterInput
-        keyboardType={'decimal-pad'}
-        label={'Degree'}
-        placeholder={'radial distance to be travelled by the motor'}
-        reduxValue={controlEntities[entity].degree}
-        onInputBlur={(value) =>
-          onParameterChange('degree', value || '0', 'number')
-        }
-      />
+    <ControlEntityCard {...props}>
       <ControlEntityParameterInput
         keyboardType={'decimal-pad'}
         label={'Pulse Interval'}
@@ -82,40 +57,63 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
           onParameterChange('pulseInterval', value || '0', 'number')
         }
       />
-      <View style={tailwind('mt-3 flex-row justify-between items-center')}>
-        <View style={tailwind('flex-row items-center')}>
-          <ControlEntityParameterButton
-            isSelected={controlEntities[entity].direction === Direction.CW}
-            onSelected={() =>
-              onParameterChange(
-                'direction',
-                parseFromTypeToString(Direction.CW),
-                'number',
-              )
-            }>
-            CW
-          </ControlEntityParameterButton>
-          <ControlEntityParameterButton
-            isSelected={controlEntities[entity].direction === Direction.CCW}
-            onSelected={() =>
-              onParameterChange(
-                'direction',
-                parseFromTypeToString(Direction.CCW),
-                'number',
-              )
-            }>
-            CCW
-          </ControlEntityParameterButton>
-        </View>
-        <ControlEntityParameterToggle
-          style={tailwind('ml-1')}
-          checked={controlEntities[entity].enable === 1}
-          onChange={(checked) =>
-            onParameterChange('enable', checked ? '1' : '0', 'number')
-          }>
-          Enable
-        </ControlEntityParameterToggle>
-      </View>
-    </Card>
+      {controlInterface === ControlInterface.Testing ? (
+        <>
+          <ControlEntityParameterInput
+            keyboardType={'decimal-pad'}
+            label={'Degree'}
+            placeholder={'radial distance to be travelled by the motor'}
+            reduxValue={controlEntities[entity].degree}
+            onInputBlur={(value) =>
+              onParameterChange('degree', value || '0', 'number')
+            }
+          />
+          <View style={tailwind('mt-3 flex-row justify-between items-center')}>
+            <View style={tailwind('flex-row items-center')}>
+              <ControlEntityParameterButton
+                isSelected={controlEntities[entity].direction === Direction.CCW}
+                onSelected={() =>
+                  onParameterChange(
+                    'direction',
+                    parseFromTypeToString(Direction.CCW),
+                    'number',
+                  )
+                }>
+                CCW
+              </ControlEntityParameterButton>
+              <ControlEntityParameterButton
+                isSelected={controlEntities[entity].direction === Direction.CW}
+                onSelected={() =>
+                  onParameterChange(
+                    'direction',
+                    parseFromTypeToString(Direction.CW),
+                    'number',
+                  )
+                }>
+                CW
+              </ControlEntityParameterButton>
+            </View>
+            <ControlEntityParameterToggle
+              style={tailwind('ml-1')}
+              checked={controlEntities[entity].enable === Enable.High}
+              onChange={(checked) =>
+                onParameterChange(
+                  'enable',
+                  checked ? Enable.High.toString() : Enable.Low.toString(),
+                  'number',
+                )
+              }>
+              Enable
+            </ControlEntityParameterToggle>
+          </View>
+        </>
+      ) : null}
+      {controlInterface === ControlInterface.RealTimeControl ? (
+        <StepperMotorContinuousControlButtons
+          entity={entity}
+          style={tailwind('mt-4 w-4/5 self-center')}
+        />
+      ) : null}
+    </ControlEntityCard>
   );
 };

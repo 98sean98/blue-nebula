@@ -1,14 +1,15 @@
 import React, { FC } from 'react';
+import { FlatList, ListRenderItem, View } from 'react-native';
+
+import { tailwind } from '@styles/tailwind';
+
+import { SimpleControllerScreenProps } from '@navigation/navigationTypes';
+
 import {
   Diameter,
   SDR,
   SimpleControllerOptionType,
 } from '@models/SimpleController';
-import { ListRenderItem, View, FlatList } from 'react-native';
-
-import { tailwind } from '@styles/tailwind';
-
-import { SimpleControllerScreenProps } from '@navigation/navigationTypes';
 
 import { SimpleControllerOption } from '@components/controller/simple';
 import {

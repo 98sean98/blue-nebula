@@ -4,6 +4,10 @@ import { Divider } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
+import { ControlInterface } from '@models/ControlInterface';
+
+import { MotorCard } from '@containers/generic/DevControllerScreen';
+
 import { StepperMotorCard } from './StepperMotorCard';
 import {
   BleReadDeviceButton,
@@ -11,30 +15,23 @@ import {
 } from '@components/shared/bluetooth';
 import { Timer } from '@components/shared/actionable';
 
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
+interface TestingModeProps {
+  motors: Array<MotorCard>;
+}
 
-type Motor = {
-  entity: keyof DeclaredControlEntities;
-  title: string;
-};
-
-interface TestingModeProps {}
-
-export const TestingMode: FC<TestingModeProps> = () => {
-  const motors: Array<Motor> = [
-    { entity: 'wheelMotor', title: 'Wheel' },
-    { entity: 'screwMotor', title: 'Screw' },
-  ];
-
-  const renderItem: ListRenderItem<Motor> = ({ item: { entity, title } }) => (
+export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
+  const renderItem: ListRenderItem<typeof motors[0]> = ({
+    item: { entity, title },
+  }) => (
     <StepperMotorCard
       entity={entity}
-      header={{ title }}
+      controlInterface={ControlInterface.Testing}
+      headerParams={{ title }}
       style={[tailwind('my-2 mx-4')]}
     />
   );
 
-  const keyExtractor = (item: Motor) => item.entity;
+  const keyExtractor = (item: MotorCard) => item.entity;
 
   const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
   const onRunningStateChange = (newState: boolean) => {

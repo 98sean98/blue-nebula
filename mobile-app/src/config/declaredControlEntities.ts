@@ -1,4 +1,11 @@
-export const declaredControlEntities = {
+import { StepperMotor } from '@models/control-entity';
+
+export type DeclaredControlEntities = {
+  wheelMotor: StepperMotor;
+  screwMotor: StepperMotor;
+};
+
+export const declaredControlEntities: DeclaredControlEntities = {
   wheelMotor: {
     name: 'wheel_motor',
     pulseInterval: 0,
@@ -14,5 +21,3 @@ export const declaredControlEntities = {
     enable: 0,
   },
 };
-
-export type DeclaredControlEntities = typeof declaredControlEntities;
