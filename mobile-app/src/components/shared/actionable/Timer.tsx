@@ -1,10 +1,11 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { View } from 'react-native';
 import { Button, Layout, LayoutProps, Text } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
 import { parseTimerText } from '@utilities/functions/parse';
+import { useTimerContext } from '@utilities/hooks';
 
 interface TimerProps extends LayoutProps {
   shouldRun: boolean;
@@ -12,12 +13,9 @@ interface TimerProps extends LayoutProps {
 }
 
 export const Timer: FC<TimerProps> = ({ shouldRun, onHardReset, ...props }) => {
-  const [timerSeconds, setTimerSeconds] = useState<number>(0);
-
-  const memoizedTimerSeconds = useMemo(() => timerSeconds, [timerSeconds]);
+  const { timerSeconds, setTimerSeconds } = useTimerContext();
 
   useEffect(() => {
-    console.log({ shouldRun });
     if (shouldRun) {
       const interval = setInterval(
         () => setTimerSeconds((currentTimerSeconds) => currentTimerSeconds + 1),
@@ -25,7 +23,7 @@ export const Timer: FC<TimerProps> = ({ shouldRun, onHardReset, ...props }) => {
       );
       return () => clearInterval(interval);
     }
-  }, [shouldRun]);
+  }, [shouldRun, setTimerSeconds]);
 
   const onResetPress = () => {
     if (shouldRun && typeof onHardReset !== 'undefined') onHardReset();
@@ -33,9 +31,9 @@ export const Timer: FC<TimerProps> = ({ shouldRun, onHardReset, ...props }) => {
   };
 
   const text = {
-    hour: parseTimerText(memoizedTimerSeconds / 3600),
-    minute: parseTimerText((memoizedTimerSeconds % 3600) / 60),
-    second: parseTimerText(memoizedTimerSeconds % 60),
+    hour: parseTimerText(timerSeconds / 3600),
+    minute: parseTimerText((timerSeconds % 3600) / 60),
+    second: parseTimerText(timerSeconds % 60),
   };
 
   return (

@@ -13,7 +13,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
 
   return (
-    <RenderBleComponent overrideShouldShow>
+    <RenderBleComponent>
       <View style={[{ flex: 1 }]}>
         <TabView
           style={[{ flex: 1 }, tailwind('pt-2')]}

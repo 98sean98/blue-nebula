@@ -14,6 +14,7 @@ import { store } from '@reduxApp/store';
 import { RootNavigator } from '@navigation';
 
 import { BleLayer } from '@components/shared/bluetooth';
+import { TimerLayer } from '@components/shared/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
 
@@ -33,13 +34,15 @@ export const App: FC = () => {
   return (
     <ReduxProvider store={store}>
       <BleLayer>
-        <IconRegistry icons={EvaIconsPack} />
-        <ApplicationProvider {...eva} theme={themes.eva}>
-          <NavigationContainer theme={themes.navigation}>
-            <StatusBar hidden />
-            <RootNavigator />
-          </NavigationContainer>
-        </ApplicationProvider>
+        <TimerLayer>
+          <IconRegistry icons={EvaIconsPack} />
+          <ApplicationProvider {...eva} theme={themes.eva}>
+            <NavigationContainer theme={themes.navigation}>
+              <StatusBar hidden />
+              <RootNavigator />
+            </NavigationContainer>
+          </ApplicationProvider>
+        </TimerLayer>
       </BleLayer>
     </ReduxProvider>
   );

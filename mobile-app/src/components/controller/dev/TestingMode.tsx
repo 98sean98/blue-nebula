@@ -26,17 +26,11 @@ export const TestingMode: FC<TestingModeProps> = () => {
     { entity: 'screwMotor', title: 'Screw' },
   ];
 
-  const renderItem: ListRenderItem<Motor> = ({
-    item: { entity, title },
-    index,
-  }) => (
+  const renderItem: ListRenderItem<Motor> = ({ item: { entity, title } }) => (
     <StepperMotorCard
       entity={entity}
       header={{ title }}
-      style={[
-        index !== 0 ? tailwind('mt-4') : undefined,
-        tailwind('mt-4 mx-4'),
-      ]}
+      style={[tailwind('my-2 mx-4')]}
     />
   );
 
