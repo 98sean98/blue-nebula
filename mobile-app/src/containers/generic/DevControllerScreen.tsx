@@ -38,7 +38,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
 
         <View style={tailwind('m-4 flex-row justify-between')}>
           <BleReadDeviceButton style={{ width: '49%' }} />
-          <BleRunIdleButton style={{ width: '49%' }} />
+          <BleRunIdleButton style={{ width: '49%' }} showVerbose />
         </View>
       </View>
     </RenderBleComponent>
