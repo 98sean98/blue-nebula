@@ -16,6 +16,7 @@ import {
 import { Timer } from '@components/shared/actionable';
 
 interface TestingModeProps {
+  isFocused: boolean;
   motors: Array<MotorCard>;
 }
 

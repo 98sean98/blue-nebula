@@ -1,5 +1,6 @@
 import React, { ComponentProps, FC, useCallback } from 'react';
 import { View } from 'react-native';
+import { Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
@@ -93,21 +94,28 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
                 CW
               </ControlEntityParameterButton>
             </View>
-            <ControlEntityParameterToggle
-              style={tailwind('ml-1')}
-              checked={controlEntities[entity].enable === Enable.High}
-              onChange={(checked) =>
-                onParameterChange(
-                  'enable',
-                  checked ? Enable.High.toString() : Enable.Low.toString(),
-                  'number',
-                )
-              }>
-              Enable
-            </ControlEntityParameterToggle>
+            <View style={tailwind('ml-4 items-center')}>
+              <ControlEntityParameterToggle
+                checked={controlEntities[entity].enable === Enable.High}
+                onChange={(checked) =>
+                  onParameterChange(
+                    'enable',
+                    checked ? Enable.High.toString() : Enable.Low.toString(),
+                    'number',
+                  )
+                }
+              />
+              <Text
+                category={'label'}
+                appearance={'hint'}
+                style={tailwind('mt-1')}>
+                Enable
+              </Text>
+            </View>
           </View>
         </>
       ) : null}
+
       {controlInterface === ControlInterface.RealTimeControl ? (
         <StepperMotorContinuousControlButtons
           entity={entity}

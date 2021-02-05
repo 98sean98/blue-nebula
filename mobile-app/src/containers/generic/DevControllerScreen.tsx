@@ -33,10 +33,13 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
           selectedIndex={selectedIndex}
           onSelect={setSelectedIndex}>
           <Tab title={'Testing'}>
-            <TestingMode motors={motors} />
+            <TestingMode isFocused={selectedIndex === 0} motors={motors} />
           </Tab>
           <Tab title={'Real Time Control'}>
-            <RealTimeControlMode motors={motors} />
+            <RealTimeControlMode
+              isFocused={selectedIndex === 1}
+              motors={motors}
+            />
           </Tab>
         </TabView>
       </View>
