@@ -25,7 +25,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
   ];
 
   return (
-    <RenderBleComponent overrideShouldShow>
+    <RenderBleComponent>
       <View style={[{ flex: 1 }]}>
         <TabView
           style={[{ flex: 1 }, tailwind('pt-2')]}

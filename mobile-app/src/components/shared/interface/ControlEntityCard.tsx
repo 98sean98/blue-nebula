@@ -14,7 +14,9 @@ export const ControlEntityCard: FC<ControlEntityCardProps> = ({
   const renderHeader: RenderProp<ViewProps> = (headerViewProps) => (
     <View {...headerViewProps}>
       <Text category={'h4'}>{title}</Text>
-      <Text category={'label'}>{subtitle ?? 'Step motor control'}</Text>
+      <Text category={'label'} appearance={'hint'}>
+        {subtitle ?? 'Step motor control'}
+      </Text>
     </View>
   );
 

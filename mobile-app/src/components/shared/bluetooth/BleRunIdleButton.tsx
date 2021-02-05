@@ -101,7 +101,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
         visible={shouldShowModal}
         backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         onBackdropPress={() => setShouldShowModal(false)}>
-        <Card disabled>
+        <Card disabled style={tailwind('m-4')}>
           <Text category={'h5'}>Are you ready to start?</Text>
           {showVerbose ? (
             <ScrollView
