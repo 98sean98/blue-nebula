@@ -1,21 +1,76 @@
-import React, { FC } from 'react';
-import { View } from 'react-native';
+import React, { FC, useState } from 'react';
+import { FlatList, ListRenderItem, View } from 'react-native';
+import { Divider } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
 import { StepperMotorCard } from './StepperMotorCard';
+import {
+  BleReadDeviceButton,
+  BleRunIdleButton,
+} from '@components/shared/bluetooth';
+import { Timer } from '@components/shared/actionable';
+
+import { DeclaredControlEntities } from '@config/declaredControlEntities';
+
+type Motor = {
+  entity: keyof DeclaredControlEntities;
+  title: string;
+};
 
 interface TestingModeProps {}
 
 export const TestingMode: FC<TestingModeProps> = () => {
+  const motors: Array<Motor> = [
+    { entity: 'wheelMotor', title: 'Wheel' },
+    { entity: 'screwMotor', title: 'Screw' },
+  ];
+
+  const renderItem: ListRenderItem<Motor> = ({
+    item: { entity, title },
+    index,
+  }) => (
+    <StepperMotorCard
+      entity={entity}
+      header={{ title }}
+      style={[
+        index !== 0 ? tailwind('mt-4') : undefined,
+        tailwind('mt-4 mx-4'),
+      ]}
+    />
+  );
+
+  const keyExtractor = (item: Motor) => item.entity;
+
+  const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
+  const onRunningStateChange = (newState: boolean) => {
+    setIsRunningTimer(newState);
+  };
+
   return (
-    <View style={tailwind('mb-6')}>
-      <StepperMotorCard entity={'wheelMotor'} header={{ title: 'Wheel' }} />
-      <StepperMotorCard
-        entity={'screwMotor'}
-        header={{ title: 'Screw' }}
-        style={tailwind('mt-4')}
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={motors}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
       />
+
+      <Divider />
+
+      <View style={tailwind('my-1 mx-3')}>
+        <Timer
+          shouldRun={isRunningTimer}
+          style={tailwind('w-2/3 self-center')}
+        />
+        <View style={tailwind('mt-2 flex-row justify-between')}>
+          <BleReadDeviceButton style={{ width: '49%' }} />
+          <BleRunIdleButton
+            style={{ width: '49%' }}
+            showVerbose
+            onStateChange={onRunningStateChange}
+          />
+        </View>
+      </View>
     </View>
   );
 };
