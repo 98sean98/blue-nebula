@@ -7,22 +7,26 @@ import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
 import { SetControlEntities } from '@reduxApp/control/types';
 
-import { mapArrayToObject } from '@utilities/functions/mapArrayToObject';
-import { mapObjectToArray } from '@utilities/functions/mapObjectToArray';
+import { DeclarableValueType } from '@models/ValueType';
+
 import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
+import {
+  mapStepperMotorToString,
+  mapStringArrayToStepperMotor,
+} from '@utilities/functions/stepper-motor';
+
+import { parseStringToType } from '@utilities/functions/parse';
 
 type UseControlEntities = {
   readAll: () => Promise<void>;
   writeAll: () => Promise<void>;
+  setControlEntityByParameter: (
+    entity: string,
+    param: string,
+    value: string,
+    valueType: DeclarableValueType,
+  ) => void;
 };
-
-const stepMotorObjectKeys: Parameters<typeof mapArrayToObject>[1] = [
-  { key: 'name', valueType: 'string' },
-  { key: 'pulseInterval', valueType: 'number' },
-  { key: 'degree', valueType: 'number' },
-  { key: 'direction', valueType: 'number' },
-  { key: 'enable', valueType: 'number' },
-];
 
 export const useControlEntities = (): UseControlEntities => {
   const dispatch = useDispatch();
@@ -40,13 +44,11 @@ export const useControlEntities = (): UseControlEntities => {
     const stepMotorStringArray = stepMotorString.split(', ');
 
     const newControlEntities: SetControlEntities = {
-      wheelMotor: mapArrayToObject(
+      wheelMotor: mapStringArrayToStepperMotor(
         stepMotorStringArray.slice(0, 5),
-        stepMotorObjectKeys,
       ),
-      screwMotor: mapArrayToObject(
+      screwMotor: mapStringArrayToStepperMotor(
         stepMotorStringArray.slice(5, 10),
-        stepMotorObjectKeys,
       ),
     };
 
@@ -56,16 +58,10 @@ export const useControlEntities = (): UseControlEntities => {
   const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
     const strings = [
       checkIfObjectValuesAreDefined(controlEntities.wheelMotor)
-        ? mapObjectToArray(
-            controlEntities.wheelMotor,
-            stepMotorObjectKeys,
-          ).join(', ')
+        ? mapStepperMotorToString(controlEntities.wheelMotor)
         : '',
       checkIfObjectValuesAreDefined(controlEntities.screwMotor)
-        ? mapObjectToArray(
-            controlEntities.screwMotor,
-            stepMotorObjectKeys,
-          ).join(', ')
+        ? mapStepperMotorToString(controlEntities.screwMotor)
         : '',
     ];
 
@@ -74,5 +70,24 @@ export const useControlEntities = (): UseControlEntities => {
     }
   }, [controlEntities, writeStepMotor]);
 
-  return { readAll, writeAll };
+  const setControlEntityByParameter: UseControlEntities['setControlEntityByParameter'] = (
+    entity,
+    param,
+    value,
+    valueType,
+  ) => {
+    dispatch(
+      setControlEntities({
+        [entity]: {
+          [param]: parseStringToType(value, valueType),
+        },
+      }),
+    );
+  };
+
+  return {
+    readAll,
+    writeAll,
+    setControlEntityByParameter,
+  };
 };
