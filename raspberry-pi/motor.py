@@ -42,8 +42,7 @@ class Motor:
             self.process.join()
 
     def run(self):
-        sleep(10)
-        print(f"{motor_name} finished running after 10 seconds!")
+        pass
 
     def stop_running(self):
-        print(f"{motor_name} has been stopped.")
+        pass
