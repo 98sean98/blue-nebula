@@ -15,6 +15,7 @@ class Motor:
         self.motor_name = motor_name
         if multiprocessing_manager is not None and initial_tracked_parameters is not None:
             self.tracked_parameters = multiprocessing_manager.dict(initial_tracked_parameters)
+            self.initial_tracked_parameters = initial_tracked_parameters
 
     def get_is_running(self):
         return self.is_running.value
@@ -32,6 +33,8 @@ class Motor:
             self.terminate_process()
 
             if is_running:
+                # reset the tracked parameters
+                self.reset_tracked_parameters()
                 # spawn a new process
                 self.spawn_process()
                 # start the process
@@ -46,8 +49,15 @@ class Motor:
             self.process.terminate()
             self.process.join()
 
+    def reset_tracked_parameters(self):
+        for [key, value] in list(self.initial_tracked_parameters.items()):
+            self.tracked_parameters[key] = value
+
     def run(self, is_running, tracked_parameters):
         is_running.value = False
 
     def stop_running(self):
         pass
+
+    def get_tracked_parameters(self):
+        return self.tracked_parameters
