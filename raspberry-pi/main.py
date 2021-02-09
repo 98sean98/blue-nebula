@@ -2,6 +2,7 @@
 
 import dbus
 import RPi.GPIO as GPIO
+from multiprocessing import Manager
 
 from advertisement import Advertisement
 from service import Application, Service, Characteristic, Descriptor
@@ -22,10 +23,10 @@ class RobotControllerAdvertisement(Advertisement):
 class RobotControllerService(Service):
     ROBOT_CONTROLLER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
 
-    def __init__(self, index):
+    def __init__(self, index, multiprocessing_manager):
         self.stepper_motors = {
-            'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22)
-            # 'screw_motor': StepperMotor('screw_motor', 14, 15, 18)
+            'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22, multiprocessing_manager)
+            # 'screw_motor': StepperMotor('screw_motor', 14, 15, 18, multiprocessing_manager)
         }
         self.dc_motors = {
         }
@@ -37,9 +38,18 @@ class RobotControllerService(Service):
         self.add_characteristic(DCMotorsCharacteristic(self))
 
     def get_is_running(self):
-        return self.is_running
+        is_running = False
+        all_motors = list(self.get_all_motors().values())
+        for motors_of_type in all_motors:
+            for motor in list(motors_of_type.values()):
+                if motor.get_is_running():
+                    is_running = True
+                    break
+        self.is_running = is_running
+        return is_running
 
     def set_is_running(self, is_running):
+        print(f"service is_running is now {is_running}")
         self.is_running = is_running
         # set each motor's is_running states
         all_motors = list(self.get_all_motors().values())
@@ -180,17 +190,22 @@ class DCMotorsDescriptor(Descriptor):
         desc = self.DESCRIPTOR_VALUE
         return utilities.encode_base64(desc)
 
-GPIO.setmode(GPIO.BCM)
+def main():
+    GPIO.setmode(GPIO.BCM)
+    multiprocessing_manager = Manager()
 
-app = Application()
-app.add_service(RobotControllerService(0))
-app.register()
+    app = Application()
+    app.add_service(RobotControllerService(0, multiprocessing_manager))
+    app.register()
 
-adv = RobotControllerAdvertisement(0)
-adv.register()
+    adv = RobotControllerAdvertisement(0)
+    adv.register()
 
-try:
-    app.run()
-except KeyboardInterrupt:
-    app.quit()
-    GPIO.cleanup()
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        app.quit()
+        GPIO.cleanup()
+
+if __name__ == '__main__':
+    main()

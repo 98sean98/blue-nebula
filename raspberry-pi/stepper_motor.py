@@ -11,12 +11,13 @@ class StepperMotor(Motor):
     # parameters (order of the dictionary keys is important)
     parameters = {
         'pulse_interval': 300, # in micro seconds
-        'degree': 0,
+        'revolution': 200, # number of revolutions
+        'pulse_per_revolution': 70,
         'direction': 0, # 0 is LOW, 1 is HIGH
-        'enable': 0 # 0 is LOW, 1 is HIGH
+        'enable': 1 # 0 is LOW, 1 is HIGH
     }
 
-    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin):
+    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None):
         # pins
         # note that these pins are based on BCM, see https://pinout.xyz/ and look for GPIO pins
         self.pulse_pin = pulse_pin
@@ -28,7 +29,7 @@ class StepperMotor(Motor):
         GPIO.setup(self.direction_pin, GPIO.OUT)
         GPIO.setup(self.enable_pin, GPIO.OUT)
 
-        super().__init__(motor_name)
+        super().__init__(motor_name, multiprocessing_manager, {'revolution': 0, 'duration': 0})
 
     def get_pins(self):
         pins = {'pulse_pin': self.pulse_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin}
@@ -40,9 +41,11 @@ class StepperMotor(Motor):
     def get_parameters(self):
         return self.parameters
 
-    def run(self):
+    def run(self, is_running, tracked_parameters):
+        sleep(0.1) # pause due to a possible change in direction
+
         # determine total pulse, and delay per pulse
-        total_pulse = round(self.parameters['degree'] / 360 * pulse_per_revolution)
+        total_pulse = round(self.parameters['revolution'] * self.parameters['pulse_per_revolution'])
         delay = self.parameters['pulse_interval'] * 10 ** (-6)
         print(f"{self.motor_name}.total_pulse = {total_pulse}, delay = {delay}")
         # determine gpio values for direction and enable
@@ -50,9 +53,7 @@ class StepperMotor(Motor):
         enable_value = GPIO.LOW if self.parameters['enable'] == 0 else GPIO.HIGH
 
         GPIO.output(self.enable_pin, enable_value)
-        print(f"{self.motor_name}.enable = {self.enable_pin}")
-
-        sleep(0.1) # pause due to a possible change in direction
+        print(f"{self.motor_name}.enable = {enable_value}")
 
         GPIO.output(self.direction_pin, direction_value)
         print(f"{self.motor_name}.direction = {direction_value}")
@@ -67,6 +68,9 @@ class StepperMotor(Motor):
         GPIO.output(self.enable_pin, GPIO.LOW)
 
         sleep(0.5) # pause for possible change direction
+
+        # call parent method to finish running
+        super().run(is_running, tracked_parameters)
 
     def stop_running(self):
         # disable the motor by setting enable to LOW

@@ -26,7 +26,6 @@ def main():
         is_running = user_prompt == '1'
         motor.set_is_running(is_running)
         print(motor.get_tracked_parameters())
-        print(parameter)
 
     motor.terminate_process()
     if p.is_alive(): p.terminate()
