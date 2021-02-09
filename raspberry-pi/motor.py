@@ -8,8 +8,11 @@ class Motor:
 
     process = None
 
-    def __init__(self, motor_name):
+    tracked_parameters = None
+
+    def __init__(self, motor_name, multiprocessing_manager, initial_tracked_parameters):
         self.motor_name = motor_name
+        self.tracked_parameters = multiprocessing_manager.dict(initial_tracked_parameters)
 
     def get_is_running(self):
         return self.is_running
@@ -33,7 +36,7 @@ class Motor:
                 self.process.start()
 
     def spawn_process(self):
-        self.process = Process(target=self.run)
+        self.process = Process(target=self.run, args=[self.tracked_parameters])
 
     def terminate_process(self):
         self.stop_running()
@@ -41,7 +44,7 @@ class Motor:
             self.process.terminate()
             self.process.join()
 
-    def run(self):
+    def run(self, tracked_parameters):
         pass
 
     def stop_running(self):
