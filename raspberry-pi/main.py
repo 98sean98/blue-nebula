@@ -115,11 +115,15 @@ class RunIdleDescriptor(Descriptor):
 
 class StepperMotorsCharacteristic(Characteristic):
     CHARACTERISTIC_UUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
+    # this timeout cannot changed during run time
+    NOTIFY_TIMEOUT = 50 # in milliseconds
 
     def __init__(self, service):
+        self.notifying = False
+
         Characteristic.__init__(
                 self, self.CHARACTERISTIC_UUID,
-                ["read", "write"], service)
+                ["notify", "read", "write"], service)
         self.add_descriptor(StepperMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
@@ -138,8 +142,26 @@ class StepperMotorsCharacteristic(Characteristic):
         print("read step motors:", utilities.decode_base64(combined))
         return combined
 
+    def notify_callback(self):
+        if self.notifying:
+            value = utilities.encode_base64('notify')
+            self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        return self.notifying
+
+    def StartNotify(self):
+        if self.notifying:
+            return
+
+        self.notifying = True
+        value = utilities.encode_base64('notify')
+        self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        self.add_timeout(self.NOTIFY_TIMEOUT, self.notify_callback)
+
+    def StopNotify(self):
+        self.notifying = False
+
 class StepperMotorsDescriptor(Descriptor):
-    DESCRIPTOR_UUID = "2902"
+    DESCRIPTOR_UUID = "2901"
     DESCRIPTOR_VALUE = "Step motors control"
 
     def __init__(self, characteristic):
@@ -177,7 +199,7 @@ class DCMotorsCharacteristic(Characteristic):
         return utilities.encode_base64('dc motor string')
 
 class DCMotorsDescriptor(Descriptor):
-    DESCRIPTOR_UUID = "2903"
+    DESCRIPTOR_UUID = "2901"
     DESCRIPTOR_VALUE = "DC motors control"
 
     def __init__(self, characteristic):
