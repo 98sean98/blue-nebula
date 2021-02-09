@@ -68,7 +68,9 @@ class Motor:
         pass
 
     def get_tracked_parameters(self):
-        return self.tracked_parameters
+        all_tracked_parameters = self.tracked_parameters
+        all_tracked_parameters['running_duration'] = self.get_running_duration()
+        return all_tracked_parameters
 
     def track_running_duration(self, running_duration):
         start_time = time()
