@@ -17,6 +17,10 @@ class StepperMotor(Motor):
         'enable': 1 # 0 is LOW, 1 is HIGH
     }
 
+    initial_tracked_parameters = {
+        'revolution': 0
+    }
+
     def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None):
         # pins
         # note that these pins are based on BCM, see https://pinout.xyz/ and look for GPIO pins
@@ -29,7 +33,7 @@ class StepperMotor(Motor):
         GPIO.setup(self.direction_pin, GPIO.OUT)
         GPIO.setup(self.enable_pin, GPIO.OUT)
 
-        super().__init__(motor_name, multiprocessing_manager, {'revolution': 0, 'duration': 0})
+        super().__init__(motor_name, multiprocessing_manager, self.initial_tracked_parameters)
 
     def get_pins(self):
         pins = {'pulse_pin': self.pulse_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin}
@@ -63,6 +67,9 @@ class StepperMotor(Motor):
             sleep(delay)
             GPIO.output(self.pulse_pin, GPIO.LOW)
             sleep(delay)
+            # track current revolution
+            if i % 100 is 0:
+                tracked_parameters['revolution'] = round(i / self.parameters['pulse_per_revolution'], 2)
 
         # finish running the required total pulse
         GPIO.output(self.enable_pin, GPIO.LOW)
