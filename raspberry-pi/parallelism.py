@@ -25,9 +25,9 @@ def main():
         if user_prompt == '0': break
         is_running = user_prompt == '1'
         motor.set_is_running(is_running)
-        print(motor.get_tracked_parameters())
+        print(motor.get_tracked_parameters(), motor.get_running_duration())
 
-    motor.terminate_process()
+    motor.terminate_processes()
     if p.is_alive(): p.terminate()
     p.join()
 

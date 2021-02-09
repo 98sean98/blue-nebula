@@ -1,13 +1,14 @@
 from multiprocessing import Process, Value
-from ctypes import c_bool
-from time import sleep
+from ctypes import c_bool, c_double
+from time import sleep, time
 
 class Motor:
     '''This is a generic motor connected to the device.'''
 
     is_running = Value(c_bool, False)
+    running_duration = Value(c_double, 0.0)
 
-    process = None
+    processes = []
 
     tracked_parameters = None
 
@@ -29,29 +30,36 @@ class Motor:
             self.is_running.value = is_running
             print(f"{self.motor_name} control has been changed, is_running is now {is_running}")
 
-            # terminate the process if it is alive
-            self.terminate_process()
+            # terminate the processes if they are alive
+            self.terminate_processes()
 
             if is_running:
                 # reset the tracked parameters
-                self.reset_tracked_parameters()
-                # spawn a new process
-                self.spawn_process()
-                # start the process
-                self.process.start()
+                self.reset_running_parameters()
+                # spawn new processes
+                self.spawn_processes()
 
-    def spawn_process(self):
-        self.process = Process(target=self.run, args=[self.is_running, self.tracked_parameters])
+    def spawn_processes(self):
+        main = Process(target=self.run, args=[self.is_running, self.tracked_parameters])
+        duration = Process(target=self.track_running_duration, args=[self.running_duration])
+        main.start()
+        duration.start()
+        self.processes.append(main)
+        self.processes.append(duration)
 
-    def terminate_process(self):
+    def terminate_processes(self):
         self.stop_running()
-        if (self.process is not None and self.process.is_alive()):
-            self.process.terminate()
-            self.process.join()
+        for p in self.processes:
+            if p.is_alive():
+                p.terminate()
+                p.join()
 
-    def reset_tracked_parameters(self):
+    def reset_running_parameters(self):
+        # reset tracked parameters
         for [key, value] in list(self.initial_tracked_parameters.items()):
             self.tracked_parameters[key] = value
+        # reset running duration
+        self.running_duration = Value(c_double, 0.0)
 
     def run(self, is_running, tracked_parameters):
         is_running.value = False
@@ -61,3 +69,12 @@ class Motor:
 
     def get_tracked_parameters(self):
         return self.tracked_parameters
+
+    def track_running_duration(self, running_duration):
+        start_time = time()
+        while True:
+            running_duration.value = round(time() - start_time, 2)
+            sleep(0.2)
+
+    def get_running_duration(self):
+        return self.running_duration.value
