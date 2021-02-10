@@ -19,7 +19,7 @@ import {
   ControlEntityParameterInput,
   ControlEntityParameterToggle,
 } from '@components/shared/actionable';
-import { StepperMotorContinuousControlButtons } from './StepperMotorContinuousControlButtons';
+import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
 
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
@@ -129,7 +129,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
       ) : null}
 
       {controlInterface === ControlInterface.RealTimeControl ? (
-        <StepperMotorContinuousControlButtons
+        <StepperMotorContinuousControl
           entity={entity}
           style={tailwind('mt-4 w-4/5 self-center')}
         />

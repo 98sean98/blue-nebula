@@ -16,8 +16,9 @@ import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
 import { mapStepperMotorToString } from '@utilities/functions/stepper-motor/mapStepperMotorToString';
+import { parseStringToNumber } from '@utilities/functions/parse';
 
-interface StepperMotorContinuousControlButtonsProps extends ViewProps {
+interface StepperMotorContinuousControlProps extends ViewProps {
   entity: keyof DeclaredControlEntities;
 }
 
@@ -25,17 +26,25 @@ const GhostButton = (props: ButtonProps) => (
   <Button appearance={'ghost'} {...props} />
 );
 
-export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousControlButtonsProps> = ({
+const generateMethodToDecipherMonitorValue = (entityName: string) => (
+  rawValue: string,
+): string => {
+  const stringArray = rawValue.split(', ');
+  const entityNameIndex = stringArray.findIndex((e) => e === entityName);
+  return stringArray.slice(entityNameIndex, entityNameIndex + 3).join(', ');
+};
+
+export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProps> = ({
   entity,
   ...props
 }) => {
   const { controlEntities } = useSelector((state: RootState) => state.control);
   const controlEntityObject = controlEntities[entity];
 
-  const { write: writeStepMotor } = useBleRpiDeviceCharacteristic(
-    'stepMotors',
-    'string',
-  );
+  const {
+    write: writeStepperMotor,
+    monitor: monitorStepperMotor,
+  } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
   const { write: WriteRunIdle } = useBleRpiDeviceCharacteristic(
     'runIdle',
     'boolean',
@@ -49,19 +58,23 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
       if (isRunning) {
         const stringValue = mapStepperMotorToString({
           ...controlEntityObject,
-          revolution: 20,
+          revolution: 2000, // arbitrarily large revolution number
           direction,
           enable: Enable.High,
         });
-        await writeStepMotor(stringValue);
+        await writeStepperMotor(stringValue);
+        monitorStepperMotor.start(
+          generateMethodToDecipherMonitorValue(controlEntityObject.name),
+        );
         await WriteRunIdle(true);
       } else {
         await WriteRunIdle(false);
+        monitorStepperMotor.stop();
         const stringValue = mapStepperMotorToString({
           ...controlEntityObject,
           enable: Enable.Low,
         });
-        await writeStepMotor(stringValue);
+        await writeStepperMotor(stringValue);
       }
     } catch (error) {
       console.log(error);
@@ -73,17 +86,38 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
     }
   };
 
-  const [revolution, setRevolution] = useState<number>(0);
-  const throttledSetRevolution = useThrottledCallback(setRevolution, 70, {
-    leading: true,
-  });
+  const [revolution, setRevolution] = useState<{
+    current: number;
+    previous: number;
+  }>({ current: 0, previous: 0 });
+  const throttledSetRevolution = useThrottledCallback(setRevolution, 100, {});
 
-  const streamedRevolution = 50; // todo: stream read revolution from ble characteristic
-
-  useEffect(() => throttledSetRevolution.callback(streamedRevolution), [
+  useEffect(() => {
+    if (
+      monitorStepperMotor.isMonitoring &&
+      typeof monitorStepperMotor.value !== 'undefined'
+    ) {
+      const stringArray = (monitorStepperMotor.value as string).split(', ');
+      const readRevolution = parseStringToNumber(stringArray[1]);
+      if (typeof readRevolution !== 'undefined')
+        throttledSetRevolution.callback((thisRevolution) => ({
+          ...thisRevolution,
+          current:
+            Math.round((readRevolution + thisRevolution.previous) * 10) / 10,
+        }));
+    } else
+      setRevolution((thisRevolution) => ({
+        ...thisRevolution,
+        previous: thisRevolution.current,
+      }));
+  }, [
+    monitorStepperMotor.isMonitoring,
+    monitorStepperMotor.value,
+    setRevolution,
     throttledSetRevolution,
-    streamedRevolution,
   ]);
+
+  const onResetPress = () => setRevolution({ current: 0, previous: 0 });
 
   return (
     <View {...props}>
@@ -97,7 +131,7 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
         </GhostButton>
         <View style={tailwind('items-center')}>
           <View style={tailwind('flex-row items-end')}>
-            <Text category={'h6'}>{revolution}</Text>
+            <Text category={'h6'}>{revolution.current}</Text>
             <Text category={'s1'} style={tailwind('ml-1')}>
               rev
             </Text>
@@ -106,7 +140,7 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
             style={tailwind('mt-1')}
             status={'basic'}
             size={'small'}
-            onPress={() => setRevolution(0)}>
+            onPress={onResetPress}>
             Reset
           </GhostButton>
         </View>
