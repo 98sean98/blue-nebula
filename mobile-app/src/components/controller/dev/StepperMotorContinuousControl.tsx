@@ -50,6 +50,8 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
     'boolean',
   );
 
+  const [isControlDisabled, setIsControlDisabled] = useState<boolean>(false);
+
   const triggerContinuousRunning = async (
     isRunning: boolean,
     direction: Direction,
@@ -68,6 +70,8 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         );
         await WriteRunIdle(true);
       } else {
+        // disable the controls for a short while
+        setIsControlDisabled(true);
         await WriteRunIdle(false);
         monitorStepperMotor.stop();
         const stringValue = mapStepperMotorToString({
@@ -85,6 +89,13 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
       });
     }
   };
+
+  useEffect(() => {
+    if (isControlDisabled) {
+      const timeout = setTimeout(() => setIsControlDisabled(false), 800);
+      return () => clearTimeout(timeout);
+    }
+  }, [isControlDisabled]);
 
   const [revolution, setRevolution] = useState<{
     current: number;
@@ -125,6 +136,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
+          disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
           CCW
@@ -147,6 +159,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
+          disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
           CW
