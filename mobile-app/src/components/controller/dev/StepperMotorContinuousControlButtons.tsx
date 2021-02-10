@@ -21,8 +21,8 @@ interface StepperMotorContinuousControlButtonsProps extends ViewProps {
   entity: keyof DeclaredControlEntities;
 }
 
-const SimpleButton = (props: ButtonProps) => (
-  <Button size={'large'} appearance={'ghost'} {...props} />
+const GhostButton = (props: ButtonProps) => (
+  <Button appearance={'ghost'} {...props} />
 );
 
 export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousControlButtonsProps> = ({
@@ -88,12 +88,13 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
   return (
     <View {...props}>
       <View style={tailwind('flex-row justify-between items-center')}>
-        <SimpleButton
+        <GhostButton
           status={'info'}
+          size={'large'}
           onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
           CCW
-        </SimpleButton>
+        </GhostButton>
         <View style={tailwind('items-center')}>
           <View style={tailwind('flex-row items-end')}>
             <Text category={'h6'}>{revolution}</Text>
@@ -101,19 +102,21 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
               rev
             </Text>
           </View>
-          <SimpleButton
+          <GhostButton
             style={tailwind('mt-1')}
             status={'basic'}
+            size={'small'}
             onPress={() => setRevolution(0)}>
             Reset
-          </SimpleButton>
+          </GhostButton>
         </View>
-        <SimpleButton
+        <GhostButton
           status={'info'}
+          size={'large'}
           onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
           CW
-        </SimpleButton>
+        </GhostButton>
       </View>
     </View>
   );
