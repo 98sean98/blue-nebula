@@ -102,10 +102,20 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
     previous: number;
   }>({ current: 0, previous: 0 });
   const throttledSetRevolution = useThrottledCallback(setRevolution, 100, {});
+  const [shouldStreamMonitor, setShouldStreamMonitor] = useState<boolean>(
+    false,
+  );
+
+  useEffect(() => {
+    if (monitorStepperMotor.isMonitoring) {
+      const timeout = setTimeout(() => setShouldStreamMonitor(true), 800);
+      return () => clearTimeout(timeout);
+    } else setShouldStreamMonitor(false);
+  }, [monitorStepperMotor.isMonitoring]);
 
   useEffect(() => {
     if (
-      monitorStepperMotor.isMonitoring &&
+      shouldStreamMonitor &&
       typeof monitorStepperMotor.value !== 'undefined'
     ) {
       const stringArray = (monitorStepperMotor.value as string).split(', ');
@@ -122,7 +132,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         previous: thisRevolution.current,
       }));
   }, [
-    monitorStepperMotor.isMonitoring,
+    shouldStreamMonitor,
     monitorStepperMotor.value,
     setRevolution,
     throttledSetRevolution,
