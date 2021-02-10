@@ -1,18 +1,19 @@
 import React, { FC, useState, useEffect } from 'react';
 import { View, ViewProps } from 'react-native';
+import { Button, ButtonProps, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
-import { useDebouncedCallback } from 'use-debounce';
+import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Direction, Enable } from '@models/control-entity';
 import { DeclaredControlEntities } from '@config/declaredControlEntities';
 
+import { RootState } from '@reduxApp';
+
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
-import { Button, ButtonProps, Text } from '@ui-kitten/components';
-import { RootState } from '@reduxApp/index';
 
 import { mapStepperMotorToString } from '@utilities/functions/stepper-motor/mapStepperMotorToString';
 
@@ -21,7 +22,7 @@ interface StepperMotorContinuousControlButtonsProps extends ViewProps {
 }
 
 const SimpleButton = (props: ButtonProps) => (
-  <Button size={'small'} appearance={'ghost'} {...props} />
+  <Button size={'large'} appearance={'ghost'} {...props} />
 );
 
 export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousControlButtonsProps> = ({
@@ -48,7 +49,7 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
       if (isRunning) {
         const stringValue = mapStepperMotorToString({
           ...controlEntityObject,
-          degree: 10000,
+          revolution: 20,
           direction,
           enable: Enable.High,
         });
@@ -72,18 +73,22 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
     }
   };
 
-  const [degree, setDegree] = useState<number>(0);
-  const debounced = useDebouncedCallback(setDegree, 100, { leading: true });
+  const [revolution, setRevolution] = useState<number>(0);
+  const throttledSetRevolution = useThrottledCallback(setRevolution, 70, {
+    leading: true,
+  });
 
-  const readDegree = 50; // todo: stream read degree from ble characteristic
+  const streamedRevolution = 50; // todo: stream read revolution from ble characteristic
 
-  useEffect(() => debounced.callback(readDegree), [debounced, readDegree]);
+  useEffect(() => throttledSetRevolution.callback(streamedRevolution), [
+    throttledSetRevolution,
+    streamedRevolution,
+  ]);
 
   return (
     <View {...props}>
       <View style={tailwind('flex-row justify-between items-center')}>
         <SimpleButton
-          style={tailwind('w-16 h-10')}
           status={'info'}
           onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
@@ -91,20 +96,19 @@ export const StepperMotorContinuousControlButtons: FC<StepperMotorContinuousCont
         </SimpleButton>
         <View style={tailwind('items-center')}>
           <View style={tailwind('flex-row items-end')}>
-            <Text category={'h6'}>{degree}</Text>
+            <Text category={'h6'}>{revolution}</Text>
             <Text category={'s1'} style={tailwind('ml-1')}>
-              deg
+              rev
             </Text>
           </View>
           <SimpleButton
             style={tailwind('mt-1')}
             status={'basic'}
-            onPress={() => setDegree(0)}>
+            onPress={() => setRevolution(0)}>
             Reset
           </SimpleButton>
         </View>
         <SimpleButton
-          style={tailwind('w-16 h-10')}
           status={'info'}
           onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>

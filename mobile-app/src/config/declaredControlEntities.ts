@@ -8,15 +8,17 @@ export type DeclaredControlEntities = {
 export const declaredControlEntities: DeclaredControlEntities = {
   wheelMotor: {
     name: 'wheel_motor',
-    pulseInterval: 0,
-    degree: 0,
+    pulseInterval: 300,
+    revolution: 20,
+    pulsePerRevolution: 140,
     direction: 0,
     enable: 0,
   },
   screwMotor: {
     name: 'screw_motor',
-    pulseInterval: 0,
-    degree: 0,
+    pulseInterval: 300,
+    revolution: 20,
+    pulsePerRevolution: 140,
     direction: 0,
     enable: 0,
   },

@@ -45,11 +45,11 @@ export const useControlEntities = (): UseControlEntities => {
 
     const newControlEntities: SetControlEntities = {
       wheelMotor: mapStringArrayToStepperMotor(
-        stepMotorStringArray.slice(0, 5),
+        stepMotorStringArray.slice(0, 6),
       ),
-      screwMotor: mapStringArrayToStepperMotor(
-        stepMotorStringArray.slice(5, 10),
-      ),
+      // screwMotor: mapStringArrayToStepperMotor(
+      //   stepMotorStringArray.slice(6, 12),
+      // ),
     };
 
     dispatch(setControlEntities(newControlEntities));

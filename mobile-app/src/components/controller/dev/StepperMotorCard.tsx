@@ -48,7 +48,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   return (
     <ControlEntityCard {...props}>
       <ControlEntityParameterInput
-        keyboardType={'decimal-pad'}
+        keyboardType={'number-pad'}
         label={'Pulse Interval'}
         placeholder={
           'step pulse (the lower this value, the faster the motor runs)'
@@ -58,62 +58,74 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
           onParameterChange('pulseInterval', value || '0', 'number')
         }
       />
+
       {controlInterface === ControlInterface.Testing ? (
-        <>
-          <ControlEntityParameterInput
-            keyboardType={'decimal-pad'}
-            label={'Degree'}
-            placeholder={'radial distance to be travelled by the motor'}
-            reduxValue={controlEntities[entity].degree}
-            onInputBlur={(value) =>
-              onParameterChange('degree', value || '0', 'number')
-            }
-          />
-          <View style={tailwind('mt-3 flex-row justify-between items-center')}>
-            <View style={tailwind('flex-row items-center')}>
-              <ControlEntityParameterButton
-                isSelected={controlEntities[entity].direction === Direction.CCW}
-                onSelected={() =>
-                  onParameterChange(
-                    'direction',
-                    parseFromTypeToString(Direction.CCW),
-                    'number',
-                  )
-                }>
-                CCW
-              </ControlEntityParameterButton>
-              <ControlEntityParameterButton
-                isSelected={controlEntities[entity].direction === Direction.CW}
-                onSelected={() =>
-                  onParameterChange(
-                    'direction',
-                    parseFromTypeToString(Direction.CW),
-                    'number',
-                  )
-                }>
-                CW
-              </ControlEntityParameterButton>
-            </View>
-            <View style={tailwind('ml-4 items-center')}>
-              <ControlEntityParameterToggle
-                checked={controlEntities[entity].enable === Enable.High}
-                onChange={(checked) =>
-                  onParameterChange(
-                    'enable',
-                    checked ? Enable.High.toString() : Enable.Low.toString(),
-                    'number',
-                  )
-                }
-              />
-              <Text
-                category={'label'}
-                appearance={'hint'}
-                style={tailwind('mt-1')}>
-                Enable
-              </Text>
-            </View>
+        <ControlEntityParameterInput
+          keyboardType={'decimal-pad'}
+          label={'Revolution'}
+          placeholder={'rotational distance traversed by the motor'}
+          reduxValue={controlEntities[entity].revolution}
+          onInputBlur={(value) =>
+            onParameterChange('revolution', value || '0', 'number')
+          }
+        />
+      ) : null}
+
+      <ControlEntityParameterInput
+        keyboardType={'number-pad'}
+        label={'Pulse per Revolution'}
+        placeholder={'number of pulses per revolution'}
+        reduxValue={controlEntities[entity].pulsePerRevolution}
+        onInputBlur={(value) =>
+          onParameterChange('pulsePerRevolution', value || '0', 'number')
+        }
+      />
+
+      {controlInterface === ControlInterface.Testing ? (
+        <View style={tailwind('mt-3 flex-row justify-between items-center')}>
+          <View style={tailwind('flex-row items-center')}>
+            <ControlEntityParameterButton
+              isSelected={controlEntities[entity].direction === Direction.CCW}
+              onSelected={() =>
+                onParameterChange(
+                  'direction',
+                  parseFromTypeToString(Direction.CCW),
+                  'number',
+                )
+              }>
+              CCW
+            </ControlEntityParameterButton>
+            <ControlEntityParameterButton
+              isSelected={controlEntities[entity].direction === Direction.CW}
+              onSelected={() =>
+                onParameterChange(
+                  'direction',
+                  parseFromTypeToString(Direction.CW),
+                  'number',
+                )
+              }>
+              CW
+            </ControlEntityParameterButton>
           </View>
-        </>
+          <View style={tailwind('ml-4 items-center')}>
+            <ControlEntityParameterToggle
+              checked={controlEntities[entity].enable === Enable.High}
+              onChange={(checked) =>
+                onParameterChange(
+                  'enable',
+                  checked ? Enable.High.toString() : Enable.Low.toString(),
+                  'number',
+                )
+              }
+            />
+            <Text
+              category={'label'}
+              appearance={'hint'}
+              style={tailwind('mt-1')}>
+              Enable
+            </Text>
+          </View>
+        </View>
       ) : null}
 
       {controlInterface === ControlInterface.RealTimeControl ? (

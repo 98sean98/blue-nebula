@@ -2,9 +2,10 @@ import React, { FC, useEffect, useState } from 'react';
 import { NativeSyntheticEvent, TextInputFocusEventData } from 'react-native';
 import { Input, InputProps } from '@ui-kitten/components';
 
+import { DeclarableValueType, Value } from '@models/ValueType';
+
 import { parseFromTypeToString } from '@utilities/functions/parse';
 import { initialiseValueOfType } from '@utilities/functions/initialiseValueOfType';
-import { DeclarableValueType, Value } from '@models/ValueType';
 
 interface ControlEntityParameterInputProps extends InputProps {
   reduxValue: Value;
