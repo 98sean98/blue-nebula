@@ -47,9 +47,9 @@ export const useControlEntities = (): UseControlEntities => {
       wheelMotor: mapStringArrayToStepperMotor(
         stepMotorStringArray.slice(0, 6),
       ),
-      // screwMotor: mapStringArrayToStepperMotor(
-      //   stepMotorStringArray.slice(6, 12),
-      // ),
+      screwMotor: mapStringArrayToStepperMotor(
+        stepMotorStringArray.slice(6, 12),
+      ),
     };
 
     dispatch(setControlEntities(newControlEntities));

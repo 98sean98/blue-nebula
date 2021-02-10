@@ -15,7 +15,7 @@ export const ControlEntityCard: FC<ControlEntityCardProps> = ({
     <View {...headerViewProps}>
       <Text category={'h4'}>{title}</Text>
       <Text category={'label'} appearance={'hint'}>
-        {subtitle ?? 'Step motor control'}
+        {subtitle ?? 'Control entity'}
       </Text>
     </View>
   );
