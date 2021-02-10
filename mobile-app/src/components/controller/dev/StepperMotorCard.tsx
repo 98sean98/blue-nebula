@@ -131,7 +131,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
       {controlInterface === ControlInterface.RealTimeControl ? (
         <StepperMotorContinuousControl
           entity={entity}
-          style={tailwind('mt-4 w-4/5 self-center')}
+          style={tailwind('mt-4 w-full')}
         />
       ) : null}
     </ControlEntityCard>

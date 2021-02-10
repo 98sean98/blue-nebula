@@ -136,12 +136,13 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
+          style={tailwind('ml-1 w-20')}
           disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
           CCW
         </GhostButton>
-        <View style={tailwind('items-center')}>
+        <View style={tailwind('items-center mx-2')}>
           <View style={tailwind('flex-row items-end')}>
             <Text category={'h6'}>{revolution.current}</Text>
             <Text category={'s1'} style={tailwind('ml-1')}>
@@ -159,6 +160,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
+          style={tailwind('w-20')}
           disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
