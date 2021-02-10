@@ -45,7 +45,7 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const { write: writeStepMotor } = useBleRpiDeviceCharacteristic(
-    'stepMotors',
+    'stepperMotors',
     'string',
   );
 

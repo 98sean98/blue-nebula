@@ -34,12 +34,12 @@ export const useControlEntities = (): UseControlEntities => {
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const {
-    read: readStepMotors,
-    write: writeStepMotor,
-  } = useBleRpiDeviceCharacteristic('stepMotors', 'string');
+    read: readStepperMotors,
+    write: writeStepperMotor,
+  } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
 
   const readAll: UseControlEntities['readAll'] = useCallback(async () => {
-    const stepMotorString = (await readStepMotors()) as string;
+    const stepMotorString = (await readStepperMotors()) as string;
     // decipher string into control entity object
     const stepMotorStringArray = stepMotorString.split(', ');
 
@@ -53,7 +53,7 @@ export const useControlEntities = (): UseControlEntities => {
     };
 
     dispatch(setControlEntities(newControlEntities));
-  }, [dispatch, readStepMotors]);
+  }, [dispatch, readStepperMotors]);
 
   const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
     const strings = [
@@ -66,9 +66,9 @@ export const useControlEntities = (): UseControlEntities => {
     ];
 
     for (const string of strings) {
-      if (string.length > 0) await writeStepMotor(string);
+      if (string.length > 0) await writeStepperMotor(string);
     }
-  }, [controlEntities, writeStepMotor]);
+  }, [controlEntities, writeStepperMotor]);
 
   const setControlEntityByParameter: UseControlEntities['setControlEntityByParameter'] = (
     entity,
