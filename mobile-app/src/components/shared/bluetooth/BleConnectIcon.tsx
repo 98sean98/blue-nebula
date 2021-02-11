@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, ButtonProps, Icon, IconProps } from '@ui-kitten/components';
 
 import { RootState } from '@reduxApp';
-import { cancelConnect, connectAsync } from '@reduxApp/bluetooth/actions';
+import {
+  cancelConnect,
+  connectAsync,
+  setIsBleRpiDeviceConnected,
+} from '@reduxApp/bluetooth/actions';
 
 interface BleConnectIconProps extends Omit<ButtonProps, 'onPress'> {
   iconProps?: IconProps;
@@ -18,9 +22,14 @@ export const BleConnectIcon: FC<BleConnectIconProps> = ({
     (state: RootState) => state.bluetooth,
   );
 
-  const onScanAndConnectPress = () => {
+  const onPress = () => {
     if (!isScanningAndConnecting) dispatch(connectAsync());
     else dispatch(cancelConnect());
+  };
+
+  const onLongPress = () => {
+    if (isScanningAndConnecting) dispatch(cancelConnect());
+    if (isBleRpiDeviceConnected) dispatch(setIsBleRpiDeviceConnected(false));
   };
 
   // button status depicts icon color
@@ -38,7 +47,8 @@ export const BleConnectIcon: FC<BleConnectIconProps> = ({
         <Icon {...accessoryProps} {...iconProps} name={'bluetooth'} />
       )}
       {...props}
-      onPress={onScanAndConnectPress}
+      onPress={onPress}
+      onLongPress={onLongPress}
     />
   );
 };
