@@ -3,23 +3,8 @@ import RPi.GPIO as GPIO
 
 from motor import Motor
 
-pulse_per_revolution = 70
-
 class StepperMotor(Motor):
     '''A stepper motor instance connected to the device'''
-
-    # parameters (order of the dictionary keys is important)
-    parameters = {
-        'pulse_interval': 300, # in micro seconds
-        'revolution': 20, # number of revolutions
-        'pulse_per_revolution': 700,
-        'direction': 0, # 0 is LOW, 1 is HIGH
-        'enable': 1 # 0 is LOW, 1 is HIGH
-    }
-
-    initial_tracked_parameters = {
-        'revolution': 0
-    }
 
     def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None):
         # pins
@@ -28,12 +13,21 @@ class StepperMotor(Motor):
         self.direction_pin = direction_pin
         self.enable_pin = enable_pin
 
+        # parameters (order of the dictionary keys is important)
+        self.parameters = {
+            'pulse_interval': 300, # in micro seconds
+            'revolution': 20, # number of revolutions
+            'pulse_per_revolution': 700,
+            'direction': 0, # 0 is LOW, 1 is HIGH
+            'enable': 1 # 0 is LOW, 1 is HIGH
+        }
+
         # initialise GPIO
         GPIO.setup(self.pulse_pin, GPIO.OUT)
         GPIO.setup(self.direction_pin, GPIO.OUT)
         GPIO.setup(self.enable_pin, GPIO.OUT)
 
-        super().__init__(motor_name, multiprocessing_manager, self.initial_tracked_parameters)
+        super().__init__(motor_name, multiprocessing_manager, {'revolution': 0})
 
     def get_pins(self):
         pins = {'pulse_pin': self.pulse_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin}

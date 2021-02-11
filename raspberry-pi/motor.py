@@ -5,15 +5,16 @@ from time import sleep, time
 class Motor:
     '''This is a generic motor connected to the device.'''
 
-    is_running = Value(c_bool, False)
-    running_duration = Value(c_double, 0.0)
-
-    processes = []
-
-    tracked_parameters = None
-
     def __init__(self, motor_name, multiprocessing_manager = None, initial_tracked_parameters = None):
         self.motor_name = motor_name
+
+        self.is_running = Value(c_bool, False)
+        self.running_duration = Value(c_double, 0.0)
+
+        self.processes = []
+
+        self.tracked_parameters = None
+
         if multiprocessing_manager is not None and initial_tracked_parameters is not None:
             self.tracked_parameters = multiprocessing_manager.dict(initial_tracked_parameters)
             self.initial_tracked_parameters = initial_tracked_parameters
