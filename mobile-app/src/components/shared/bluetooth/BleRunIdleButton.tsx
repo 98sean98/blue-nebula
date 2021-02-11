@@ -5,7 +5,7 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { Dimensions, ScrollView, View } from 'react-native';
+import { Dimensions, ScrollView } from 'react-native';
 import { Button, ButtonProps, Card, Modal, Text } from '@ui-kitten/components';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -18,6 +18,7 @@ import {
 
 import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
 import { ControlEntitySummary } from '@components/shared/interface';
+import { ConfirmationButtonGroup } from '@components/shared/actionable';
 
 interface BleRunIdleButtonProps extends Omit<ButtonProps, 'onPress'> {
   showVerbose?: boolean;
@@ -102,29 +103,21 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
         backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         onBackdropPress={() => setShouldShowModal(false)}>
         <Card disabled style={tailwind('m-4')}>
-          <Text category={'h5'}>Are you ready to start?</Text>
+          <Text category={'h5'} style={tailwind('text-center')}>
+            Are you ready to start?
+          </Text>
           {showVerbose ? (
             <ScrollView
               style={{ maxHeight: Dimensions.get('window').height * 0.6 }}>
-              <ControlEntitySummary style={tailwind('mt-1')} />
+              <ControlEntitySummary style={tailwind('mt-2')} />
             </ScrollView>
           ) : null}
-          <View style={tailwind('mt-3 flex-row justify-between')}>
-            <Button
-              appearance={'ghost'}
-              status={'warning'}
-              size={'large'}
-              onPress={() => setShouldShowModal(false)}>
-              No
-            </Button>
-            <Button
-              appearance={'ghost'}
-              status={'success'}
-              size={'large'}
-              onPress={onConfirmStartPress}>
-              Yes
-            </Button>
-          </View>
+
+          <ConfirmationButtonGroup
+            onNoPress={() => setShouldShowModal(false)}
+            onYesPress={onConfirmStartPress}
+            style={tailwind('mt-3')}
+          />
         </Card>
       </Modal>
     </>
