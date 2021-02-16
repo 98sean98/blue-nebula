@@ -14,6 +14,7 @@ import {
   setBleRpiDeviceServicesCharacteristics,
   setIsBleRpiDeviceConnected,
   setIsScanningConnecting,
+  startMonitoringConnectionAsync,
 } from '../actions';
 import { SetBleRpiDeviceServicesCharacteristics } from '../types';
 import { BluetoothConstants } from '../constants';
@@ -82,6 +83,20 @@ export function* connectAsyncSaga({}: ConnectAsyncBluetoothAction): Generator<
       );
       // mark BleRpiDevice as connected
       yield put(setIsBleRpiDeviceConnected(true));
+
+      // if should monitor device connection is true in settings, try to start monitoring
+      try {
+        const shouldMonitorDeviceConnection = yield select(
+          (state: RootState) => state.settings.shouldMonitorDeviceConnection,
+        );
+        if (shouldMonitorDeviceConnection)
+          yield put(startMonitoringConnectionAsync());
+      } catch (e) {
+        console.log(
+          'error starting to monitor device connection after device has been connected successfully',
+          e,
+        );
+      }
     } catch (e) {
       yield put(setIsBleRpiDeviceConnected(false));
       yield put(cancelConnect());

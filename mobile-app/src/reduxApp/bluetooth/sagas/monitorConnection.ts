@@ -22,6 +22,8 @@ export function* monitorConnection(): Generator<any, void> {
     console.log(
       'device is not connected, therefore connection monitoring cannot be initialised',
     );
+    // kill the start connection task itself
+    yield put(stopMonitoringConnection());
     return;
   }
 
