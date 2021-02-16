@@ -1,0 +1,12 @@
+[Unit]
+Description=Scraper Control Program
+After=multi-user.target bluetooth.service bluetooth.target
+Requires=bluetooth.service bluetooth.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/Documents/scraper/raspberry-pi/main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
