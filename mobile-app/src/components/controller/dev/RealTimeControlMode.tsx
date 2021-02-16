@@ -16,7 +16,7 @@ import { StepperMotorCard } from './StepperMotorCard';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
-import { mapStepperMotorToString } from '@utilities/functions/stepper-motor';
+import { mapControlEntityToString } from '@utilities/functions/map';
 
 interface RealTimeControlModeProps {
   isFocused: boolean;
@@ -61,11 +61,11 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   const onEnablePinOff = async () => {
     try {
       const strings = [
-        mapStepperMotorToString({
+        mapControlEntityToString({
           ...controlEntities.wheelMotor,
           enable: Enable.Low,
         }),
-        mapStepperMotorToString({
+        mapControlEntityToString({
           ...controlEntities.screwMotor,
           enable: Enable.Low,
         }),

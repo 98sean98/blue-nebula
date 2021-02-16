@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useMemo } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -15,7 +15,7 @@ import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
-import { mapStepperMotorToString } from '@utilities/functions/stepper-motor/mapStepperMotorToString';
+import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
 
 interface StepperMotorContinuousControlProps extends ViewProps {
@@ -39,7 +39,10 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
   ...props
 }) => {
   const { controlEntities } = useSelector((state: RootState) => state.control);
-  const controlEntityObject = controlEntities[entity];
+  const controlEntityObject = useMemo(() => controlEntities[entity], [
+    controlEntities,
+    entity,
+  ]);
 
   const {
     write: writeStepperMotor,
@@ -58,7 +61,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
   ) => {
     try {
       if (isRunning) {
-        const stringValue = mapStepperMotorToString({
+        const stringValue = mapControlEntityToString({
           ...controlEntityObject,
           revolution: 2000, // arbitrarily large revolution number
           direction,
@@ -74,7 +77,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         setIsControlDisabled(true);
         await WriteRunIdle(false);
         monitorStepperMotor.stop();
-        const stringValue = mapStepperMotorToString({
+        const stringValue = mapControlEntityToString({
           ...controlEntityObject,
           enable: Enable.Low,
         });

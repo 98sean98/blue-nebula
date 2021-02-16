@@ -1,24 +1,23 @@
-import { StepperMotor } from '@models/control-entity';
+import { ControlEntity, ControlEntityEnum } from '@models/control-entity';
 
-export type DeclaredControlEntities = {
-  wheelMotor: StepperMotor;
-  screwMotor: StepperMotor;
-};
+export type DeclaredControlEntities = Record<string, ControlEntity>;
 
 export const declaredControlEntities: DeclaredControlEntities = {
   wheelMotor: {
     name: 'wheel_motor',
-    pulseInterval: 300,
-    revolution: 20,
-    pulsePerRevolution: 140,
+    type: ControlEntityEnum.StepperMotor,
+    pulseInterval: 150,
+    revolution: 200,
+    pulsePerRevolution: 500,
     direction: 0,
     enable: 0,
   },
   screwMotor: {
     name: 'screw_motor',
-    pulseInterval: 300,
-    revolution: 20,
-    pulsePerRevolution: 140,
+    type: ControlEntityEnum.StepperMotor,
+    pulseInterval: 150,
+    revolution: 200,
+    pulsePerRevolution: 500,
     direction: 0,
     enable: 0,
   },

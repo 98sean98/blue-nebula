@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useCallback } from 'react';
+import React, { ComponentProps, FC, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { DeclaredControlEntities } from '@config/declaredControlEntities';
 
 import { DeclarableValueType } from '@models/ValueType';
 import { ControlInterface } from '@models/ControlInterface';
-import { Direction, Enable } from '@models/control-entity';
+import { Direction, Enable, StepperMotor } from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
 
@@ -36,6 +36,10 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   ...props
 }) => {
   const { controlEntities } = useSelector((state: RootState) => state.control);
+  const controlEntity = useMemo(() => controlEntities[entity] as StepperMotor, [
+    controlEntities,
+    entity,
+  ]);
 
   const { setControlEntityByParameter } = useControlEntities();
 
@@ -53,7 +57,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         placeholder={
           'step pulse (the lower this value, the faster the motor runs)'
         }
-        reduxValue={controlEntities[entity].pulseInterval}
+        reduxValue={controlEntity.pulseInterval}
         onInputBlur={(value) =>
           onParameterChange('pulseInterval', value || '0', 'number')
         }
@@ -64,7 +68,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
           keyboardType={'decimal-pad'}
           label={'Revolution'}
           placeholder={'rotational distance traversed by the motor'}
-          reduxValue={controlEntities[entity].revolution}
+          reduxValue={controlEntity.revolution}
           onInputBlur={(value) =>
             onParameterChange('revolution', value || '0', 'number')
           }
@@ -75,7 +79,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         keyboardType={'number-pad'}
         label={'Pulse per Revolution'}
         placeholder={'number of pulses per revolution'}
-        reduxValue={controlEntities[entity].pulsePerRevolution}
+        reduxValue={controlEntity.pulsePerRevolution}
         onInputBlur={(value) =>
           onParameterChange('pulsePerRevolution', value || '0', 'number')
         }
@@ -85,7 +89,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         <View style={tailwind('mt-3 flex-row justify-between items-center')}>
           <View style={tailwind('flex-row items-center')}>
             <ControlEntityParameterButton
-              isSelected={controlEntities[entity].direction === Direction.CCW}
+              isSelected={controlEntity.direction === Direction.CCW}
               onSelected={() =>
                 onParameterChange(
                   'direction',
@@ -96,7 +100,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
               CCW
             </ControlEntityParameterButton>
             <ControlEntityParameterButton
-              isSelected={controlEntities[entity].direction === Direction.CW}
+              isSelected={controlEntity.direction === Direction.CW}
               onSelected={() =>
                 onParameterChange(
                   'direction',
@@ -109,7 +113,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
           </View>
           <View style={tailwind('ml-4 items-center')}>
             <ControlEntityParameterToggle
-              checked={controlEntities[entity].enable === Enable.High}
+              checked={controlEntity.enable === Enable.High}
               onChange={(checked) =>
                 onParameterChange(
                   'enable',

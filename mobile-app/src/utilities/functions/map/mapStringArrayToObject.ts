@@ -2,7 +2,7 @@ import { DeclarableValueType, Value } from '@models/ValueType';
 
 import { parseStringToType } from '@utilities/functions/parse';
 
-export const mapArrayToObject = (
+export const mapStringArrayToObject = (
   values: Array<string>,
   objectKeys: Array<{
     key: string;
