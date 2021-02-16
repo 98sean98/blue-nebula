@@ -8,7 +8,7 @@ import { tailwind } from '@styles/tailwind';
 import { DeclaredControlEntities } from '@config/declaredControlEntities';
 
 import { DeclarableValueType } from '@models/ValueType';
-import { ControlInterface } from '@models/ControlInterface';
+import { DevControlInterface } from '@models/DevControlInterface';
 import { Direction, Enable, StepperMotor } from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
@@ -27,7 +27,7 @@ import { parseFromTypeToString } from '@utilities/functions/parse';
 interface StepperMotorCardProps
   extends ComponentProps<typeof ControlEntityCard> {
   entity: keyof DeclaredControlEntities;
-  controlInterface: ControlInterface;
+  controlInterface: DevControlInterface;
 }
 
 export const StepperMotorCard: FC<StepperMotorCardProps> = ({
@@ -63,7 +63,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         }
       />
 
-      {controlInterface === ControlInterface.Testing ? (
+      {controlInterface === DevControlInterface.Testing ? (
         <ControlEntityParameterInput
           keyboardType={'decimal-pad'}
           label={'Revolution'}
@@ -85,7 +85,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         }
       />
 
-      {controlInterface === ControlInterface.Testing ? (
+      {controlInterface === DevControlInterface.Testing ? (
         <View style={tailwind('mt-3 flex-row justify-between items-center')}>
           <View style={tailwind('flex-row items-center')}>
             <ControlEntityParameterButton
@@ -132,7 +132,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         </View>
       ) : null}
 
-      {controlInterface === ControlInterface.RealTimeControl ? (
+      {controlInterface === DevControlInterface.RealTimeControl ? (
         <StepperMotorContinuousControl
           entity={entity}
           style={tailwind('mt-4 w-full')}

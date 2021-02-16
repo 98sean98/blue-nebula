@@ -1,4 +1,4 @@
-export enum ControlInterface {
+export enum DevControlInterface {
   Testing = 'Testing',
   RealTimeControl = 'RealTimeControl',
 }

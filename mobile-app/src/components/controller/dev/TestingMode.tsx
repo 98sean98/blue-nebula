@@ -4,7 +4,7 @@ import { Divider } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControlInterface } from '@models/ControlInterface';
+import { DevControlInterface } from '@models/DevControlInterface';
 
 import { MotorCard } from '@containers/generic/DevControllerScreen';
 
@@ -26,7 +26,7 @@ export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
   }) => (
     <StepperMotorCard
       entity={entity}
-      controlInterface={ControlInterface.Testing}
+      controlInterface={DevControlInterface.Testing}
       headerParams={{ title }}
       style={[tailwind('my-2 mx-4')]}
     />

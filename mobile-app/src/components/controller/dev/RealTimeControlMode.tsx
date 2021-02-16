@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControlInterface } from '@models/ControlInterface';
+import { DevControlInterface } from '@models/DevControlInterface';
 import { Enable } from '@models/control-entity';
 
 import { MotorCard } from '@containers/generic/DevControllerScreen';
@@ -32,7 +32,7 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   }) => (
     <StepperMotorCard
       entity={entity}
-      controlInterface={ControlInterface.RealTimeControl}
+      controlInterface={DevControlInterface.RealTimeControl}
       headerParams={{ title }}
       style={[tailwind('my-2 mx-4')]}
     />
