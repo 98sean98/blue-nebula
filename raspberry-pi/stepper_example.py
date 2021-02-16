@@ -78,7 +78,7 @@ def run_cycle(cycles):
     print('Duration Fwd set to ' + str(durationFwd))
     print('Duration Bwd set to ' + str(durationBwd))
     #
-    pulse_interval = 300 # This is actualy a delay interval between PUL pulses - effectively sets the mtor rotation speed (in micro seconds)
+    pulse_interval = 100 # This is actualy a delay interval between PUL pulses - effectively sets the mtor rotation speed (in micro seconds)
     print('Speed set to ' + str(pulse_interval))
     #
     cyclecount = 0 # This is the iteration of cycles to be run once program is started.
@@ -93,3 +93,6 @@ def run_cycle(cycles):
 
     GPIO.cleanup()
     print('Cycling Completed')
+
+if __name__ == '__main__':
+    run_cycle(10)
