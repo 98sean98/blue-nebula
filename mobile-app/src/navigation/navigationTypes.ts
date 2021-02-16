@@ -9,6 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 export type RootStackParamList = {
   DevController: undefined;
   SimpleController: undefined;
+  Settings: undefined;
 };
 
 type RootScreenProps<T extends keyof RootStackParamList> = {
@@ -19,3 +20,5 @@ type RootScreenProps<T extends keyof RootStackParamList> = {
 export type DevControllerScreenProps = RootScreenProps<'DevController'>;
 
 export type SimpleControllerScreenProps = RootScreenProps<'SimpleController'>;
+
+export type SettingsScreenProps = RootScreenProps<'Settings'>;

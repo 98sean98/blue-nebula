@@ -6,6 +6,7 @@ import { RootStackParamList } from './navigationTypes';
 import { CustomHeader } from '@navigation/CustomHeader';
 import {
   DevControllerScreen,
+  SettingsScreen,
   SimpleControllerScreen,
 } from '@containers/generic';
 
@@ -25,5 +26,6 @@ export const RootNavigator: FC = () => (
       component={SimpleControllerScreen}
       options={{ headerTitle: 'Simple Controller' }}
     />
+    <Stack.Screen name={'Settings'} component={SettingsScreen} />
   </Stack.Navigator>
 );
