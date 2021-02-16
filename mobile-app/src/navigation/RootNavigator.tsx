@@ -3,16 +3,27 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { RootStackParamList } from './navigationTypes';
 
-import { ControllerScreen } from '@containers/generic';
+import { CustomHeader } from '@navigation/CustomHeader';
+import {
+  DevControllerScreen,
+  SimpleControllerScreen,
+} from '@containers/generic';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: FC = () => (
-  <Stack.Navigator>
+  <Stack.Navigator
+    screenOptions={{ header: (props) => <CustomHeader {...props} /> }}
+    initialRouteName={'SimpleController'}>
     <Stack.Screen
-      name={'Controller'}
-      component={ControllerScreen}
-      options={{ headerTitle: 'Scraper Controller' }}
+      name={'DevController'}
+      component={DevControllerScreen}
+      options={{ headerTitle: 'Developer Controller' }}
+    />
+    <Stack.Screen
+      name={'SimpleController'}
+      component={SimpleControllerScreen}
+      options={{ headerTitle: 'Simple Controller' }}
     />
   </Stack.Navigator>
 );

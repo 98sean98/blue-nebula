@@ -1,1 +1,2 @@
-export { ControllerScreen } from './ControllerScreen';
+export { DevControllerScreen } from './DevControllerScreen';
+export { SimpleControllerScreen } from './SimpleControllerScreen';

@@ -1,0 +1,1 @@
+export { SimpleControllerOption } from './SimpleControllerOption';

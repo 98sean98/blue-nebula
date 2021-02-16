@@ -10,6 +10,7 @@ const initialState: BluetoothState = {
   bleManager: new BleManager(),
   bleManagerState: State.Unknown,
   isScanningAndConnecting: false,
+  isMonitoringBleRpiDeviceConnection: false,
   isBleRpiDeviceConnected: false,
 };
 
@@ -24,6 +25,8 @@ export const bluetoothReducer = (
       return { ...state, bleManagerState: action.payload };
     case BluetoothConstants.SET_IS_SCANNING_AND_CONNECTING:
       return { ...state, isScanningAndConnecting: action.payload };
+    case BluetoothConstants.SET_IS_MONITORING_BLE_RPI_DEVICE_CONNECTION:
+      return { ...state, isMonitoringBleRpiDeviceConnection: action.payload };
     case BluetoothConstants.SET_IS_BLE_RPI_DEVICE_CONNECTED:
       return { ...state, isBleRpiDeviceConnected: action.payload };
     case BluetoothConstants.SET_BLE_RPI_DEVICE_SERVICES_CHARACTERISTICS:
@@ -41,16 +44,18 @@ export const bluetoothReducer = (
           ...bleRpiDeviceServicesAndCharacteristics?.characteristics,
         },
       };
-      console.log(combinedBleRpiDeviceServicesAndCharacteristics);
       return {
         ...state,
-        bleRpiDevice,
+        bleRpiDevice:
+          typeof bleRpiDevice !== 'undefined'
+            ? bleRpiDevice
+            : state.bleRpiDevice,
         bleRpiDeviceServicesAndCharacteristics:
           // check if the combined state has keys
           Object.keys(combinedBleRpiDeviceServicesAndCharacteristics).length > 0
             ? // it is safe to take the combined state to be fully populated with services and characteristics as this reducer should never be called if the device is not connected
               (combinedBleRpiDeviceServicesAndCharacteristics as BleRpiDeviceServicesAndCharacteristics)
-            : undefined,
+            : state.bleRpiDeviceServicesAndCharacteristics,
       };
     default:
       // saga actions would just return the state

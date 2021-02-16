@@ -9,6 +9,7 @@ import {
 import { BleManager, Device } from 'react-native-ble-plx';
 
 import {
+  cancelConnect,
   ConnectAsyncBluetoothAction,
   setBleRpiDeviceServicesCharacteristics,
   setIsBleRpiDeviceConnected,
@@ -83,10 +84,12 @@ export function* connectAsyncSaga({}: ConnectAsyncBluetoothAction): Generator<
       yield put(setIsBleRpiDeviceConnected(true));
     } catch (e) {
       yield put(setIsBleRpiDeviceConnected(false));
+      yield put(cancelConnect());
       console.log('error getting services and characteristics:', e);
     }
   } catch (e) {
     yield put(setIsBleRpiDeviceConnected(false));
+    yield put(cancelConnect());
     console.log('error connecting to device:', e);
   } finally {
     // in any case, scanning and connecting action is stopped

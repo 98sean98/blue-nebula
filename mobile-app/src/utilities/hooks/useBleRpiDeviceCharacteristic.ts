@@ -1,27 +1,35 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
+import { Characteristic, Subscription } from 'react-native-ble-plx';
+import { useSelector } from 'react-redux';
 import * as base64 from 'base-64';
 
 import { BleRpiDeviceCharacteristicKeys } from '@models/BleRpiDevice';
+import { DeclarableValueType, Value } from '@models/ValueType';
 
 import { RootState } from '@reduxApp/rootReducer';
-import { Characteristic } from 'react-native-ble-plx';
-import { setBleRpiDeviceServicesCharacteristics } from '@reduxApp/bluetooth/actions';
-
-type ValueType = 'string' | 'number';
+import {
+  parseFromTypeToString,
+  parseStringToType,
+} from '@utilities/functions/parse';
 
 type UseBleRpiDeviceCharacteristic = {
-  read: () => Promise<string | number>;
-  write: (value: string | number) => Promise<void>;
+  read: () => Promise<Value>;
+  write: (value: Value) => Promise<void>;
+  monitor: {
+    start: (decipherMonitorValue?: (rawValue: string) => Value) => void;
+    stop: () => void;
+    isMonitoring: boolean;
+    value: Value | undefined;
+  };
 };
 
 export function useBleRpiDeviceCharacteristic(
   characteristicKey: BleRpiDeviceCharacteristicKeys,
-  valueType: ValueType,
+  valueType: DeclarableValueType,
 ): UseBleRpiDeviceCharacteristic {
   const { bleRpiDeviceServicesAndCharacteristics } = useSelector(
     (state: RootState) => state.bluetooth,
   );
-  const dispatch = useDispatch();
 
   const getCharacteristic = (): Characteristic => {
     if (!bleRpiDeviceServicesAndCharacteristics)
@@ -41,46 +49,20 @@ export function useBleRpiDeviceCharacteristic(
       throw new Error('characteristic could not be read');
 
     const returnedCharacteristic = await characteristic.read();
-    if (!returnedCharacteristic?.value) throw new Error('value is undefined');
-
-    // save the newly returned characteristic in redux
-    dispatch(
-      setBleRpiDeviceServicesCharacteristics({
-        bleRpiDeviceServicesAndCharacteristics: {
-          characteristics: {
-            [characteristicKey]: returnedCharacteristic,
-          },
-        },
-      }),
-    );
+    if (!returnedCharacteristic?.value)
+      throw new Error('read value is undefined');
 
     const decoded = base64.decode(returnedCharacteristic.value);
 
-    switch (valueType) {
-      case 'string':
-        return decoded;
-      case 'number':
-        return parseFloat(decoded);
-      default:
-        return decoded;
-    }
+    const value = parseStringToType(decoded, valueType);
+
+    return value ?? '';
   };
 
   const write: UseBleRpiDeviceCharacteristic['write'] = async (value) => {
     const characteristic = getCharacteristic();
 
-    let stringValue: string;
-
-    switch (typeof value) {
-      case 'string':
-        stringValue = value;
-        break;
-      case 'number':
-        stringValue = value.toString();
-        break;
-      default:
-        throw new Error('the value is not a string, nor a number');
-    }
+    const stringValue = parseFromTypeToString(value);
 
     const encoded = base64.encode(stringValue);
 
@@ -91,5 +73,55 @@ export function useBleRpiDeviceCharacteristic(
     else throw new Error('characteristic could not be written');
   };
 
-  return { read, write };
+  const [isMonitoring, setIsMonitoring] = useState<boolean>(false);
+  const [monitoredValue, setMonitoredValue] = useState<Value>();
+  const [monitorSubscription, setMonitorSubscription] = useState<
+    Subscription
+  >();
+
+  const start: UseBleRpiDeviceCharacteristic['monitor']['start'] = (
+    decipherMonitorValue,
+  ) => {
+    const characteristic = getCharacteristic();
+
+    if (!characteristic.isNotifiable)
+      throw new Error('characteristic is not notifiable');
+
+    const newSubscription = characteristic.monitor(
+      (error, returnedCharacteristic) => {
+        if (error !== null)
+          throw new Error(`${error.errorCode}: ${error.message}`);
+
+        if (!returnedCharacteristic?.value)
+          throw new Error('read value is undefined');
+
+        const decoded = base64.decode(returnedCharacteristic.value);
+
+        const value =
+          typeof decipherMonitorValue !== 'undefined'
+            ? decipherMonitorValue(decoded)
+            : parseStringToType(decoded, valueType);
+
+        setMonitoredValue(value);
+      },
+    );
+
+    setIsMonitoring(true);
+    setMonitoredValue(undefined);
+    setMonitorSubscription(newSubscription);
+  };
+
+  const stop: UseBleRpiDeviceCharacteristic['monitor']['stop'] = () => {
+    if (typeof monitorSubscription !== 'undefined') {
+      monitorSubscription.remove();
+      setMonitorSubscription(undefined);
+    }
+    setIsMonitoring(false);
+  };
+
+  return {
+    read,
+    write,
+    monitor: { start, stop, isMonitoring, value: monitoredValue },
+  };
 }

@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
-import { exampleCounterReducer } from './exampleCounter';
+
 import { bluetoothReducer } from './bluetooth';
+import { controlReducer } from './control';
 
 export const rootReducer = combineReducers({
-  exampleCounter: exampleCounterReducer,
   bluetooth: bluetoothReducer,
+  control: controlReducer,
 });
 
 // infer the root state from reducers
