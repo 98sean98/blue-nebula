@@ -45,8 +45,7 @@ class Motor:
         duration = Process(target=self.track_running_duration, args=[self.running_duration])
         main.start()
         duration.start()
-        self.processes.append(main)
-        self.processes.append(duration)
+        self.processes = [main, duration]
 
     def terminate_processes(self):
         self.stop_running()
@@ -54,16 +53,18 @@ class Motor:
             if p.is_alive():
                 p.terminate()
                 p.join()
+        self.processes = []
 
     def reset_running_parameters(self):
         # reset tracked parameters
         for [key, value] in list(self.initial_tracked_parameters.items()):
             self.tracked_parameters[key] = value
         # reset running duration
-        self.running_duration = Value(c_double, 0.0)
+        self.running_duration.value = 0.0
 
     def run(self, is_running, tracked_parameters):
         is_running.value = False
+        print(f"{self.motor_name} has finished running!")
 
     def stop_running(self):
         pass

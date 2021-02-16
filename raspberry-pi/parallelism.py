@@ -18,16 +18,19 @@ def main():
     p = Process(target=sleep_with_duration, args=(180, parameter))
     p.start()
 
-    motor = TestMotor('motor', manager)
+    motors = [TestMotor('motor_1', manager), TestMotor('motor_2', manager)]
 
     while p.is_alive():
         user_prompt = input('Enter command: ')
         if user_prompt == '0': break
         is_running = user_prompt == '1'
-        motor.set_is_running(is_running)
-        print(motor.get_tracked_parameters(), motor.get_running_duration())
+        for motor in motors:
+            motor.set_is_running(is_running)
+        for motor in motors:
+            print(motor.motor_name, motor.get_tracked_parameters(), motor.get_running_duration())
 
-    motor.terminate_processes()
+    for motor in motors:
+        motor.terminate_processes()
     if p.is_alive(): p.terminate()
     p.join()
 
