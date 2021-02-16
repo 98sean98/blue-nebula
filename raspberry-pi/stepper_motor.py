@@ -6,7 +6,7 @@ from motor import Motor
 class StepperMotor(Motor):
     '''A stepper motor instance connected to the device'''
 
-    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None):
+    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None, initial_parameters=None):
         # pins
         # note that these pins are based on BCM, see https://pinout.xyz/ and look for GPIO pins
         self.pulse_pin = pulse_pin
@@ -15,12 +15,12 @@ class StepperMotor(Motor):
 
         # parameters (order of the dictionary keys is important)
         self.parameters = {
-            'pulse_interval': 300, # in micro seconds
-            'revolution': 20, # number of revolutions
-            'pulse_per_revolution': 700,
+            'pulse_interval': 150, # in micro seconds
+            'revolution': 200, # number of revolutions
+            'pulse_per_revolution': 500,
             'direction': 0, # 0 is LOW, 1 is HIGH
-            'enable': 1 # 0 is LOW, 1 is HIGH
-        }
+            'enable': 0 # 0 is LOW, 1 is HIGH
+        } if initial_parameters is None else initial_parameters
 
         # initialise GPIO
         GPIO.setup(self.pulse_pin, GPIO.OUT)
