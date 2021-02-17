@@ -15,10 +15,10 @@ export const SettingsLayer: FC = ({ children }) => {
 
   useEffect(() => {
     const readStorage = async () => {
-      const settingsJson = await AsyncStorage.getItem('settings');
-      if (settingsJson !== null) {
+      const json = await AsyncStorage.getItem('settings');
+      if (json !== null) {
         console.log('successfully read settings data from storage!');
-        dispatch(setSettings(JSON.parse(settingsJson)));
+        dispatch(setSettings(JSON.parse(json)));
       }
     };
 
