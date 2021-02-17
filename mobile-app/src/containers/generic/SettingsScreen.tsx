@@ -1,7 +1,8 @@
-import React, { FC } from 'react';
-import { ScrollView, View } from 'react-native';
+import React, { FC, useEffect } from 'react';
+import { Alert, ScrollView, View } from 'react-native';
 import { Text, Toggle } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { SettingsScreenProps } from '@navigation/navigationTypes';
 
@@ -13,12 +14,32 @@ import { setSettings } from '@reduxApp/settings/actions';
 export const SettingsScreen: FC<SettingsScreenProps> = () => {
   const dispatch = useDispatch();
 
+  const settings = useSelector((state: RootState) => state.settings);
+
+  useEffect(() => {
+    const writeStorage = async () => {
+      const newSettingsJson = JSON.stringify(settings);
+      const oldSettingsJson = await AsyncStorage.getItem('settings');
+      if (oldSettingsJson !== null)
+        await AsyncStorage.mergeItem('settings', newSettingsJson);
+      else await AsyncStorage.setItem('settings', newSettingsJson);
+    };
+    try {
+      writeStorage().then();
+      console.log('successfully wrote settings data into storage!');
+    } catch (error) {
+      console.log(error);
+      Alert.alert(
+        'Write Storage Error',
+        'There was an error writing app settings data into your phone storage.',
+      );
+    }
+  }, [settings]);
+
+  const { shouldMonitorDeviceConnection } = settings;
+
   const { isScanningAndConnecting } = useSelector(
     (state: RootState) => state.bluetooth,
-  );
-
-  const { shouldMonitorDeviceConnection } = useSelector(
-    (state: RootState) => state.settings,
   );
 
   return (
