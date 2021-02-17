@@ -5,6 +5,7 @@ import { Divider } from '@ui-kitten/components';
 import { tailwind } from '@styles/tailwind';
 
 import { DevControlInterface } from '@models/DevControlInterface';
+import { ControlEntityEnum } from '@models/control-entity';
 
 import { MotorCard } from '@containers/main/DevControllerScreen';
 
@@ -14,8 +15,8 @@ import {
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
 import {
-  Timer,
   CreateNewControlEntityButton,
+  Timer,
 } from '@components/shared/actionable';
 
 interface TestingModeProps {
@@ -25,15 +26,22 @@ interface TestingModeProps {
 
 export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
   const renderItem: ListRenderItem<typeof motors[0]> = ({
-    item: { entity, title },
-  }) => (
-    <StepperMotorCard
-      entity={entity}
-      controlInterface={DevControlInterface.Testing}
-      headerParams={{ title }}
-      style={[tailwind('my-2 mx-4')]}
-    />
-  );
+    item: { entity, title, type },
+  }) => {
+    switch (type) {
+      case ControlEntityEnum.StepperMotor:
+        return (
+          <StepperMotorCard
+            entity={entity}
+            controlInterface={DevControlInterface.Testing}
+            headerParams={{ title }}
+            style={[tailwind('my-2 mx-4')]}
+          />
+        );
+      case ControlEntityEnum.DCMotor:
+        return <></>;
+    }
+  };
 
   const keyExtractor = (item: MotorCard) => item.entity;
 

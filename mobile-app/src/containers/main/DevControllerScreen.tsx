@@ -13,11 +13,12 @@ import { RootState } from '@reduxApp';
 import { RealTimeControlMode, TestingMode } from '@components/controller/dev';
 import { RenderBleComponent } from '@components/shared/bluetooth';
 
-import { ControlEntities } from '@models/control-entity';
+import { ControlEntities, ControlEntityEnum } from '@models/control-entity';
 
 export type MotorCard = {
   entity: keyof ControlEntities;
   title: string;
+  type: ControlEntityEnum;
 };
 
 export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
@@ -27,9 +28,10 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
 
   const motors: Array<MotorCard> = useMemo(
     () =>
-      Object.entries(controlEntities).map(([entity, { name }]) => ({
+      Object.entries(controlEntities).map(([entity, { name, type }]) => ({
         entity,
         title: capitalCase(name),
+        type,
       })),
     [controlEntities],
   );

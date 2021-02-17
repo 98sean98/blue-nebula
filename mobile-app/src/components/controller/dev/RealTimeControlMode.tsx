@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { tailwind } from '@styles/tailwind';
 
 import { DevControlInterface } from '@models/DevControlInterface';
-import { Enable } from '@models/control-entity';
+import { ControlEntityEnum, Enable } from '@models/control-entity';
 
 import { MotorCard } from '@containers/main/DevControllerScreen';
 
@@ -28,15 +28,22 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   motors,
 }) => {
   const renderItem: ListRenderItem<typeof motors[0]> = ({
-    item: { entity, title },
-  }) => (
-    <StepperMotorCard
-      entity={entity}
-      controlInterface={DevControlInterface.RealTimeControl}
-      headerParams={{ title }}
-      style={[tailwind('my-2 mx-4')]}
-    />
-  );
+    item: { entity, title, type },
+  }) => {
+    switch (type) {
+      case ControlEntityEnum.StepperMotor:
+        return (
+          <StepperMotorCard
+            entity={entity}
+            controlInterface={DevControlInterface.Testing}
+            headerParams={{ title }}
+            style={[tailwind('my-2 mx-4')]}
+          />
+        );
+      case ControlEntityEnum.DCMotor:
+        return <></>;
+    }
+  };
 
   const keyExtractor = (item: MotorCard) => item.entity;
 
