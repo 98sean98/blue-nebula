@@ -57,25 +57,26 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
     controlEntities,
   ]);
 
-  const [selectedControlEntityIndex, setSelectedControlEntityIndex] = useState<
-    IndexPath
-  >(new IndexPath(0));
+  const [
+    selectedControlEntityTypeIndex,
+    setSelectedControlEntityTypeIndex,
+  ] = useState<IndexPath>(new IndexPath(0));
 
-  const selectedControlEntity = useMemo(
-    () => controlEntityTypes[selectedControlEntityIndex.row],
-    [selectedControlEntityIndex],
+  const selectedControlEntityType = useMemo(
+    () => controlEntityTypes[selectedControlEntityTypeIndex.row],
+    [selectedControlEntityTypeIndex],
   );
   const controlEntityObjectKeys = useMemo(() => {
     const specialKeys = ['direction', 'enable'];
     const ordinary: ReturnType<typeof getObjectKeys> = [],
       special: ReturnType<typeof getObjectKeys> = [];
-    getObjectKeys(selectedControlEntity).forEach((objectKey) =>
+    getObjectKeys(selectedControlEntityType).forEach((objectKey) =>
       specialKeys.includes(objectKey.key)
         ? special.push(objectKey)
         : ordinary.push(objectKey),
     );
     return { ordinary, special };
-  }, [selectedControlEntity]);
+  }, [selectedControlEntityType]);
 
   const [cachedNewControlEntities, setCachedNewControlEntities] = useState<
     ControlEntities
@@ -83,7 +84,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
 
   const getCachedValue = (key: string): Value => {
     try {
-      return cachedNewControlEntities[selectedControlEntity][
+      return cachedNewControlEntities[selectedControlEntityType][
         key as keyof ControlEntity
       ];
     } catch (error) {
@@ -99,7 +100,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
     if (value !== undefined)
       setCachedNewControlEntities((entities) =>
         deepmerge(entities, {
-          [selectedControlEntity]: {
+          [selectedControlEntityType]: {
             [key]: parseStringToType(value, valueType),
           },
         }),
@@ -107,13 +108,18 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   };
 
   const onSubmitPress = (updatedName?: string) => {
-    const newControlEntity = cachedNewControlEntities[selectedControlEntity];
+    const newControlEntity =
+      cachedNewControlEntities[selectedControlEntityType];
     const name = updatedName ?? newControlEntity.name;
     const newControlEntityKey = camelCase(name);
     if (!takenControlEntityNames.includes(newControlEntityKey)) {
       dispatch(
         setControlEntities({
-          [newControlEntityKey]: { ...newControlEntity, name },
+          [newControlEntityKey]: {
+            ...newControlEntity,
+            name,
+            type: selectedControlEntityType,
+          },
         }),
       );
       navigation.goBack();
@@ -134,9 +140,11 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
       {/* select a control entity type */}
       <Select
         label={'Control Entity Type'}
-        value={capitalCase(selectedControlEntity)}
-        selectedIndex={selectedControlEntityIndex}
-        onSelect={(index) => setSelectedControlEntityIndex(index as IndexPath)}>
+        value={capitalCase(selectedControlEntityType)}
+        selectedIndex={selectedControlEntityTypeIndex}
+        onSelect={(index) =>
+          setSelectedControlEntityTypeIndex(index as IndexPath)
+        }>
         {controlEntityTypes.map((controlEntityType) => (
           <SelectItem
             key={controlEntityType}
