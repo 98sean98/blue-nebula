@@ -1,0 +1,1 @@
+export { getKeyboardType } from './getKeyboardType';

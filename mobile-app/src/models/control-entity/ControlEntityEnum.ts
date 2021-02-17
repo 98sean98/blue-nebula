@@ -1,4 +1,4 @@
 export enum ControlEntityEnum {
-  StepperMotor = '@@ControlEntity/StepperMotor',
-  DCMotor = '@@ControlEntity/DCMotor',
+  StepperMotor = 'StepperMotor',
+  DCMotor = 'DCMotor',
 }

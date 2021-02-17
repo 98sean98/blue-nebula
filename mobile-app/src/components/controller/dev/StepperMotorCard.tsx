@@ -58,7 +58,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         keyboardType={'number-pad'}
         label={'Pulse Interval'}
         placeholder={
-          'step pulse (the lower this value, the faster the motor runs)'
+          'time delay between pulses in microseconds (the lower this value, the faster the motor runs)'
         }
         reduxValue={controlEntity.pulseInterval}
         onInputBlur={(value) =>
@@ -80,7 +80,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
 
       <ControlEntityParameterInput
         keyboardType={'number-pad'}
-        label={'Pulse per Revolution'}
+        label={'Pulse Per Revolution'}
         placeholder={'number of pulses per revolution'}
         reduxValue={controlEntity.pulsePerRevolution}
         onInputBlur={(value) =>

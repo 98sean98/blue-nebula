@@ -4,13 +4,10 @@ import { ControlConstants } from './constants';
 import { ControlState } from './types';
 import { ControlActionTypes } from './actions';
 
-import {
-  ControlEntities,
-  declaredControlEntities,
-} from '@models/control-entity/ControlEntities';
+import { ControlEntities } from '@models/control-entity/ControlEntities';
 
 const initialState: ControlState = {
-  controlEntities: declaredControlEntities,
+  controlEntities: {},
 };
 
 export const controlReducer = (

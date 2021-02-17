@@ -2,6 +2,7 @@ import React, { FC, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { Tab, TabView } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
+import { capitalCase } from 'change-case';
 
 import { DevControllerScreenProps } from '@navigation/main';
 
@@ -28,7 +29,7 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
     () =>
       Object.entries(controlEntities).map(([entity, { name }]) => ({
         entity,
-        title: name,
+        title: capitalCase(name),
       })),
     [controlEntities],
   );
