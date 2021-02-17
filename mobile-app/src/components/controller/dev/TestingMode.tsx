@@ -6,14 +6,17 @@ import { tailwind } from '@styles/tailwind';
 
 import { DevControlInterface } from '@models/DevControlInterface';
 
-import { MotorCard } from '@containers/generic/DevControllerScreen';
+import { MotorCard } from '@containers/main/DevControllerScreen';
 
 import { StepperMotorCard } from './StepperMotorCard';
 import {
   BleReadDeviceButton,
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
-import { Timer } from '@components/shared/actionable';
+import {
+  Timer,
+  CreateNewControlEntityButton,
+} from '@components/shared/actionable';
 
 interface TestingModeProps {
   isFocused: boolean;
@@ -45,6 +48,8 @@ export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
         data={motors}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        ListFooterComponent={<CreateNewControlEntityButton />}
+        ListFooterComponentStyle={tailwind('px-4 pb-3')}
       />
 
       <Divider />

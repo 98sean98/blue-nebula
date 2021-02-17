@@ -3,7 +3,7 @@ import { FlatList, ListRenderItem, View } from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
-import { SimpleControllerScreenProps } from '@navigation/navigationTypes';
+import { SimpleControllerScreenProps } from '@navigation/main';
 
 import {
   Diameter,

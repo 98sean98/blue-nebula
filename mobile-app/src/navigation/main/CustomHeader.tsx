@@ -1,27 +1,20 @@
 import React, { FC, useState } from 'react';
-import { ImageProps, Platform, View } from 'react-native';
+import { Platform, View } from 'react-native';
 import { StackHeaderProps } from '@react-navigation/stack/lib/typescript/src/types';
 import {
-  Icon,
   TopNavigation,
   TopNavigationAction,
   OverflowMenu,
   MenuItem,
-  IconProps,
   Divider,
 } from '@ui-kitten/components';
-import { RenderProp } from '@ui-kitten/components/devsupport';
 
 import { tailwind } from '@styles/tailwind';
 
 import { BleConnectIcon } from '@components/shared/bluetooth';
+import { renderIcon } from '@components/shared/interface';
 
-const renderIcon = (
-  iconName: string,
-  iconProps?: Partial<IconProps>,
-): RenderProp<Partial<ImageProps>> => (props) => (
-  <Icon {...props} {...iconProps} name={iconName} />
-);
+import { MainStackParamList } from '@navigation/main/navigationTypes';
 
 export const CustomHeader: FC<StackHeaderProps> = ({
   scene: { route, descriptor },
@@ -46,7 +39,11 @@ export const CustomHeader: FC<StackHeaderProps> = ({
     />
   );
 
-  const menuItems = [
+  const menuItems: Array<{
+    routeName: keyof MainStackParamList;
+    text: string;
+    iconName: string;
+  }> = [
     {
       routeName: 'SimpleController',
       text: 'Simple Controller',
@@ -81,7 +78,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
             title={text}
             onPress={() => {
               setIsMenuVisible(false);
-              navigation.navigate(routeName);
+              navigation.navigate('Main', { screen: routeName });
             }}
           />
         ))}

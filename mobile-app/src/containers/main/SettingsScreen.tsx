@@ -4,7 +4,7 @@ import { Button, Text, Toggle } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { SettingsScreenProps } from '@navigation/navigationTypes';
+import { SettingsScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 

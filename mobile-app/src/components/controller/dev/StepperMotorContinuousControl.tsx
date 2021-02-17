@@ -6,8 +6,7 @@ import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Direction, Enable } from '@models/control-entity';
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
+import { Direction, Enable, ControlEntities } from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
 
@@ -19,7 +18,7 @@ import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
 
 interface StepperMotorContinuousControlProps extends ViewProps {
-  entity: keyof DeclaredControlEntities;
+  entity: keyof ControlEntities;
 }
 
 const GhostButton = (props: ButtonProps) => (

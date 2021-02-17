@@ -1,8 +1,9 @@
-import { ControlEntity, ControlEntityEnum } from '@models/control-entity';
+import { ControlEntity } from './ControlEntity';
+import { ControlEntityEnum } from './ControlEntityEnum';
 
-export type DeclaredControlEntities = Record<string, ControlEntity>;
+export type ControlEntities = Record<string, ControlEntity>;
 
-export const declaredControlEntities: DeclaredControlEntities = {
+export const declaredControlEntities: ControlEntities = {
   wheelMotor: {
     name: 'wheel_motor',
     type: ControlEntityEnum.StepperMotor,

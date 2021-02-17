@@ -8,7 +8,7 @@ import { tailwind } from '@styles/tailwind';
 import { DevControlInterface } from '@models/DevControlInterface';
 import { Enable } from '@models/control-entity';
 
-import { MotorCard } from '@containers/generic/DevControllerScreen';
+import { MotorCard } from '@containers/main/DevControllerScreen';
 
 import { RootState } from '@reduxApp';
 

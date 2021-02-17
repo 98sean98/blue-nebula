@@ -5,3 +5,5 @@ export { ControlEntityParameterToggle } from './ControlEntityParameterToggle';
 export { Timer } from './Timer';
 
 export { ConfirmationButtonGroup } from './ConfirmationButtonGroup';
+
+export { CreateNewControlEntityButton } from './CreateNewControlEntityButton';

@@ -5,11 +5,14 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
-
 import { DeclarableValueType } from '@models/ValueType';
 import { DevControlInterface } from '@models/DevControlInterface';
-import { Direction, Enable, StepperMotor } from '@models/control-entity';
+import {
+  Direction,
+  Enable,
+  ControlEntities,
+  StepperMotor,
+} from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
 
@@ -26,7 +29,7 @@ import { parseFromTypeToString } from '@utilities/functions/parse';
 
 interface StepperMotorCardProps
   extends ComponentProps<typeof ControlEntityCard> {
-  entity: keyof DeclaredControlEntities;
+  entity: keyof ControlEntities;
   controlInterface: DevControlInterface;
 }
 

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Tab, TabView } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
-import { DevControllerScreenProps } from '@navigation/navigationTypes';
+import { DevControllerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -12,10 +12,10 @@ import { RootState } from '@reduxApp';
 import { RealTimeControlMode, TestingMode } from '@components/controller/dev';
 import { RenderBleComponent } from '@components/shared/bluetooth';
 
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
+import { ControlEntities } from '@models/control-entity';
 
 export type MotorCard = {
-  entity: keyof DeclaredControlEntities;
+  entity: keyof ControlEntities;
   title: string;
 };
 
