@@ -13,8 +13,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { store } from '@reduxApp/store';
 import { RootNavigator } from '@navigation';
 
-import { BleLayer } from '@components/shared/bluetooth';
-import { TimerLayer, SettingsLayer } from '@components/shared/layer';
+import { BleLayer, SettingsLayer, TimerLayer } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
 
