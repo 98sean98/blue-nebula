@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useMemo, useState, Fragment } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Select, IndexPath, SelectItem, Button } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +14,8 @@ import {
   ControlEntityEnum,
   ControlEntity,
   ControlEntities,
+  Direction,
+  Enable,
 } from '@models/control-entity';
 
 import { ControlEntityParameterInput } from '@components/shared/actionable';
@@ -63,10 +65,17 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
     () => controlEntityTypes[selectedControlEntityIndex.row],
     [selectedControlEntityIndex],
   );
-  const controlEntityObjectKeys = useMemo(
-    () => getObjectKeys(selectedControlEntity),
-    [selectedControlEntity],
-  );
+  const controlEntityObjectKeys = useMemo(() => {
+    const specialKeys = ['direction', 'enable'];
+    const ordinary: ReturnType<typeof getObjectKeys> = [],
+      special: ReturnType<typeof getObjectKeys> = [];
+    getObjectKeys(selectedControlEntity).forEach((objectKey) =>
+      specialKeys.includes(objectKey.key)
+        ? special.push(objectKey)
+        : ordinary.push(objectKey),
+    );
+    return { ordinary, special };
+  }, [selectedControlEntity]);
 
   const [cachedNewControlEntities, setCachedNewControlEntities] = useState<
     ControlEntities
@@ -138,10 +147,10 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
 
       {/* object keys */}
       <View>
-        {controlEntityObjectKeys.map(
-          ({ key, valueType, description }, index) => (
+        {controlEntityObjectKeys.ordinary.map(
+          ({ key, valueType, description }) => (
             <ControlEntityParameterInput
-              key={index}
+              key={key}
               label={capitalCase(key)}
               caption={description}
               reduxValue={getCachedValue(key)}
@@ -149,6 +158,62 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
               keyboardType={getKeyboardType(valueType)}
               style={tailwind('mt-3')}
             />
+          ),
+        )}
+        {controlEntityObjectKeys.special.map(
+          ({ key, valueType, description }) => (
+            <Fragment key={key}>
+              {key === 'direction' ? (
+                <Select
+                  label={capitalCase(key)}
+                  caption={description}
+                  value={getCachedValue(key) === Direction.CW ? 'CW' : 'CCW'}
+                  selectedIndex={
+                    getCachedValue(key) === Direction.CW
+                      ? new IndexPath(0)
+                      : new IndexPath(1)
+                  }
+                  onSelect={(index) =>
+                    onParameterChange(
+                      key,
+                      ((index as IndexPath).row === 0
+                        ? Direction.CW
+                        : Direction.CCW
+                      ).toString(),
+                      valueType,
+                    )
+                  }
+                  style={tailwind('mt-3')}>
+                  <SelectItem title={'CW'} />
+                  <SelectItem title={'CCW'} />
+                </Select>
+              ) : null}
+              {key === 'enable' ? (
+                <Select
+                  label={capitalCase(key)}
+                  caption={description}
+                  value={getCachedValue(key) === Enable.Low ? 'Low' : 'High'}
+                  selectedIndex={
+                    getCachedValue(key) === Enable.Low
+                      ? new IndexPath(0)
+                      : new IndexPath(1)
+                  }
+                  onSelect={(index) =>
+                    onParameterChange(
+                      key,
+                      ((index as IndexPath).row === 0
+                        ? Enable.Low
+                        : Enable.High
+                      ).toString(),
+                      valueType,
+                    )
+                  }
+                  style={tailwind('mt-3')}>
+                  <SelectItem title={'Low'} />
+                  <SelectItem title={'High'} />
+                </Select>
+              ) : null}
+            </Fragment>
           ),
         )}
       </View>
