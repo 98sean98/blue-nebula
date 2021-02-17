@@ -13,7 +13,12 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { store } from '@reduxApp/store';
 import { RootNavigator } from '@navigation';
 
-import { BleLayer, SettingsLayer, TimerLayer } from '@components/layer';
+import {
+  BleLayer,
+  ControlEntitiesLayer,
+  SettingsLayer,
+  TimerLayer,
+} from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
 
@@ -34,15 +39,17 @@ export const App: FC = () => {
     <ReduxProvider store={store}>
       <BleLayer>
         <SettingsLayer>
-          <TimerLayer>
-            <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={themes.eva}>
-              <NavigationContainer theme={themes.navigation}>
-                <StatusBar hidden />
-                <RootNavigator />
-              </NavigationContainer>
-            </ApplicationProvider>
-          </TimerLayer>
+          <ControlEntitiesLayer>
+            <TimerLayer>
+              <IconRegistry icons={EvaIconsPack} />
+              <ApplicationProvider {...eva} theme={themes.eva}>
+                <NavigationContainer theme={themes.navigation}>
+                  <StatusBar hidden />
+                  <RootNavigator />
+                </NavigationContainer>
+              </ApplicationProvider>
+            </TimerLayer>
+          </ControlEntitiesLayer>
         </SettingsLayer>
       </BleLayer>
     </ReduxProvider>
