@@ -1,5 +1,5 @@
 import { buffers, eventChannel } from 'redux-saga';
-import { cancelled, select, take, cancel, put } from '@redux-saga/core/effects';
+import { cancelled, select, take, put } from '@redux-saga/core/effects';
 import { BleError, Device } from 'react-native-ble-plx';
 
 import {
@@ -46,16 +46,15 @@ export function* monitorConnection(): Generator<any, void> {
       const [error] = monitorResults as [BleError, Device];
       console.log('device has been disconnected due to:', error);
       yield put(setIsBleRpiDeviceConnected(false));
-      yield cancel();
+      yield put(stopMonitoringConnection());
     }
   } catch (error) {
     console.log('caught unknown error while monitoring the device:', error);
-    yield cancel();
+    yield put(stopMonitoringConnection());
   } finally {
     if (yield cancelled()) {
       monitoringChannel.close();
       yield put(setIsMonitoringBleRpiDeviceConnection(false));
-      yield put(stopMonitoringConnection());
     }
   }
 }
