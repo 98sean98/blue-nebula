@@ -9,6 +9,11 @@ from .. import utilities
 
 CHARACTERISTIC_UUID = Config.UUID['ip_address']
 
+def check_if_ip_address(string):
+    regex = re.compile('^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')
+    match = regex.match(string)
+    return match is not None
+
 class IPAddressCharacteristic(Characteristic):
     def __init__(self, service):
         Characteristic.__init__(
@@ -26,16 +31,13 @@ class IPAddressCharacteristic(Characteristic):
     def get_ip_address(self):
         try:
             ip_address = check_output(['hostname', '-I'], encoding='UTF-8')
-            pattern = re.compile('(\d+\.){3}\d+')
-            match = pattern.match(ip_address)
-            if match is not None: return ip_address
+            if check_if_ip_address(ip_address): return ip_address
             else:
                 string = check_output(['ifconfig', 'wlan0'], encoding='UTF-8')
                 regex = re.compile('inet ((\d+\.){3}\d+)')
                 ip_address = regex.search(string).group(1)
-                match = pattern.match(ip_address)
-                if match is not None: return ip_address
-                else raise Exception()
+                if check_if_ip_address(ip_address): return ip_address
+                else: raise Exception()
         except:
             print('Error: cannot find a valid ip address')
 
