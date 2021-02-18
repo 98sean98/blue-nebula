@@ -1,9 +1,11 @@
-from control_entities.stepper_motor import StepperMotor
-from control_entities.dc_motor import DCMotor
+from .bluetooth.service import Service
 
-from characteristics.run_idle import RunIdleCharacteristic
-from characteristics.stepper_motor import StepperMotorsCharacteristic
-from characteristics.dc_motor import DCMotorsCharacteristic
+from .control_entities.stepper_motor import StepperMotor
+from .control_entities.dc_motor import DCMotor
+
+from .characteristics.run_idle import RunIdleCharacteristic
+from .characteristics.stepper_motor import StepperMotorsCharacteristic
+from .characteristics.dc_motor import DCMotorsCharacteristic
 
 class RobotControllerService(Service):
     ROBOT_CONTROLLER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"

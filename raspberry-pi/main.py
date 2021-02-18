@@ -4,10 +4,10 @@ import dbus
 import RPi.GPIO as GPIO
 from multiprocessing import Manager
 
-from bluetooth.advertisement import Advertisement
-from bluetooth.service import Application
+from lib.bluetooth.advertisement import Advertisement
+from lib.bluetooth.service import Application
 
-from robot_controller_service import RobotControllerService
+from lib.robot_controller_service import RobotControllerService
 
 GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"
 
