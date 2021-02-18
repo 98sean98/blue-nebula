@@ -9,8 +9,6 @@ from lib.bluetooth.service import Application
 
 from lib.robot_controller_service import RobotControllerService
 
-GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"
-
 class RobotControllerAdvertisement(Advertisement):
     def __init__(self, index):
         Advertisement.__init__(self, index, "peripheral")

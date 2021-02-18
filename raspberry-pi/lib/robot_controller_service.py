@@ -1,5 +1,7 @@
 from .bluetooth.service import Service
 
+from .config import Config
+
 from .control_entities.stepper_motor import StepperMotor
 from .control_entities.dc_motor import DCMotor
 
@@ -7,9 +9,9 @@ from .characteristics.run_idle import RunIdleCharacteristic
 from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
 
-class RobotControllerService(Service):
-    ROBOT_CONTROLLER_SVC_UUID = "00000001-710e-4a5b-8d75-3e5b444bc3cf"
+SERVICE_UUID = Config.UUID['robot_controller_service']
 
+class RobotControllerService(Service):
     def __init__(self, index, multiprocessing_manager):
         self.stepper_motors = {
             'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22, multiprocessing_manager),
@@ -19,7 +21,7 @@ class RobotControllerService(Service):
         }
         self.is_running = False
 
-        Service.__init__(self, index, self.ROBOT_CONTROLLER_SVC_UUID, True)
+        Service.__init__(self, index, SERVICE_UUID, True)
         self.add_characteristic(RunIdleCharacteristic(self))
         self.add_characteristic(StepperMotorsCharacteristic(self))
         self.add_characteristic(DCMotorsCharacteristic(self))

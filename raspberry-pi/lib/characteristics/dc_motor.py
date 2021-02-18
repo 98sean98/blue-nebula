@@ -1,15 +1,17 @@
 from ..bluetooth.service import Characteristic, Descriptor
 
+from ..config import Config
+
 from ..control_entities.dc_motor import DCMotor
 
 from .. import utilities
 
-class DCMotorsCharacteristic(Characteristic):
-    CHARACTERISTIC_UUID = "00000004-710e-4a5b-8d75-3e5b444bc3cf"
+CHARACTERISTIC_UUID = Config.UUID['dc_motors']
 
+class DCMotorsCharacteristic(Characteristic):
     def __init__(self, service):
         Characteristic.__init__(
-                self, self.CHARACTERISTIC_UUID,
+                self, CHARACTERISTIC_UUID,
                 ["read", "write"], service)
         self.add_descriptor(DCMotorsDescriptor(self))
 

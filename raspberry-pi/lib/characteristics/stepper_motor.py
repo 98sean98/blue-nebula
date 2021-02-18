@@ -1,25 +1,28 @@
 from ..bluetooth.service import Characteristic, Descriptor
 
+from ..config import Config
+
 from ..control_entities.stepper_motor import StepperMotor
 
 from .. import utilities
 
-class StepperMotorsCharacteristic(Characteristic):
-    CHARACTERISTIC_UUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
-    # this timeout cannot changed during run time
-    NOTIFY_TIMEOUT = 50 # in milliseconds
+GATT_CHRC_IFACE = Config.GATT_CHRC_IFACE
+CHARACTERISTIC_UUID = Config.UUID['stepper_motors']
+# this timeout cannot changed during run time
+NOTIFY_TIMEOUT = 50 # in milliseconds
 
+class StepperMotorsCharacteristic(Characteristic):
     def __init__(self, service):
         self.notifying = False
 
         Characteristic.__init__(
-                self, self.CHARACTERISTIC_UUID,
+                self, CHARACTERISTIC_UUID,
                 ["notify", "read", "write"], service)
         self.add_descriptor(StepperMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
         decoded = utilities.decode_motor_info(value, StepperMotor.parameters_keys)
-        print("Write step motor:", decoded)
+        print("Write stepper motor:", decoded)
         self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method):
@@ -32,7 +35,7 @@ class StepperMotorsCharacteristic(Characteristic):
 
     def ReadValue(self, options):
         value = self.get_value(lambda motor: motor.get_parameters())
-        print("read step motors:", utilities.decode_base64(value))
+        print("read stepper motors:", utilities.decode_base64(value))
         return value
 
     def notify_callback(self):
@@ -48,14 +51,14 @@ class StepperMotorsCharacteristic(Characteristic):
         self.notifying = True
         value = self.get_value(lambda motor: motor.get_tracked_parameters())
         self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
-        self.add_timeout(self.NOTIFY_TIMEOUT, self.notify_callback)
+        self.add_timeout(NOTIFY_TIMEOUT, self.notify_callback)
 
     def StopNotify(self):
         self.notifying = False
 
 class StepperMotorsDescriptor(Descriptor):
     DESCRIPTOR_UUID = "2901"
-    DESCRIPTOR_VALUE = "Step motors control"
+    DESCRIPTOR_VALUE = "Stepper motors control"
 
     def __init__(self, characteristic):
         Descriptor.__init__(
