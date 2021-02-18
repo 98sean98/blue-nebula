@@ -110,7 +110,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
 
   useEffect(() => {
     if (monitorStepperMotor.isMonitoring) {
-      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1200);
+      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1500);
       return () => clearTimeout(timeout);
     } else setShouldStreamMonitor(false);
   }, [monitorStepperMotor.isMonitoring]);
