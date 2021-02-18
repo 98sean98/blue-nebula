@@ -25,7 +25,7 @@ class IPAddressCharacteristic(Characteristic):
         ip_address = self.get_ip_address()
         if ip_address is not None:
             print(f"read ip address: {ip_address}")
-            return utilities.encode_bae64(ip_address)
+            return utilities.encode_base64(ip_address)
         else: return utilities.encode_base64('error')
 
     def get_ip_address(self):

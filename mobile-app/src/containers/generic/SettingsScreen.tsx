@@ -67,7 +67,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
         throw new Error(
           'internal logic error in device while trying to read the ip address',
         );
-      else if (checkIfIpAddress(newIpAddress)) {
+      else if (!checkIfIpAddress(newIpAddress)) {
         throw new Error(
           `the ip address received is not valid: ${newIpAddress}`,
         );
