@@ -8,6 +8,8 @@ class StepperMotor(Motor):
 
     # class attribute: list of parameters (order is important)
     parameters_keys = ['pulse_interval', 'revolution', 'pulse_per_revolution', 'direction', 'enable']
+    # class attribute: list of tracked parameters (order is important)
+    tracked_parameters_keys = ['revolution', 'running_duration']
 
     def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None, initial_parameters=None):
         # pins
