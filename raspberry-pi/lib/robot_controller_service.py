@@ -5,6 +5,7 @@ from .config import Config
 from .control_entities.stepper_motor import StepperMotor
 from .control_entities.dc_motor import DCMotor
 
+from .characteristics.ip_address import IPAddressCharacteristic
 from .characteristics.run_idle import RunIdleCharacteristic
 from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
@@ -22,6 +23,7 @@ class RobotControllerService(Service):
         self.is_running = False
 
         Service.__init__(self, index, SERVICE_UUID, True)
+        self.add_characteristic(IPAddressCharacteristic(self))
         self.add_characteristic(RunIdleCharacteristic(self))
         self.add_characteristic(StepperMotorsCharacteristic(self))
         self.add_characteristic(DCMotorsCharacteristic(self))
