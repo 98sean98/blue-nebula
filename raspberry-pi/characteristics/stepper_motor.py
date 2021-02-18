@@ -1,0 +1,68 @@
+from ..bluetooth.service import Characteristic, Descriptor
+
+from ..control_entities.stepper_motor import StepperMotor
+
+from .. import utilities
+
+class StepperMotorsCharacteristic(Characteristic):
+    CHARACTERISTIC_UUID = "00000003-710e-4a5b-8d75-3e5b444bc3cf"
+    # this timeout cannot changed during run time
+    NOTIFY_TIMEOUT = 50 # in milliseconds
+
+    def __init__(self, service):
+        self.notifying = False
+
+        Characteristic.__init__(
+                self, self.CHARACTERISTIC_UUID,
+                ["notify", "read", "write"], service)
+        self.add_descriptor(StepperMotorsDescriptor(self))
+
+    def WriteValue(self, value, options):
+        decoded = utilities.decode_motor_info(value, StepperMotor.parameters_keys)
+        print("Write step motor:", decoded)
+        self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
+
+    def get_value(self, get_parameters_method):
+        # encode the motor info for each step motor in the service
+        all_stepper_motors = self.service.get_all_motors()['stepper_motors']
+        list_of_motors = list(all_stepper_motors.items())
+        encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), StepperMotor.parameters_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
+        # combine motor info into one long list
+        return [item for sublist in encoded_info_list for item in sublist]
+
+    def ReadValue(self, options):
+        value = self.get_value(lambda motor: motor.get_parameters())
+        print("read step motors:", utilities.decode_base64(value))
+        return value
+
+    def notify_callback(self):
+        if self.notifying:
+            value = self.get_value(lambda motor: motor.get_tracked_parameters())
+            self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        return self.notifying
+
+    def StartNotify(self):
+        if self.notifying:
+            return
+
+        self.notifying = True
+        value = self.get_value(lambda motor: motor.get_tracked_parameters())
+        self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        self.add_timeout(self.NOTIFY_TIMEOUT, self.notify_callback)
+
+    def StopNotify(self):
+        self.notifying = False
+
+class StepperMotorsDescriptor(Descriptor):
+    DESCRIPTOR_UUID = "2901"
+    DESCRIPTOR_VALUE = "Step motors control"
+
+    def __init__(self, characteristic):
+        Descriptor.__init__(
+                self, self.DESCRIPTOR_UUID,
+                ["read"],
+                characteristic)
+
+    def ReadValue(self, options):
+        desc = self.DESCRIPTOR_VALUE
+        return utilities.encode_base64(desc)

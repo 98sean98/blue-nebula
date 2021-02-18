@@ -6,14 +6,16 @@ from .motor import Motor
 class StepperMotor(Motor):
     '''A stepper motor instance connected to the device'''
 
+    # class attribute: list of parameters (order is important)
+    parameters_keys = ['pulse_interval', 'revolution', 'pulse_per_revolution', 'direction', 'enable']
+
     def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None, initial_parameters=None):
         # pins
-        # note that these pins are based on BCM, see https://pinout.xyz/ and look for GPIO pins
         self.pulse_pin = pulse_pin
         self.direction_pin = direction_pin
         self.enable_pin = enable_pin
 
-        # parameters (order of the dictionary keys is important)
+        # parameters dictionary
         self.parameters = {
             'pulse_interval': 150, # in micro seconds
             'revolution': 200, # number of revolutions
