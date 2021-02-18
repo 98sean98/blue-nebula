@@ -25,22 +25,22 @@ class StepperMotorsCharacteristic(Characteristic):
         print("Write stepper motor:", decoded)
         self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
 
-    def get_value(self, get_parameters_method):
+    def get_value(self, get_parameters_method, dictionary_keys):
         # encode the motor info for each step motor in the service
         all_stepper_motors = self.service.get_all_motors()['stepper_motors']
         list_of_motors = list(all_stepper_motors.items())
-        encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), StepperMotor.parameters_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
+        encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
         # combine motor info into one long list
         return [item for sublist in encoded_info_list for item in sublist]
 
     def ReadValue(self, options):
-        value = self.get_value(lambda motor: motor.get_parameters())
+        value = self.get_value(lambda motor: motor.get_parameters(), StepperMotor.parameters_keys)
         print("read stepper motors:", utilities.decode_base64(value))
         return value
 
     def notify_callback(self):
         if self.notifying:
-            value = self.get_value(lambda motor: motor.get_tracked_parameters())
+            value = self.get_value(lambda motor: motor.get_tracked_parameters(), StepperMotor.tracked_parameters_keys)
             self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
         return self.notifying
 
@@ -49,7 +49,7 @@ class StepperMotorsCharacteristic(Characteristic):
             return
 
         self.notifying = True
-        value = self.get_value(lambda motor: motor.get_tracked_parameters())
+        value = self.get_value(lambda motor: motor.get_tracked_parameters(), StepperMotor.tracked_parameters_keys)
         self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
         self.add_timeout(NOTIFY_TIMEOUT, self.notify_callback)
 

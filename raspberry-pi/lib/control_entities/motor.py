@@ -5,6 +5,8 @@ from time import sleep, time
 class Motor:
     '''This is a generic motor connected to the device.'''
 
+    tracked_parameters_keys = ['running_duration']
+
     def __init__(self, motor_name, multiprocessing_manager = None, initial_tracked_parameters = None):
         self.motor_name = motor_name
 
@@ -70,7 +72,7 @@ class Motor:
         pass
 
     def get_tracked_parameters(self):
-        all_tracked_parameters = self.tracked_parameters
+        all_tracked_parameters = self.tracked_parameters if self.tracked_parameters is not None else {}
         all_tracked_parameters['running_duration'] = self.get_running_duration()
         return all_tracked_parameters
 
