@@ -23,8 +23,8 @@ SOFTWARE.
 
 import dbus
 
-from advertisement import Advertisement
-from service import Application, Service, Characteristic, Descriptor
+from lib.bluetooth.advertisement import Advertisement
+from lib.bluetooth.service import Application, Service, Characteristic, Descriptor
 from gpiozero import CPUTemperature
 
 GATT_CHRC_IFACE = "org.bluez.GattCharacteristic1"

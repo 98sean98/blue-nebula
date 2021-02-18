@@ -38,7 +38,6 @@ def decode_motor_info(encoded, parameters_keys):
     return {'motor_name': decoded_list[0], 'parameters': parameters}
 
 # motor: motor_1
-def encode_motor_info(motor_name, parameters):
-    parameters_list = list(parameters.values())
-    string_value = f"{motor_name}, " + "".join([f"{value}{', ' if i < len(parameters_list) - 1 else ''}" for i, value in enumerate(parameters_list)])
+def encode_motor_info(motor_name, parameters, parameters_keys):
+    string_value = f"{motor_name}, " + "".join([f"{parameters[key]}{', ' if i < len(parameters_keys) - 1 else ''}" for i, key in enumerate(parameters_keys)])
     return encode_base64(string_value)
