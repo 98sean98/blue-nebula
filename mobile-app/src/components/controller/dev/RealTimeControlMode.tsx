@@ -35,7 +35,7 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
         return (
           <StepperMotorCard
             entity={entity}
-            controlInterface={DevControlInterface.Testing}
+            controlInterface={DevControlInterface.RealTimeControl}
             headerParams={{ title }}
             style={[tailwind('my-2 mx-4')]}
           />
