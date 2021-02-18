@@ -4,11 +4,11 @@ import dbus
 import RPi.GPIO as GPIO
 from multiprocessing import Manager
 
-from advertisement import Advertisement
-from service import Application, Service, Characteristic, Descriptor
+from bluetooth.advertisement import Advertisement
+from bluetooth.service import Application, Service, Characteristic, Descriptor
 
-from stepper_motor import StepperMotor
-from dc_motor import DCMotor
+from control_entities.stepper_motor import StepperMotor
+from control_entities.dc_motor import DCMotor
 
 import utilities
 

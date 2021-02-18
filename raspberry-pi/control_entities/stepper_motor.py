@@ -1,7 +1,7 @@
 from time import sleep
 import RPi.GPIO as GPIO
 
-from motor import Motor
+from .motor import Motor
 
 class StepperMotor(Motor):
     '''A stepper motor instance connected to the device'''
