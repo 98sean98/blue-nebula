@@ -21,7 +21,7 @@ export const ConfirmationButtonGroup: FC<ConfirmationButtonGroupProps> = ({
       style={[tailwind('flex-row justify-between'), props.style ?? {}]}>
       <Button
         appearance={'ghost'}
-        status={'warning'}
+        status={'danger'}
         size={'large'}
         onPress={onNoPress}
         {...commonButtonProps}>

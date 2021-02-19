@@ -7,3 +7,6 @@ export { Timer } from './Timer';
 export { ConfirmationButtonGroup } from './ConfirmationButtonGroup';
 
 export { CreateNewControlEntityButton } from './CreateNewControlEntityButton';
+export { NavigateToSetupsButton } from './NavigateToSetupsButton';
+
+export { DeleteConfirmationModal } from './DeleteConfirmationModal';

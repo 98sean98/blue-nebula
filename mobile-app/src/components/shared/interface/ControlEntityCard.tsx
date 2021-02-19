@@ -1,12 +1,12 @@
 import React, { FC, useState } from 'react';
-import { Card, CardProps, Text, Button, Modal } from '@ui-kitten/components';
+import { Card, CardProps, Text, Button } from '@ui-kitten/components';
 import { RenderProp } from '@ui-kitten/components/devsupport';
 import { View, ViewProps } from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
 import { renderIcon } from '@components/shared/interface/renderIcon';
-import { ConfirmationButtonGroup } from '@components/shared/actionable';
+import { DeleteConfirmationModal } from '@components/shared/actionable/DeleteConfirmationModal';
 
 interface ControlEntityCardProps extends Omit<CardProps, 'header'> {
   headerParams: { title: string; subtitle?: string };
@@ -53,21 +53,13 @@ export const ControlEntityCard: FC<ControlEntityCardProps> = ({
   return (
     <>
       <Card disabled {...props} header={renderHeader} />
-      <Modal
+
+      <DeleteConfirmationModal
         visible={shouldShowModal}
-        backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        onBackdropPress={() => setShouldShowModal(false)}>
-        <Card disabled style={tailwind('m-4')}>
-          <Text category={'h5'} style={tailwind('text-center')}>
-            {`Are you sure you want to delete ${title}?`}
-          </Text>
-          <ConfirmationButtonGroup
-            onNoPress={() => setShouldShowModal(false)}
-            onYesPress={onYesPress}
-            style={tailwind('mt-3')}
-          />
-        </Card>
-      </Modal>
+        onBackdropPress={() => setShouldShowModal(false)}
+        itemName={title}
+        onYesPress={onYesPress}
+      />
     </>
   );
 };

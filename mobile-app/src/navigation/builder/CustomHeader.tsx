@@ -1,13 +1,9 @@
 import React, { FC } from 'react';
 import { Platform } from 'react-native';
 import { StackHeaderProps } from '@react-navigation/stack/lib/typescript/src/types';
-import {
-  Divider,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import { Divider, TopNavigation, Button } from '@ui-kitten/components';
 
-import { renderIcon } from '@components/shared/interface';
+import { tailwind } from '@styles/tailwind';
 
 export const CustomHeader: FC<StackHeaderProps> = ({
   scene: { route, descriptor },
@@ -23,13 +19,13 @@ export const CustomHeader: FC<StackHeaderProps> = ({
       ? options.title
       : route.name;
 
-  const iconProps = { width: 20, height: 20 };
-
   const renderLeftAction = () => (
-    <TopNavigationAction
-      icon={renderIcon('arrow-back', iconProps)}
-      onPress={() => navigation.goBack()}
-    />
+    <Button
+      appearance={'ghost'}
+      style={tailwind('p-1')}
+      onPress={() => navigation.goBack()}>
+      Cancel
+    </Button>
   );
 
   const marginTop = Platform.OS === 'ios' ? top : 0; // only on ios to give space to status bar

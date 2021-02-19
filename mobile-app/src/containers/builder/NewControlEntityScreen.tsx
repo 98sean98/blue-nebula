@@ -110,7 +110,10 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   const onSubmitPress = (updatedName?: string) => {
     const newControlEntity =
       cachedNewControlEntities[selectedControlEntityType];
-    const name = updatedName ?? newControlEntity.name;
+    const name =
+      typeof updatedName !== 'undefined' && updatedName !== ''
+        ? updatedName
+        : newControlEntity.name;
     const newControlEntityKey = camelCase(name);
     if (!takenControlEntityNames.includes(newControlEntityKey)) {
       dispatch(
@@ -136,7 +139,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   };
 
   return (
-    <ScrollView style={[{ flex: 1 }, tailwind('my-4 px-4')]}>
+    <ScrollView style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
       {/* select a control entity type */}
       <Select
         label={'Control Entity Type'}

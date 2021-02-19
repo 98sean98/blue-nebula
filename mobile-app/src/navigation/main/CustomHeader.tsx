@@ -47,10 +47,14 @@ export const CustomHeader: FC<StackHeaderProps> = ({
     {
       routeName: 'SimpleController',
       text: 'Simple Controller',
-      iconName: 'grid',
+      iconName: 'grid-outline',
     },
-    { routeName: 'DevController', text: 'Dev Controller', iconName: 'flash' },
-    { routeName: 'Settings', text: 'Settings', iconName: 'settings-2' },
+    {
+      routeName: 'DevController',
+      text: 'Dev Controller',
+      iconName: 'flash-outline',
+    },
+    { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
   ];
 
   const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);

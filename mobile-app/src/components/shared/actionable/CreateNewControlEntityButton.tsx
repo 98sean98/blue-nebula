@@ -22,7 +22,7 @@ export const CreateNewControlEntityButton: FC<CreateNewControlEntityButtonProps>
 
   return (
     <Button accessoryLeft={renderIcon('plus')} {...props} onPress={onPress}>
-      Create Another Entity
+      Create Entity
     </Button>
   );
 };

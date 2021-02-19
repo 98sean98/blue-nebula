@@ -1,20 +1,18 @@
 import React, { FC, memo } from 'react';
 import { View } from 'react-native';
 import { LayoutProps, Layout, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
-import { RootState } from '@reduxApp';
+import { ControlEntities } from '@models/control-entity';
 
-interface ControlEntitySummaryProps extends LayoutProps {}
+interface ControlEntitySummaryProps extends LayoutProps {
+  controlEntities: ControlEntities;
+}
 
 export const ControlEntitySummary: FC<ControlEntitySummaryProps> = memo(
-  (props) => {
-    const { controlEntities } = useSelector(
-      (state: RootState) => state.control,
-    );
-
+  ({ controlEntities, ...props }) => {
     return (
       <Layout {...props}>
         {Object.values(controlEntities).map((controlEntity, i) => (
@@ -30,7 +28,7 @@ export const ControlEntitySummary: FC<ControlEntitySummaryProps> = memo(
                   <View
                     key={j}
                     style={tailwind('flex-row flex-wrap justify-between')}>
-                    <Text appearance={'hint'}>{`${param}:`}</Text>
+                    <Text appearance={'hint'}>{`${sentenceCase(param)}:`}</Text>
                     <Text>{value}</Text>
                   </View>
                 ))
