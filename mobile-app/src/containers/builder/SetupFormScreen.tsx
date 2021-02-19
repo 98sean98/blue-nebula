@@ -120,7 +120,8 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
       dispatch(
         setSetups({ [newSetupKey]: { ...setup, name, updatedAt: new Date() } }),
       );
-      navigation.goBack();
+      if (typeof keyOfSetupToBeEdited !== 'undefined') navigation.goBack();
+      else navigation.navigate('Main', { screen: 'DevController' });
     } else {
       Alert.prompt(
         'Duplicated Name',
