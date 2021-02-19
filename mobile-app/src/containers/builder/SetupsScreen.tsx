@@ -10,11 +10,11 @@ import { tailwind } from '@styles/tailwind';
 import { Setups } from '@models/setup';
 
 import { RootState } from '@reduxApp';
-import { removeSetup } from '@reduxApp/builder/actions';
+import { removeSetup, setSetups } from '@reduxApp/builder/actions';
 
 import { SetupDetailsCard } from '@components/builder/setups';
 import { renderIcon } from '@components/shared/interface';
-import { DeleteConfirmationModal } from '@components/shared/actionable';
+import { ConfirmationModal } from '@components/shared/actionable';
 
 export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const { mode } = route.params;
@@ -22,6 +22,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
   const { setups } = useSelector((state: RootState) => state.builder);
+  const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const data = useMemo(
     () => Object.entries(setups).map(([key, setup]) => ({ key, setup })),
@@ -35,6 +36,10 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const [
     showDeleteConfirmationModal,
     setShowDeleteConfirmationModal,
+  ] = useState<boolean>(false);
+  const [
+    showReplaceConfirmationModal,
+    setShowReplaceConfirmationModal,
   ] = useState<boolean>(false);
 
   const onSaveNewSetupPress = () =>
@@ -66,27 +71,64 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
     }
   };
 
+  const onReplaceSetupPress = (setupKey: keyof Setups) => {
+    setSelectedSetupKey(setupKey);
+    setShowReplaceConfirmationModal(true);
+  };
+
+  const onReplaceConfirmationPress = () => {
+    if (typeof selectedSetupKey !== 'undefined') {
+      dispatch(
+        setSetups({
+          [selectedSetupKey]: {
+            ...setups[selectedSetupKey],
+            controlEntitiesState: controlEntities,
+          },
+        }),
+      );
+      setSelectedSetupKey(undefined);
+      setShowReplaceConfirmationModal(false);
+    }
+  };
+
   const renderAccessoryRight = (
     viewProps: ViewProps | undefined,
     setupKey: keyof Setups,
-  ) => (
-    <View {...viewProps} style={[tailwind('flex-row')]}>
-      <Button
-        accessoryLeft={renderIcon('edit-outline')}
-        appearance={'ghost'}
-        status={'warning'}
-        style={tailwind('h-10 w-10 p-1')}
-        onPress={() => onEditSetupPress(setupKey)}
-      />
-      <Button
-        accessoryLeft={renderIcon('trash-outline')}
-        appearance={'ghost'}
-        status={'danger'}
-        style={tailwind('h-10 w-10 p-1')}
-        onPress={() => onRemoveSetupPress(setupKey)}
-      />
-    </View>
-  );
+  ) => {
+    switch (mode) {
+      case SetupsMode.Normal:
+        return (
+          <View {...viewProps} style={[tailwind('flex-row')]}>
+            <Button
+              accessoryLeft={renderIcon('edit-outline')}
+              appearance={'ghost'}
+              status={'warning'}
+              style={tailwind('h-10 w-10 p-1')}
+              onPress={() => onEditSetupPress(setupKey)}
+            />
+            <Button
+              accessoryLeft={renderIcon('trash-outline')}
+              appearance={'ghost'}
+              status={'danger'}
+              style={tailwind('h-10 w-10 p-1')}
+              onPress={() => onRemoveSetupPress(setupKey)}
+            />
+          </View>
+        );
+      case SetupsMode.SavingNew:
+        return (
+          <View {...viewProps}>
+            <Button
+              status={'info'}
+              appearance={'ghost'}
+              accessoryLeft={renderIcon('edit-2-outline')}
+              style={tailwind('h-10 w-10 p-1')}
+              onPress={() => onReplaceSetupPress(setupKey)}
+            />
+          </View>
+        );
+    }
+  };
 
   const renderItem: ListRenderItem<typeof data[0]> = ({
     item: {
@@ -103,6 +145,14 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   );
 
   const keyExtractor = (item: typeof data[0]) => item.key;
+
+  const itemName = useMemo(
+    () =>
+      typeof selectedSetupKey !== 'undefined'
+        ? setups[selectedSetupKey].name
+        : '',
+    [setups, selectedSetupKey],
+  );
 
   return (
     <>
@@ -142,15 +192,20 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         ) : null}
       </Modal>
 
-      <DeleteConfirmationModal
+      <ConfirmationModal
         visible={showDeleteConfirmationModal}
         onBackdropPress={() => setShowDeleteConfirmationModal(false)}
-        itemName={
-          typeof selectedSetupKey !== 'undefined'
-            ? setups[selectedSetupKey].name
-            : ''
-        }
+        action={'delete'}
+        itemName={itemName}
         onYesPress={onDeleteConfirmationPress}
+      />
+
+      <ConfirmationModal
+        visible={showReplaceConfirmationModal}
+        onBackdropPress={() => setShowReplaceConfirmationModal(false)}
+        action={'replace'}
+        itemName={itemName}
+        onYesPress={onReplaceConfirmationPress}
       />
     </>
   );

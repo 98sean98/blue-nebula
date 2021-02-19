@@ -5,13 +5,15 @@ import { tailwind } from '@styles/tailwind';
 
 import { ConfirmationButtonGroup } from '@components/shared/actionable/ConfirmationButtonGroup';
 
-interface DeleteConfirmationModalProps extends ModalProps {
+interface ConfirmationModalProps extends ModalProps {
   onBackdropPress: () => void;
+  action: string;
   itemName: string;
   onYesPress: () => void;
 }
 
-export const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
+export const ConfirmationModal: FC<ConfirmationModalProps> = ({
+  action,
   itemName,
   onYesPress,
   ...props
@@ -22,7 +24,7 @@ export const DeleteConfirmationModal: FC<DeleteConfirmationModalProps> = ({
     <Modal backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} {...props}>
       <Card disabled style={tailwind('m-4')}>
         <Text category={'h6'} style={tailwind('text-center')}>
-          {`Are you sure you want to delete `}
+          {`Are you sure you want to ${action} `}
           {
             <Text category={'h6'} status={'warning'}>
               {itemName}

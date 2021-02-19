@@ -6,7 +6,7 @@ import { View, ViewProps } from 'react-native';
 import { tailwind } from '@styles/tailwind';
 
 import { renderIcon } from '@components/shared/interface/renderIcon';
-import { DeleteConfirmationModal } from '@components/shared/actionable/DeleteConfirmationModal';
+import { ConfirmationModal } from '@components/shared/actionable/ConfirmationModal';
 
 interface ControlEntityCardProps extends Omit<CardProps, 'header'> {
   headerParams: { title: string; subtitle?: string };
@@ -54,9 +54,10 @@ export const ControlEntityCard: FC<ControlEntityCardProps> = ({
     <>
       <Card disabled {...props} header={renderHeader} />
 
-      <DeleteConfirmationModal
+      <ConfirmationModal
         visible={shouldShowModal}
         onBackdropPress={() => setShouldShowModal(false)}
+        action={'delete'}
         itemName={title}
         onYesPress={onYesPress}
       />
