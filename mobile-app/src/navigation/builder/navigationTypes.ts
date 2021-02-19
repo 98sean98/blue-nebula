@@ -1,5 +1,5 @@
 /**
- * @purpose to type check the main stack navigator, and screens
+ * @purpose to type check the builder stack navigator, and screens
  * @documentation please see https://reactnavigation.org/docs/typescript/ for expanding the type definition
  */
 
@@ -8,8 +8,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 
 import { RootNavigationProp } from '@navigation/navigationTypes';
 
+import { Setups } from '@models/setup';
+
+export enum SetupsMode {
+  Normal = '@@SetupsMode/Normal',
+  SavingNew = '@@SetupsMode/SavingNew',
+}
+
 export type BuilderStackParamList = {
   NewControlEntity: undefined;
+  Setups: { mode: SetupsMode };
+  SetupForm: { keyOfSetupToBeEdited?: keyof Setups };
 };
 
 type ParentNavigationProp = RootNavigationProp;
@@ -25,3 +34,7 @@ type BuilderScreenProps<T extends keyof BuilderStackParamList> = {
 export type NewControlEntityScreenProps = BuilderScreenProps<
   'NewControlEntity'
 >;
+
+export type SetupsScreenProps = BuilderScreenProps<'Setups'>;
+
+export type SetupFormScreenProps = BuilderScreenProps<'SetupForm'>;

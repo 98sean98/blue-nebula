@@ -17,8 +17,11 @@ import {
 } from '@components/shared/bluetooth';
 import {
   CreateNewControlEntityButton,
+  NavigateToSetupsButton,
   Timer,
 } from '@components/shared/actionable';
+import { renderIcon } from '@components/shared/interface';
+import { SetupsMode } from '@navigation/builder';
 
 interface TestingModeProps {
   isFocused: boolean;
@@ -56,10 +59,24 @@ export const TestingMode: FC<TestingModeProps> = () => {
 
   const keyExtractor = (item: typeof data[0]) => item.entity;
 
+  const listFooterComponent = useMemo(
+    () => (
+      <View style={tailwind('w-full flex-row justify-between')}>
+        <CreateNewControlEntityButton style={{ width: '49%' }} />
+        <NavigateToSetupsButton
+          mode={SetupsMode.SavingNew}
+          accessoryLeft={renderIcon('save-outline')}
+          style={{ width: '49%' }}>
+          Save Setup
+        </NavigateToSetupsButton>
+      </View>
+    ),
+    [],
+  );
+
   const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
-  const onRunningStateChange = (newState: boolean) => {
+  const onRunningStateChange = (newState: boolean) =>
     setIsRunningTimer(newState);
-  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -67,7 +84,7 @@ export const TestingMode: FC<TestingModeProps> = () => {
         data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
-        ListFooterComponent={<CreateNewControlEntityButton />}
+        ListFooterComponent={listFooterComponent}
         ListFooterComponentStyle={tailwind('px-4 pb-3')}
       />
 

@@ -1,0 +1,1 @@
+export { SetupDetailsCard } from './SetupDetailsCard';
