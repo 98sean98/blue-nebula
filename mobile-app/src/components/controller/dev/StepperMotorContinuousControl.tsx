@@ -1,14 +1,11 @@
-import React, { FC, useState, useEffect, useMemo } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
 import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Direction, Enable, ControlEntities } from '@models/control-entity';
-
-import { RootState } from '@reduxApp';
+import { Direction, Enable, StepperMotor } from '@models/control-entity';
 
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
@@ -18,7 +15,7 @@ import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
 
 interface StepperMotorContinuousControlProps extends ViewProps {
-  entity: keyof ControlEntities;
+  controlEntity: StepperMotor;
 }
 
 const GhostButton = (props: ButtonProps) => (
@@ -34,15 +31,9 @@ const generateMethodToDecipherMonitorValue = (entityName: string) => (
 };
 
 export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProps> = ({
-  entity,
+  controlEntity,
   ...props
 }) => {
-  const { controlEntities } = useSelector((state: RootState) => state.control);
-  const controlEntityObject = useMemo(() => controlEntities[entity], [
-    controlEntities,
-    entity,
-  ]);
-
   const {
     write: writeStepperMotor,
     monitor: monitorStepperMotor,
@@ -61,14 +52,14 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
     try {
       if (isRunning) {
         const stringValue = mapControlEntityToString({
-          ...controlEntityObject,
+          ...controlEntity,
           revolution: 2000, // arbitrarily large revolution number
           direction,
           enable: Enable.High,
         });
         await writeStepperMotor(stringValue);
         monitorStepperMotor.start(
-          generateMethodToDecipherMonitorValue(controlEntityObject.name),
+          generateMethodToDecipherMonitorValue(controlEntity.name),
         );
         await WriteRunIdle(true);
       } else {
@@ -77,7 +68,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         await WriteRunIdle(false);
         monitorStepperMotor.stop();
         const stringValue = mapControlEntityToString({
-          ...controlEntityObject,
+          ...controlEntity,
           enable: Enable.Low,
         });
         await writeStepperMotor(stringValue);

@@ -1,20 +1,18 @@
-import React, { ComponentProps, FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import { View } from 'react-native';
-import { Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { CardProps, Text } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { DeclarableValueType } from '@models/ValueType';
 import { DevControlInterface } from '@models/DevControlInterface';
 import {
+  ControlEntities,
   Direction,
   Enable,
-  ControlEntities,
   StepperMotor,
 } from '@models/control-entity';
-
-import { RootState } from '@reduxApp';
 
 import { ControlEntityCard } from '@components/shared/interface';
 import {
@@ -26,23 +24,21 @@ import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
 
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
+import { removeControlEntity } from '@reduxApp/control/actions';
 
-interface StepperMotorCardProps
-  extends ComponentProps<typeof ControlEntityCard> {
+interface StepperMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof ControlEntities;
+  controlEntity: StepperMotor;
   controlInterface: DevControlInterface;
 }
 
 export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   entity,
+  controlEntity,
   controlInterface,
   ...props
 }) => {
-  const { controlEntities } = useSelector((state: RootState) => state.control);
-  const controlEntity = useMemo(() => controlEntities[entity] as StepperMotor, [
-    controlEntities,
-    entity,
-  ]);
+  const dispatch = useDispatch();
 
   const { setControlEntityByParameter } = useControlEntities();
 
@@ -52,8 +48,15 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
     [entity, setControlEntityByParameter],
   );
 
+  const headerParams = { title: controlEntity.name };
+
+  const onConfirmDelete = () => dispatch(removeControlEntity(entity));
+
   return (
-    <ControlEntityCard {...props}>
+    <ControlEntityCard
+      {...props}
+      headerParams={headerParams}
+      onConfirmDelete={onConfirmDelete}>
       <ControlEntityParameterInput
         keyboardType={'number-pad'}
         label={'Pulse Interval'}
@@ -137,7 +140,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
 
       {controlInterface === DevControlInterface.RealTimeControl ? (
         <StepperMotorContinuousControl
-          entity={entity}
+          controlEntity={controlEntity}
           style={tailwind('mt-4 w-full')}
         />
       ) : null}

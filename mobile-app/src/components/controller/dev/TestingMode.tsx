@@ -1,13 +1,14 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, View } from 'react-native';
 import { Divider } from '@ui-kitten/components';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { DevControlInterface } from '@models/DevControlInterface';
-import { ControlEntityEnum } from '@models/control-entity';
+import { ControlEntityEnum, StepperMotor } from '@models/control-entity';
 
-import { MotorCard } from '@containers/main/DevControllerScreen';
+import { RootState } from '@reduxApp';
 
 import { StepperMotorCard } from './StepperMotorCard';
 import {
@@ -21,20 +22,30 @@ import {
 
 interface TestingModeProps {
   isFocused: boolean;
-  motors: Array<MotorCard>;
 }
 
-export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
-  const renderItem: ListRenderItem<typeof motors[0]> = ({
-    item: { entity, title, type },
+export const TestingMode: FC<TestingModeProps> = () => {
+  const { controlEntities } = useSelector((state: RootState) => state.control);
+
+  const data = useMemo(
+    () =>
+      Object.entries(controlEntities).map(([entity, controlEntity]) => ({
+        entity,
+        controlEntity,
+      })),
+    [controlEntities],
+  );
+
+  const renderItem: ListRenderItem<typeof data[0]> = ({
+    item: { entity, controlEntity },
   }) => {
-    switch (type) {
+    switch (controlEntity.type) {
       case ControlEntityEnum.StepperMotor:
         return (
           <StepperMotorCard
             entity={entity}
+            controlEntity={controlEntity as StepperMotor}
             controlInterface={DevControlInterface.Testing}
-            headerParams={{ title }}
             style={[tailwind('my-2 mx-4')]}
           />
         );
@@ -43,7 +54,7 @@ export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
     }
   };
 
-  const keyExtractor = (item: MotorCard) => item.entity;
+  const keyExtractor = (item: typeof data[0]) => item.entity;
 
   const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
   const onRunningStateChange = (newState: boolean) => {
@@ -53,7 +64,7 @@ export const TestingMode: FC<TestingModeProps> = ({ motors }) => {
   return (
     <View style={{ flex: 1 }}>
       <FlatList
-        data={motors}
+        data={data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ListFooterComponent={<CreateNewControlEntityButton />}

@@ -23,6 +23,14 @@ export const controlReducer = (
           action.payload,
         ) as ControlEntities,
       };
+    case ControlConstants.REMOVE_CONTROL_ENTITY:
+      const key = action.payload;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [key]: _, ...controlEntities } = state.controlEntities;
+      return {
+        ...state,
+        controlEntities,
+      };
     default:
       // saga actions would just return the state
       return state;

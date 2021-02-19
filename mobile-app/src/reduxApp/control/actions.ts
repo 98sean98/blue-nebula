@@ -1,12 +1,20 @@
 import { ControlConstants } from './constants';
 
-import { SetControlEntities } from './types';
+import { RemoveControlEntity, SetControlEntities } from './types';
 
 export const setControlEntities = (
   payload: SetControlEntities, // required action arg
 ) =>
   ({
     type: ControlConstants.SET_CONTROL_ENTITIES,
+    payload,
+  } as const);
+
+export const removeControlEntity = (
+  payload: RemoveControlEntity, // required action arg
+) =>
+  ({
+    type: ControlConstants.REMOVE_CONTROL_ENTITY,
     payload,
   } as const);
 
@@ -17,5 +25,10 @@ export const setControlEntities = (
 export type SetControlEntitiesControlAction = ReturnType<
   typeof setControlEntities
 >;
+export type RemoveControlEntityControlAction = ReturnType<
+  typeof removeControlEntity
+>;
 
-export type ControlActionTypes = SetControlEntitiesControlAction;
+export type ControlActionTypes =
+  | SetControlEntitiesControlAction
+  | RemoveControlEntityControlAction;

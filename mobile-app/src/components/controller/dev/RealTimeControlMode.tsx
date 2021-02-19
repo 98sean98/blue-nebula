@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, View } from 'react-native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -6,9 +6,11 @@ import { useSelector } from 'react-redux';
 import { tailwind } from '@styles/tailwind';
 
 import { DevControlInterface } from '@models/DevControlInterface';
-import { ControlEntityEnum, Enable } from '@models/control-entity';
-
-import { MotorCard } from '@containers/main/DevControllerScreen';
+import {
+  ControlEntityEnum,
+  Enable,
+  StepperMotor,
+} from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
 
@@ -20,23 +22,32 @@ import { mapControlEntityToString } from '@utilities/functions/map';
 
 interface RealTimeControlModeProps {
   isFocused: boolean;
-  motors: Array<MotorCard>;
 }
 
 export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   isFocused,
-  motors,
 }) => {
-  const renderItem: ListRenderItem<typeof motors[0]> = ({
-    item: { entity, title, type },
+  const { controlEntities } = useSelector((state: RootState) => state.control);
+
+  const data = useMemo(
+    () =>
+      Object.entries(controlEntities).map(([entity, controlEntity]) => ({
+        entity,
+        controlEntity,
+      })),
+    [controlEntities],
+  );
+
+  const renderItem: ListRenderItem<typeof data[0]> = ({
+    item: { entity, controlEntity },
   }) => {
-    switch (type) {
+    switch (controlEntity.type) {
       case ControlEntityEnum.StepperMotor:
         return (
           <StepperMotorCard
             entity={entity}
+            controlEntity={controlEntity as StepperMotor}
             controlInterface={DevControlInterface.RealTimeControl}
-            headerParams={{ title }}
             style={[tailwind('my-2 mx-4')]}
           />
         );
@@ -45,11 +56,9 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
     }
   };
 
-  const keyExtractor = (item: MotorCard) => item.entity;
+  const keyExtractor = (item: typeof data[0]) => item.entity;
 
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
-
-  const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const { write: writeStepMotor } = useBleRpiDeviceCharacteristic(
     'stepperMotors',
@@ -97,7 +106,7 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
     <>
       <View style={{ flex: 1 }}>
         <FlatList
-          data={motors}
+          data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
         />
