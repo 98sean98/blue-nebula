@@ -15,7 +15,7 @@ import { RootNavigator } from '@navigation';
 
 import {
   BleLayer,
-  ControlEntitiesLayer,
+  AsyncStorageLayer,
   SettingsLayer,
   TimerLayer,
 } from '@components/layer';
@@ -39,7 +39,7 @@ export const App: FC = () => {
     <ReduxProvider store={store}>
       <BleLayer>
         <SettingsLayer>
-          <ControlEntitiesLayer>
+          <AsyncStorageLayer>
             <TimerLayer>
               <IconRegistry icons={EvaIconsPack} />
               <ApplicationProvider {...eva} theme={themes.eva}>
@@ -49,7 +49,7 @@ export const App: FC = () => {
                 </NavigationContainer>
               </ApplicationProvider>
             </TimerLayer>
-          </ControlEntitiesLayer>
+          </AsyncStorageLayer>
         </SettingsLayer>
       </BleLayer>
     </ReduxProvider>
