@@ -57,10 +57,13 @@ export const useControlEntities = (): UseControlEntities => {
         (i + 1) * objectKeysCount,
       );
       const entity = camelCase(stringArray[0]);
-      newControlEntities[entity] = mapStringArrayToControlEntity(
-        stringArray,
-        ControlEntityEnum.StepperMotor,
-      );
+      newControlEntities[entity] = {
+        ...mapStringArrayToControlEntity(
+          stringArray,
+          ControlEntityEnum.StepperMotor,
+        ),
+        type: ControlEntityEnum.StepperMotor,
+      };
     }
 
     dispatch(setControlEntities(newControlEntities));
