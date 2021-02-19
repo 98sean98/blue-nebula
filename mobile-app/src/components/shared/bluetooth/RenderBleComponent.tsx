@@ -9,10 +9,12 @@ import { RootState } from '@reduxApp';
 
 interface RenderBleComponent {
   overrideShouldShow?: boolean;
+  shouldShowHelperText?: boolean;
 }
 
 export const RenderBleComponent: FC<RenderBleComponent> = ({
   overrideShouldShow,
+  shouldShowHelperText = true,
   children,
 }) => {
   const isBleRpiDeviceConnected = useSelector(
@@ -25,11 +27,11 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
     <>
       {shouldShow ? (
         children
-      ) : (
+      ) : shouldShowHelperText ? (
         <View style={[{ flex: 1 }, tailwind('justify-center items-center')]}>
           <Text>Bluetooth is not connected!</Text>
         </View>
-      )}
+      ) : null}
     </>
   );
 };

@@ -32,7 +32,7 @@ export function useBleRpiDeviceCharacteristic(
   );
 
   const getCharacteristic = (): Characteristic => {
-    if (!bleRpiDeviceServicesAndCharacteristics)
+    if (typeof bleRpiDeviceServicesAndCharacteristics === 'undefined')
       throw new Error(
         'bluetooth device services and characteristics could not be found, please reconnect to device',
       );
