@@ -25,5 +25,10 @@ export const navigationItems: Array<{
     iconName: 'file-text-outline',
     screenParams: { mode: SetupsMode.Normal },
   },
+  {
+    routeName: 'AppMaker',
+    text: 'App Maker',
+    iconName: 'cube-outline',
+  },
   { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
 ];

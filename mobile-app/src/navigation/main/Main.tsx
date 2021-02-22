@@ -8,6 +8,7 @@ import { CustomDrawer } from './CustomDrawer';
 import { CustomHeader } from './CustomHeader';
 
 import {
+  AppMaker,
   DevControllerScreen,
   SettingsScreen,
   SetupsScreen,
@@ -39,6 +40,7 @@ export const Main: FC<MainScreenProps> = ({ navigation }) => {
         options={{ headerTitle: 'Developer Controller' }}
       />
       <Screen name={'Setups'} component={SetupsScreen} />
+      <Screen name={'AppMaker'} component={AppMaker} />
       <Screen name={'Settings'} component={SettingsScreen} />
     </Navigator>
   );

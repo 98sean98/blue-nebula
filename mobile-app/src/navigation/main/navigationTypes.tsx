@@ -17,6 +17,7 @@ export type MainDrawerParamList = {
   SimpleController: undefined;
   DevController: undefined;
   Setups: { mode: SetupsMode };
+  AppMaker: undefined;
   Settings: undefined;
 };
 
@@ -35,5 +36,7 @@ export type SimpleControllerScreenProps = MainScreenProps<'SimpleController'>;
 export type DevControllerScreenProps = MainScreenProps<'DevController'>;
 
 export type SetupsScreenProps = MainScreenProps<'Setups'>;
+
+export type AppMakerScreenProps = MainScreenProps<'AppMaker'>;
 
 export type SettingsScreenProps = MainScreenProps<'Settings'>;
