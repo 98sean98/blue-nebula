@@ -1,14 +1,18 @@
-import React, { FC } from 'react';
-import { Pressable, StyleSheet, View, ViewProps } from 'react-native';
+import React, { FC, ReactNode } from 'react';
+import { StyleSheet, View, ViewProps } from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
+import { Layout } from '@models/app-maker/Layout';
+
 interface LayoutDividerProps extends ViewProps {
-  layout: { rows: number; columns: number };
+  layout: Layout;
+  renderItem: (boxIndex: number) => ReactNode;
 }
 
 export const LayoutDivider: FC<LayoutDividerProps> = ({
   layout: { rows, columns },
+  renderItem,
   ...props
 }) => {
   const boxCount = rows * columns;
@@ -28,7 +32,7 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
         .fill(null)
         .map((_, index) => (
           <View key={index} style={styles.box}>
-            <Pressable style={[{ flex: 1 }, tailwind('m-1 bg-red-100')]} />
+            {renderItem(index)}
           </View>
         ))}
     </View>

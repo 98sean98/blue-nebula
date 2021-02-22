@@ -1,11 +1,20 @@
-import React, { FC } from 'react';
-import { Dimensions, View } from 'react-native';
+import React, { FC, useState } from 'react';
+import { Dimensions, Pressable, View } from 'react-native';
+import { Text, ViewPager } from '@ui-kitten/components';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 
-import { AnimatedFlingContainer, LayoutDivider } from '@components/app-maker';
+import { MakerConfig } from '@models/app-maker';
+
+import {
+  AnimatedFlingContainer,
+  LayoutDivider,
+  MakerConfiguration,
+} from '@components/app-maker';
+
+import { AppMakerContext, initialAppMakerContext } from '@utilities/context';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -20,21 +29,54 @@ const configurationViewHeight: ConfigurationViewHeight = {
 };
 
 export const AppMaker: FC<AppMakerScreenProps> = () => {
-  return (
-    <View style={[{ flex: 1 }, tailwind('relative')]}>
-      <LayoutDivider
-        layout={{
-          rows: 4,
-          columns: 3,
-        }}
-      />
+  const [config, setConfig] = useState<MakerConfig>(
+    initialAppMakerContext.config,
+  );
+  const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
+    initialAppMakerContext.shouldExpandConfigView,
+  );
 
-      <View style={{ height: configurationViewHeight.collapsed }} />
-      <AnimatedFlingContainer
-        configurationViewHeight={configurationViewHeight}
-        style={tailwind('absolute bottom-0 z-10 w-full')}>
-        <View style={{ flex: 1, backgroundColor: 'lightblue' }} />
-      </AnimatedFlingContainer>
-    </View>
+  const [selectedPageIndex, setSelectedPageIndex] = useState<number>(0);
+
+  const renderItem = (boxIndex: number) => (
+    <Pressable
+      style={[{ flex: 1 }, tailwind('m-1 bg-blue-900')]}
+      onPress={() => console.log(boxIndex)}>
+      <Text>{boxIndex}</Text>
+    </Pressable>
+  );
+
+  return (
+    <AppMakerContext.Provider
+      value={{
+        config,
+        setConfig,
+        shouldExpandConfigView,
+        setShouldExpandConfigView,
+      }}>
+      <View style={[{ flex: 1 }, tailwind('relative')]}>
+        {Object.entries(config.pages).length !== 0 ? (
+          <ViewPager
+            style={{ flex: 1 }}
+            selectedIndex={selectedPageIndex}
+            onSelect={setSelectedPageIndex}>
+            {Object.entries(config.pages).map(([key, { layout }]) => (
+              <LayoutDivider
+                key={key}
+                layout={layout}
+                renderItem={renderItem}
+              />
+            ))}
+          </ViewPager>
+        ) : null}
+
+        <View style={{ height: configurationViewHeight.collapsed }} />
+        <AnimatedFlingContainer
+          configurationViewHeight={configurationViewHeight}
+          style={tailwind('absolute bottom-0 z-10 w-full')}>
+          <MakerConfiguration style={{ flex: 1 }} />
+        </AnimatedFlingContainer>
+      </View>
+    </AppMakerContext.Provider>
   );
 };

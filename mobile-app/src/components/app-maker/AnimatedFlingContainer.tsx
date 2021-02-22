@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useRef, useState } from 'react';
+import React, { FC, ReactNode, useCallback, useEffect, useRef } from 'react';
 import { Animated, View, ViewProps } from 'react-native';
 import {
   Directions,
@@ -6,9 +6,13 @@ import {
   FlingGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
+import { Layout } from '@ui-kitten/components';
+
 import { tailwind } from '@styles/tailwind';
 
 import { ConfigurationViewHeight } from '@containers/main/AppMaker';
+
+import { useAppMakerContext } from '@utilities/hooks';
 
 interface AnimatedFlingContainerProps extends ViewProps {
   configurationViewHeight: ConfigurationViewHeight;
@@ -20,48 +24,60 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
   children,
   ...props
 }) => {
+  const {
+    shouldExpandConfigView,
+    setShouldExpandConfigView,
+  } = useAppMakerContext();
+
   const slideAnimation = useRef(new Animated.Value(collapsed)).current;
 
-  const slideIn = () => {
+  const slideUp = useCallback(() => {
     Animated.timing(slideAnimation, {
       toValue: expanded,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  };
+  }, [slideAnimation, expanded]);
 
-  const slideOut = () => {
+  const slideDown = useCallback(() => {
     Animated.timing(slideAnimation, {
       toValue: collapsed,
       duration: 200,
       useNativeDriver: false,
     }).start();
-  };
-
-  const [isConfigurationExpanded, setIsConfigurationExpanded] = useState<
-    boolean
-  >(false);
+  }, [slideAnimation, collapsed]);
 
   const onHandlerStateChange = ({
     nativeEvent,
   }: FlingGestureHandlerStateChangeEvent) => {
-    if (nativeEvent.state === State.ACTIVE) {
-      isConfigurationExpanded ? slideOut() : slideIn();
-      setIsConfigurationExpanded(!isConfigurationExpanded);
-    }
+    if (nativeEvent.state === State.ACTIVE)
+      setShouldExpandConfigView(!shouldExpandConfigView);
   };
+
+  useEffect(() => {
+    shouldExpandConfigView ? slideUp() : slideDown();
+  }, [shouldExpandConfigView, slideUp, slideDown]);
 
   return (
     <Animated.View style={[{ height: slideAnimation }, props?.style ?? {}]}>
-      <FlingGestureHandler
-        direction={isConfigurationExpanded ? Directions.DOWN : Directions.UP}
-        onHandlerStateChange={onHandlerStateChange}>
-        <View style={[tailwind('w-full bg-blue-300'), { height: fling }]} />
-      </FlingGestureHandler>
-      {/* content */}
-      {typeof children !== 'undefined' ? (
-        <View style={{ flex: 1 }}>{children}</View>
-      ) : null}
+      <Layout level={'4'} style={[{ flex: 1 }, tailwind('rounded-t-lg')]}>
+        <FlingGestureHandler
+          direction={shouldExpandConfigView ? Directions.DOWN : Directions.UP}
+          onHandlerStateChange={onHandlerStateChange}>
+          <View
+            style={[
+              tailwind('w-full justify-center items-center'),
+              { height: fling },
+            ]}>
+            <Layout style={tailwind('w-2/3 h-1/4 rounded-full')} level={'2'} />
+          </View>
+        </FlingGestureHandler>
+
+        {/* content */}
+        {typeof children !== 'undefined' ? (
+          <View style={{ flex: 1 }}>{children}</View>
+        ) : null}
+      </Layout>
     </Animated.View>
   );
 };
