@@ -88,6 +88,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
       );
       setSelectedSetupKey(undefined);
       setShowReplaceConfirmationModal(false);
+      navigation.goBack();
     }
   };
 
