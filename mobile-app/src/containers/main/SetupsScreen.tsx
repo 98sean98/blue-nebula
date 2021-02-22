@@ -3,7 +3,7 @@ import { FlatList, ListRenderItem, View, ViewProps } from 'react-native';
 import { Button, Divider, ListItem, Modal } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { SetupsMode, SetupsScreenProps } from '@navigation/builder';
+import { SetupsMode, SetupsScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 

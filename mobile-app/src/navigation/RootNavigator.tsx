@@ -6,14 +6,15 @@ import { RootStackParamList } from './navigationTypes';
 import { Main } from './main';
 import { Builder } from './builder';
 
-const Stack = createStackNavigator<RootStackParamList>();
+const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: FC = () => (
-  <Stack.Navigator
-    mode={'modal'}
-    screenOptions={{ headerShown: false }}
-    initialRouteName={'Main'}>
-    <Stack.Screen name={'Main'} component={Main} />
-    <Stack.Screen name={'Builder'} component={Builder} />
-  </Stack.Navigator>
+  <Navigator mode={'modal'} initialRouteName={'Main'}>
+    <Screen name={'Main'} component={Main} />
+    <Screen
+      name={'Builder'}
+      component={Builder}
+      options={{ headerShown: false }}
+    />
+  </Navigator>
 );

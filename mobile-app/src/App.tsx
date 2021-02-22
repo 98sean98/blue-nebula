@@ -5,7 +5,7 @@ import React, { FC, useMemo } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { enableScreens } from 'react-native-screens';
-import { StatusBar, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -44,7 +44,6 @@ export const App: FC = () => {
               <IconRegistry icons={EvaIconsPack} />
               <ApplicationProvider {...eva} theme={themes.eva}>
                 <NavigationContainer theme={themes.navigation}>
-                  <StatusBar hidden />
                   <RootNavigator />
                 </NavigationContainer>
               </ApplicationProvider>

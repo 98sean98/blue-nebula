@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
+import { SetupsMode } from '@navigation/main';
+
 import { DevControlInterface } from '@models/DevControlInterface';
 import { ControlEntityEnum, StepperMotor } from '@models/control-entity';
 
@@ -21,7 +23,6 @@ import {
   Timer,
 } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
-import { SetupsMode } from '@navigation/builder';
 
 interface TestingModeProps {
   isFocused: boolean;

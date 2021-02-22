@@ -1,105 +1,65 @@
-import React, { FC, useState } from 'react';
-import { Platform, View } from 'react-native';
+import React, { FC } from 'react';
+import { Platform, StyleSheet } from 'react-native';
 import { StackHeaderProps } from '@react-navigation/stack/lib/typescript/src/types';
+import {
+  DrawerActions,
+  getFocusedRouteNameFromRoute,
+} from '@react-navigation/native';
 import {
   TopNavigation,
   TopNavigationAction,
-  OverflowMenu,
-  MenuItem,
   Divider,
 } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
+import { navigationItems } from './navigationItems';
+
 import { BleConnectIcon } from '@components/shared/bluetooth';
 import { renderIcon } from '@components/shared/interface';
 
-import { MainStackParamList } from '@navigation/main/navigationTypes';
-
 export const CustomHeader: FC<StackHeaderProps> = ({
   scene: { route, descriptor },
-  navigation,
   insets: { top },
-  previous,
 }) => {
-  const { options } = descriptor;
+  const focusedRouteName = getFocusedRouteNameFromRoute(route);
+  const foundNavigationItem = navigationItems.find(
+    ({ routeName }) => routeName === focusedRouteName,
+  );
   const title =
-    options.headerTitle !== undefined
-      ? options.headerTitle
-      : options.title !== undefined
-      ? options.title
-      : route.name;
+    typeof foundNavigationItem !== 'undefined'
+      ? foundNavigationItem.text
+      : navigationItems[0].text;
 
   const iconProps = { width: 20, height: 20 };
 
   const renderLeftAction = () => (
     <TopNavigationAction
-      icon={renderIcon('arrow-back', iconProps)}
-      onPress={() => navigation.goBack()}
+      icon={renderIcon('list-outline', iconProps)}
+      onPress={() =>
+        descriptor.navigation.dispatch(DrawerActions.toggleDrawer())
+      }
     />
   );
 
-  const menuItems: Array<{
-    routeName: keyof MainStackParamList;
-    text: string;
-    iconName: string;
-  }> = [
-    {
-      routeName: 'SimpleController',
-      text: 'Simple Controller',
-      iconName: 'grid-outline',
-    },
-    {
-      routeName: 'DevController',
-      text: 'Dev Controller',
-      iconName: 'flash-outline',
-    },
-    { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
-  ];
-
-  const [isMenuVisible, setIsMenuVisible] = useState<boolean>(false);
-  const toggleMenu = () => setIsMenuVisible(!isMenuVisible);
-
-  const renderMenuAction = () => (
-    <TopNavigationAction
-      icon={renderIcon('more-vertical', iconProps)}
-      onPress={toggleMenu}
-    />
+  const renderRightAction = () => (
+    <BleConnectIcon iconProps={iconProps} style={tailwind('w-8 h-8')} />
   );
 
-  const renderRightActions = () => (
-    <View style={tailwind('flex-row items-center')}>
-      <BleConnectIcon iconProps={iconProps} style={tailwind('w-10 h-10')} />
-      <OverflowMenu
-        anchor={renderMenuAction}
-        visible={isMenuVisible}
-        onBackdropPress={toggleMenu}
-        backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-        {menuItems.map(({ iconName, text, routeName }, index) => (
-          <MenuItem
-            key={index}
-            accessoryLeft={renderIcon(iconName, iconProps)}
-            title={text}
-            onPress={() => {
-              setIsMenuVisible(false);
-              navigation.navigate('Main', { screen: routeName });
-            }}
-          />
-        ))}
-      </OverflowMenu>
-    </View>
-  );
-
-  const marginTop = Platform.OS === 'ios' ? top : 0; // only on ios to give space to status bar
+  const styles = StyleSheet.create({
+    navigation: {
+      marginTop: Platform.OS === 'ios' ? top : 0,
+    },
+  });
 
   return (
     <>
       <TopNavigation
         title={title as string}
         alignment={'center'}
-        accessoryLeft={previous ? renderLeftAction : undefined}
-        accessoryRight={renderRightActions}
-        style={{ marginTop }}
+        accessoryLeft={renderLeftAction}
+        accessoryRight={renderRightAction}
+        style={styles.navigation}
       />
       <Divider />
     </>

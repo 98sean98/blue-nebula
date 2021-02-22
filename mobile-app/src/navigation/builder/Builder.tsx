@@ -1,31 +1,25 @@
 import React, { FC } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { BuilderStackParamList, SetupsMode } from './navigationTypes';
+import { BuilderStackParamList } from './navigationTypes';
 
 import { CustomHeader } from './CustomHeader';
 
-import {
-  NewControlEntityScreen,
-  SetupFormScreen,
-  SetupsScreen,
-} from '@containers/builder';
+import { NewControlEntityScreen, SetupFormScreen } from '@containers/builder';
 
-const Stack = createStackNavigator<BuilderStackParamList>();
+const { Navigator, Screen } = createStackNavigator<BuilderStackParamList>();
 
 export const Builder: FC = () => (
-  <Stack.Navigator
-    screenOptions={{ header: (props) => <CustomHeader {...props} /> }}>
-    <Stack.Screen
+  <Navigator screenOptions={{ header: (props) => <CustomHeader {...props} /> }}>
+    <Screen
       name={'NewControlEntity'}
       component={NewControlEntityScreen}
       options={{ headerTitle: 'New Control Entity' }}
     />
-    <Stack.Screen
-      name={'Setups'}
-      component={SetupsScreen}
-      initialParams={{ mode: SetupsMode.Normal }}
+    <Screen
+      name={'SetupForm'}
+      component={SetupFormScreen}
+      options={{ headerTitle: 'Setup Form' }}
     />
-    <Stack.Screen name={'SetupForm'} component={SetupFormScreen} />
-  </Stack.Navigator>
+  </Navigator>
 );

@@ -3,7 +3,7 @@ import { GestureResponderEvent } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
 import { useNavigation } from '@react-navigation/core';
 
-import { SetupsMode } from '@navigation/builder';
+import { SetupsMode } from '@navigation/main';
 
 interface NavigateToSetupsButtonProps extends ButtonProps {
   mode?: SetupsMode;
@@ -16,7 +16,7 @@ export const NavigateToSetupsButton: FC<NavigateToSetupsButtonProps> = ({
   const { navigate } = useNavigation();
 
   const onPress = (e: GestureResponderEvent) => {
-    navigate('Builder', {
+    navigate('Main', {
       screen: 'Setups',
       params: { mode: mode ?? SetupsMode.Normal },
     });

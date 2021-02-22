@@ -4,28 +4,36 @@
  */
 
 import { RouteProp, CompositeNavigationProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { RootNavigationProp } from '@navigation/navigationTypes';
 
-export type MainStackParamList = {
-  DevController: undefined;
+export enum SetupsMode {
+  Normal = '@@SetupsMode/Normal',
+  SavingNew = '@@SetupsMode/SavingNew',
+}
+
+export type MainDrawerParamList = {
   SimpleController: undefined;
+  DevController: undefined;
+  Setups: { mode: SetupsMode };
   Settings: undefined;
 };
 
 type ParentNavigationProp = RootNavigationProp;
 
-type MainScreenProps<T extends keyof MainStackParamList> = {
-  route: RouteProp<MainStackParamList, T>;
+type MainScreenProps<T extends keyof MainDrawerParamList> = {
+  route: RouteProp<MainDrawerParamList, T>;
   navigation: CompositeNavigationProp<
-    StackNavigationProp<MainStackParamList, T>,
+    DrawerNavigationProp<MainDrawerParamList, T>,
     ParentNavigationProp
   >; // first parameter of CompositeNavigationProp is the primary (navigator owning this screen) type, second parameter is the secondary (parent navigator) type
 }; // generic type for both the route and navigation props for a screen
 
+export type SimpleControllerScreenProps = MainScreenProps<'SimpleController'>;
+
 export type DevControllerScreenProps = MainScreenProps<'DevController'>;
 
-export type SimpleControllerScreenProps = MainScreenProps<'SimpleController'>;
+export type SetupsScreenProps = MainScreenProps<'Setups'>;
 
 export type SettingsScreenProps = MainScreenProps<'Settings'>;

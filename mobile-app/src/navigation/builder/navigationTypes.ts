@@ -10,14 +10,8 @@ import { RootNavigationProp } from '@navigation/navigationTypes';
 
 import { Setups } from '@models/setup';
 
-export enum SetupsMode {
-  Normal = '@@SetupsMode/Normal',
-  SavingNew = '@@SetupsMode/SavingNew',
-}
-
 export type BuilderStackParamList = {
   NewControlEntity: undefined;
-  Setups: { mode: SetupsMode };
   SetupForm: { keyOfSetupToBeEdited?: keyof Setups };
 };
 
@@ -34,7 +28,5 @@ type BuilderScreenProps<T extends keyof BuilderStackParamList> = {
 export type NewControlEntityScreenProps = BuilderScreenProps<
   'NewControlEntity'
 >;
-
-export type SetupsScreenProps = BuilderScreenProps<'Setups'>;
 
 export type SetupFormScreenProps = BuilderScreenProps<'SetupForm'>;
