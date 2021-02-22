@@ -48,10 +48,10 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
               {description}
             </Text>
           ) : null}
-          <Text category={'p2'} style={tailwind('mt-1')}>{`Created ${moment(
+          <Text category={'c2'} style={tailwind('mt-1')}>{`Created ${moment(
             createdAt,
           ).fromNow()}`}</Text>
-          <Text category={'p2'}>{`Last updated ${moment(
+          <Text category={'c2'}>{`Last updated ${moment(
             updatedAt,
           ).fromNow()}`}</Text>
         </View>

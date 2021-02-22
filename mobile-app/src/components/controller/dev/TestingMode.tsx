@@ -63,10 +63,14 @@ export const TestingMode: FC<TestingModeProps> = () => {
   const listFooterComponent = useMemo(
     () => (
       <View style={tailwind('w-full flex-row justify-between')}>
-        <NavigateToNewControlEntityButton style={{ width: '49%' }} />
+        <NavigateToNewControlEntityButton
+          style={{ width: '49%' }}
+          status={'info'}
+        />
         <NavigateToSetupsButton
           mode={SetupsMode.SavingNew}
           accessoryLeft={renderIcon('save-outline')}
+          status={'info'}
           style={{ width: '49%' }}>
           Save Setup
         </NavigateToSetupsButton>
