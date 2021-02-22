@@ -16,7 +16,7 @@ import {
   setControlEntities,
 } from '@reduxApp/control/actions';
 
-import { SetupDetailsCard } from '@components/builder/setups';
+import { SetupDetailsCard } from '@components/setups';
 import { renderIcon } from '@components/shared/interface';
 import { ConfirmationModal } from '@components/shared/actionable';
 
