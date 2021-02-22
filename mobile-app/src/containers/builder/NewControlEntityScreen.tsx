@@ -18,7 +18,7 @@ import {
   Enable,
 } from '@models/control-entity';
 
-import { ControlEntityParameterInput } from '@components/shared/actionable';
+import { ResponsiveInput } from '@components/shared/actionable';
 
 import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
@@ -160,11 +160,11 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
       <View>
         {controlEntityObjectKeys.ordinary.map(
           ({ key, valueType, description }) => (
-            <ControlEntityParameterInput
+            <ResponsiveInput
               key={key}
               label={capitalCase(key)}
               caption={description}
-              reduxValue={getCachedValue(key)}
+              storedValue={getCachedValue(key)}
               onInputBlur={(value) => onParameterChange(key, value, valueType)}
               keyboardType={getKeyboardType(valueType)}
               style={tailwind('mt-3')}

@@ -16,8 +16,8 @@ import {
 
 import { ControlEntityCard } from '@components/shared/interface';
 import {
-  ControlEntityParameterButton,
-  ControlEntityParameterInput,
+  ResponsiveButton,
+  ResponsiveInput,
   ControlEntityParameterToggle,
 } from '@components/shared/actionable';
 import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
@@ -57,35 +57,35 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
       {...props}
       headerParams={headerParams}
       onConfirmDelete={onConfirmDelete}>
-      <ControlEntityParameterInput
+      <ResponsiveInput
         keyboardType={'number-pad'}
         label={'Pulse Interval'}
         placeholder={
           'time delay between pulses in microseconds (the lower this value, the faster the motor runs)'
         }
-        reduxValue={controlEntity.pulseInterval}
+        storedValue={controlEntity.pulseInterval}
         onInputBlur={(value) =>
           onParameterChange('pulseInterval', value || '0', 'number')
         }
       />
 
       {controlInterface === DevControlInterface.Testing ? (
-        <ControlEntityParameterInput
+        <ResponsiveInput
           keyboardType={'decimal-pad'}
           label={'Revolution'}
           placeholder={'rotational distance traversed by the motor'}
-          reduxValue={controlEntity.revolution}
+          storedValue={controlEntity.revolution}
           onInputBlur={(value) =>
             onParameterChange('revolution', value || '0', 'number')
           }
         />
       ) : null}
 
-      <ControlEntityParameterInput
+      <ResponsiveInput
         keyboardType={'number-pad'}
         label={'Pulse Per Revolution'}
         placeholder={'number of pulses per revolution'}
-        reduxValue={controlEntity.pulsePerRevolution}
+        storedValue={controlEntity.pulsePerRevolution}
         onInputBlur={(value) =>
           onParameterChange('pulsePerRevolution', value || '0', 'number')
         }
@@ -94,7 +94,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
       {controlInterface === DevControlInterface.Testing ? (
         <View style={tailwind('mt-3 flex-row justify-between items-center')}>
           <View style={tailwind('flex-row items-center')}>
-            <ControlEntityParameterButton
+            <ResponsiveButton
               isSelected={controlEntity.direction === Direction.CCW}
               onSelected={() =>
                 onParameterChange(
@@ -104,8 +104,8 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
                 )
               }>
               CCW
-            </ControlEntityParameterButton>
-            <ControlEntityParameterButton
+            </ResponsiveButton>
+            <ResponsiveButton
               isSelected={controlEntity.direction === Direction.CW}
               onSelected={() =>
                 onParameterChange(
@@ -115,7 +115,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
                 )
               }>
               CW
-            </ControlEntityParameterButton>
+            </ResponsiveButton>
           </View>
           <View style={tailwind('ml-4 items-center')}>
             <ControlEntityParameterToggle

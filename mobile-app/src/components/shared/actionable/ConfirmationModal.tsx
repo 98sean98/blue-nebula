@@ -3,7 +3,7 @@ import { Card, Modal, ModalProps, Text } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ConfirmationButtonGroup } from '@components/shared/actionable/ConfirmationButtonGroup';
+import { ConfirmationButtonGroup } from '@components/shared/actionable/button/ConfirmationButtonGroup';
 
 interface ConfirmationModalProps extends ModalProps {
   onBackdropPress: () => void;

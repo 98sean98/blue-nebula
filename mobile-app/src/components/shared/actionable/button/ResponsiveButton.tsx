@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import { GestureResponderEvent } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
 
-interface ControlEntityParameterButtonProps extends ButtonProps {
+interface ResponsiveButtonProps extends ButtonProps {
   isSelected: boolean;
   onSelected: (isSelected: boolean) => void;
 }
 
-export const ControlEntityParameterButton: FC<ControlEntityParameterButtonProps> = ({
+export const ResponsiveButton: FC<ResponsiveButtonProps> = ({
   isSelected,
   onSelected,
   children,

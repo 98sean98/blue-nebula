@@ -16,7 +16,7 @@ import {
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
 import {
-  CreateNewControlEntityButton,
+  NavigateToNewControlEntityButton,
   NavigateToSetupsButton,
   Timer,
 } from '@components/shared/actionable';
@@ -62,7 +62,7 @@ export const TestingMode: FC<TestingModeProps> = () => {
   const listFooterComponent = useMemo(
     () => (
       <View style={tailwind('w-full flex-row justify-between')}>
-        <CreateNewControlEntityButton style={{ width: '49%' }} />
+        <NavigateToNewControlEntityButton style={{ width: '49%' }} />
         <NavigateToSetupsButton
           mode={SetupsMode.SavingNew}
           accessoryLeft={renderIcon('save-outline')}

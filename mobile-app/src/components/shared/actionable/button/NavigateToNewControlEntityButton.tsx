@@ -5,10 +5,10 @@ import { useNavigation } from '@react-navigation/native';
 
 import { renderIcon } from '@components/shared/interface/renderIcon';
 
-interface CreateNewControlEntityButtonProps
+interface NavigateToNewControlEntityButtonProps
   extends Omit<ButtonProps, 'children'> {}
 
-export const CreateNewControlEntityButton: FC<CreateNewControlEntityButtonProps> = (
+export const NavigateToNewControlEntityButton: FC<NavigateToNewControlEntityButtonProps> = (
   props,
 ) => {
   const { navigate } = useNavigation();

@@ -14,7 +14,7 @@ import { Setup } from '@models/setup';
 import { RootState } from '@reduxApp';
 import { removeSetup, setSetups } from '@reduxApp/builder/actions';
 
-import { ControlEntityParameterInput } from '@components/shared/actionable';
+import { ResponsiveInput } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
 
 export const SetupFormScreen: FC<SetupFormScreenProps> = ({
@@ -147,24 +147,24 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
           tailwind('w-full flex-row justify-between'),
           viewProps?.style ?? {},
         ]}>
-        <ControlEntityParameterInput
+        <ResponsiveInput
           status={inputStatus}
           style={{ width: '49%' }}
           label={'Field key'}
           placeholder={'50 characters max'}
           maxLength={50}
-          reduxValue={fieldKey}
+          storedValue={fieldKey}
           onInputBlur={(newFieldKey) =>
             onFieldKeyInputChange(fieldKey, newFieldKey ?? '')
           }
         />
-        <ControlEntityParameterInput
+        <ResponsiveInput
           status={inputStatus}
           style={{ width: '49%' }}
           label={'Field value'}
           placeholder={'50 characters max'}
           maxLength={50}
-          reduxValue={fieldValue}
+          storedValue={fieldValue}
           onInputBlur={(newFieldValue) =>
             onFieldValueInputChange(fieldKey, newFieldValue ?? '')
           }
@@ -177,22 +177,22 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   return (
     <ScrollView style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
       {/* name */}
-      <ControlEntityParameterInput
+      <ResponsiveInput
         label={'Name'}
         caption={'A unique name'}
         placeholder={'50 characters max'}
         maxLength={50}
-        reduxValue={setup.name}
+        storedValue={setup.name}
         onInputBlur={(value) => onSetupKeyChange('name', value ?? '')}
       />
       {/* description */}
-      <ControlEntityParameterInput
+      <ResponsiveInput
         label={'Description'}
         caption={'Describe what this setup achieves'}
         placeholder={'140 characters max'}
         maxLength={140}
         style={tailwind('mt-3')}
-        reduxValue={setup.description ?? ''}
+        storedValue={setup.description ?? ''}
         onInputBlur={(value) => onSetupKeyChange('description', value ?? '')}
       />
 

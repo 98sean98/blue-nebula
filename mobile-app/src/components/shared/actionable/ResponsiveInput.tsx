@@ -7,18 +7,20 @@ import { DeclarableValueType, Value } from '@models/ValueType';
 import { parseFromTypeToString } from '@utilities/functions/parse';
 import { initialiseValueOfType } from '@utilities/functions/initialiseValueOfType';
 
-interface ControlEntityParameterInputProps extends InputProps {
-  reduxValue: Value;
+interface ResponsiveInputProps extends InputProps {
+  storedValue: Value;
   onInputBlur: (value: string | undefined) => void;
 }
 
-export const ControlEntityParameterInput: FC<ControlEntityParameterInputProps> = ({
-  reduxValue,
+export const ResponsiveInput: FC<ResponsiveInputProps> = ({
+  storedValue,
   onInputBlur,
   onBlur: onHigherBlur,
   ...props
 }) => {
-  const [value, setValue] = useState<string>(parseFromTypeToString(reduxValue));
+  const [value, setValue] = useState<string>(
+    parseFromTypeToString(storedValue),
+  );
 
   const onBlur = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
     onInputBlur(value);
@@ -26,14 +28,14 @@ export const ControlEntityParameterInput: FC<ControlEntityParameterInputProps> =
       setValue(
         parseFromTypeToString(
           initialiseValueOfType(
-            typeof reduxValue as DeclarableValueType,
+            typeof storedValue as DeclarableValueType,
           ) as string,
         ),
       );
     if (typeof onHigherBlur !== 'undefined') onHigherBlur(e);
   };
 
-  useEffect(() => setValue(parseFromTypeToString(reduxValue)), [reduxValue]);
+  useEffect(() => setValue(parseFromTypeToString(storedValue)), [storedValue]);
 
   return (
     <Input {...props} value={value} onChangeText={setValue} onBlur={onBlur} />

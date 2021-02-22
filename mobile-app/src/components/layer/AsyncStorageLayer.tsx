@@ -32,6 +32,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
     }
   }, []);
 
+  // --- read storage on first render ---
   useEffect(() => {
     try {
       readStorage('controlEntities').then((state) =>
@@ -54,6 +55,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
     [],
   );
 
+  // --- write control entities data when it is updated ---
   useEffect(() => {
     try {
       // artificially delay updates to async storage by 500ms to avoid writing empty state on initial load
@@ -70,6 +72,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
     }
   }, [writeStorage, controlEntities]);
 
+  // --- write setups data when it is updated ---
   useEffect(() => {
     try {
       // artificially delay updates to async storage by 500ms to avoid writing empty state on initial load
