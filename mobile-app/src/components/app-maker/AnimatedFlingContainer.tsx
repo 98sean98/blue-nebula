@@ -6,7 +6,7 @@ import {
   FlingGestureHandlerStateChangeEvent,
   State,
 } from 'react-native-gesture-handler';
-import { Layout } from '@ui-kitten/components';
+import { Layout, useTheme } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -24,6 +24,8 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
   children,
   ...props
 }) => {
+  const theme = useTheme();
+
   const {
     shouldExpandConfigView,
     setShouldExpandConfigView,
@@ -60,7 +62,7 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
 
   return (
     <Animated.View style={[{ height: slideAnimation }, props?.style ?? {}]}>
-      <Layout level={'4'} style={[{ flex: 1 }, tailwind('rounded-t-lg')]}>
+      <Layout level={'2'} style={[{ flex: 1 }, tailwind('rounded-t-lg')]}>
         <FlingGestureHandler
           direction={shouldExpandConfigView ? Directions.DOWN : Directions.UP}
           onHandlerStateChange={onHandlerStateChange}>
@@ -69,7 +71,12 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
               tailwind('w-full justify-center items-center'),
               { height: fling },
             ]}>
-            <Layout style={tailwind('w-2/3 h-1/4 rounded-full')} level={'2'} />
+            <View
+              style={[
+                tailwind('w-2/3 h-1 rounded-full'),
+                { backgroundColor: theme['color-basic-600'] },
+              ]}
+            />
           </View>
         </FlingGestureHandler>
 
