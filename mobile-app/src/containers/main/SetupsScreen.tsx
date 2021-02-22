@@ -158,7 +158,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   return (
     <>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
-        <View style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
+        <View style={[{ flex: 1 }, tailwind('px-4')]}>
           <FlatList
             data={data}
             renderItem={renderItem}
