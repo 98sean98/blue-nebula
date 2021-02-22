@@ -11,6 +11,10 @@ import { Setups } from '@models/setup';
 
 import { RootState } from '@reduxApp';
 import { removeSetup, setSetups } from '@reduxApp/builder/actions';
+import {
+  clearAllControlEntity,
+  setControlEntities,
+} from '@reduxApp/control/actions';
 
 import { SetupDetailsCard } from '@components/builder/setups';
 import { renderIcon } from '@components/shared/interface';
@@ -119,15 +123,13 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         );
       case SetupsMode.SavingNew:
         return (
-          <View {...viewProps}>
-            <Button
-              status={'info'}
-              appearance={'ghost'}
-              accessoryLeft={renderIcon('edit-2-outline')}
-              style={tailwind('h-10 w-10 p-1')}
-              onPress={() => onReplaceSetupPress(setupKey)}
-            />
-          </View>
+          <Button
+            status={'info'}
+            appearance={'ghost'}
+            accessoryLeft={renderIcon('edit-2-outline')}
+            style={tailwind('h-10 w-10 p-1')}
+            onPress={() => onReplaceSetupPress(setupKey)}
+          />
         );
     }
   };
@@ -155,6 +157,17 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         : '',
     [setups, selectedSetupKey],
   );
+
+  const onLoadSetupPress = () => {
+    if (typeof selectedSetupKey !== 'undefined') {
+      dispatch(clearAllControlEntity());
+      dispatch(
+        setControlEntities(setups[selectedSetupKey].controlEntitiesState),
+      );
+      setShowSetupDetailsModal(false);
+      navigation.navigate('Main', { screen: 'DevController' });
+    }
+  };
 
   return (
     <>
@@ -187,6 +200,8 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         {typeof selectedSetupKey !== 'undefined' ? (
           <SetupDetailsCard
             setup={setups[selectedSetupKey]}
+            showLoadSetupButton={mode === SetupsMode.Normal}
+            onLoadSetupPress={onLoadSetupPress}
             style={{ flex: 1 }}
           />
         ) : null}

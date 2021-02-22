@@ -1,18 +1,20 @@
 import React, { FC } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Card, CardProps, Divider, Text } from '@ui-kitten/components';
+import { Button, Card, CardProps, Text } from '@ui-kitten/components';
 import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Setup } from '@models/setup';
 
-import { ControlEntitySummary } from '@components/shared/interface';
+import { ControlEntitySummary, renderIcon } from '@components/shared/interface';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
 
 interface SetupDetailsCardProps extends CardProps {
   setup: Setup;
+  showLoadSetupButton: boolean;
+  onLoadSetupPress: () => void;
 }
 
 export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
@@ -24,15 +26,22 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
     fields,
     controlEntitiesState,
   },
+  showLoadSetupButton,
+  onLoadSetupPress,
   ...props
 }) => {
+  const fieldsArray = Object.entries(fields);
+
   return (
-    <Card disabled {...props}>
+    <Card
+      disabled
+      {...props}
+      style={[tailwind('justify-between'), props?.style ?? {}]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={tailwind('h-full')}>
-        {/* main pieces of information */}
-        <View style={tailwind('w-4/5')}>
+        style={{ height: showLoadSetupButton ? '85%' : '100%' }}>
+        {/*main pieces of information*/}
+        <View>
           <Text category={'h5'}>{name}</Text>
           {description ? (
             <Text category={'label'} appearance={'hint'}>
@@ -47,14 +56,9 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
           ).fromNow()}`}</Text>
         </View>
 
-        <Divider style={tailwind('mt-2')} />
-
         {/* fields */}
-        <View
-          style={
-            Object.entries(fields).length !== 0 ? tailwind('mt-2') : undefined
-          }>
-          {Object.entries(fields).map(([key, value]) => (
+        <View style={tailwind('mt-2')}>
+          {fieldsArray.map(([key, value]) => (
             <View
               key={key}
               style={tailwind('flex-row flex-wrap justify-between')}>
@@ -66,9 +70,19 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
         {/* control entity state */}
         <ControlEntitySummary
           controlEntities={controlEntitiesState}
-          style={tailwind('mt-2')}
+          style={fieldsArray.length !== 0 ? tailwind('mt-2') : undefined}
         />
       </ScrollView>
+
+      {showLoadSetupButton ? (
+        <Button
+          status={'info'}
+          accessoryRight={renderIcon('arrowhead-right-outline')}
+          style={tailwind('mt-4')}
+          onPress={onLoadSetupPress}>
+          Load into the controller
+        </Button>
+      ) : null}
     </Card>
   );
 };

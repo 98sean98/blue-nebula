@@ -113,7 +113,8 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
           </Text>
           {showVerbose ? (
             <ScrollView
-              style={{ maxHeight: Dimensions.get('window').height * 0.6 }}>
+              style={{ maxHeight: Dimensions.get('window').height * 0.6 }}
+              showsVerticalScrollIndicator={false}>
               <ControlEntitySummary
                 style={tailwind('mt-2')}
                 controlEntities={controlEntities}

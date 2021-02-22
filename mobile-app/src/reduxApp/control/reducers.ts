@@ -31,6 +31,8 @@ export const controlReducer = (
         ...state,
         controlEntities,
       };
+    case ControlConstants.CLEAR_ALL_CONTROL_ENTITIES:
+      return { ...state, controlEntities: {} };
     default:
       // saga actions would just return the state
       return state;
