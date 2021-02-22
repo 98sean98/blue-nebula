@@ -82,6 +82,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         setSetups({
           [selectedSetupKey]: {
             ...setups[selectedSetupKey],
+            updatedAt: new Date(),
             controlEntitiesState: controlEntities,
           },
         }),

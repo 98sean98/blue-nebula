@@ -6,9 +6,14 @@ import { capitalCase } from 'change-case';
 
 import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
-import { setSetups } from '@src/reduxApp/builder/actions';
 import { SetControlEntities } from '@reduxApp/control/types';
+import { setSetups } from '@reduxApp/builder/actions';
 import { SetSetups } from '@reduxApp/builder/types';
+
+import {
+  ConvertibleState,
+  convertStateWithTimestamps,
+} from '@utilities/functions/convertStateWithTimestamps';
 
 const renderAlert = (type: 'reading' | 'writing') =>
   Alert.alert(
@@ -38,9 +43,13 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       readStorage('controlEntities').then((state) =>
         dispatch(setControlEntities(state as SetControlEntities)),
       );
-      readStorage('setups').then((state) =>
-        dispatch(setSetups(state as SetSetups)),
-      );
+      readStorage('setups').then((state) => {
+        const stateWithConvertedTimestamps = convertStateWithTimestamps(
+          state as ConvertibleState,
+          ['createdAt', 'updatedAt'],
+        );
+        dispatch(setSetups(stateWithConvertedTimestamps as SetSetups));
+      });
     } catch (error) {
       console.log(error);
       renderAlert('reading');
