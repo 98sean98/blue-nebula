@@ -10,7 +10,7 @@ import { Layout } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ConfigurationViewHeight } from '@containers/main/AppMaker';
+import { ConfigurationViewHeight } from '@containers/main/AppMakerScreen';
 
 import { useAppMakerContext } from '@utilities/hooks';
 

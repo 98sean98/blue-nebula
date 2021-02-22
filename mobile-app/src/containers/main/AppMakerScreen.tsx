@@ -25,10 +25,10 @@ export type ConfigurationViewHeight = {
 const configurationViewHeight: ConfigurationViewHeight = {
   collapsed: 80,
   expanded: Dimensions.get('window').height * 0.75,
-  fling: 24,
+  fling: 28,
 };
 
-export const AppMaker: FC<AppMakerScreenProps> = () => {
+export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const [config, setConfig] = useState<MakerConfig>(
     initialAppMakerContext.config,
   );
@@ -36,7 +36,7 @@ export const AppMaker: FC<AppMakerScreenProps> = () => {
     initialAppMakerContext.shouldExpandConfigView,
   );
 
-  const [selectedPageIndex, setSelectedPageIndex] = useState<number>(0);
+  const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
   const renderItem = (boxIndex: number) => (
     <Pressable
@@ -53,13 +53,15 @@ export const AppMaker: FC<AppMakerScreenProps> = () => {
         setConfig,
         shouldExpandConfigView,
         setShouldExpandConfigView,
+        focusedPageIndex,
+        setFocusedPageIndex,
       }}>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
         {Object.entries(config.pages).length !== 0 ? (
           <ViewPager
             style={{ flex: 1 }}
-            selectedIndex={selectedPageIndex}
-            onSelect={setSelectedPageIndex}>
+            selectedIndex={focusedPageIndex}
+            onSelect={setFocusedPageIndex}>
             {Object.entries(config.pages).map(([key, { layout }]) => (
               <LayoutDivider
                 key={key}

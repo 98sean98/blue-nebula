@@ -3,7 +3,7 @@ import { StyleSheet, View, ViewProps } from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Layout } from '@models/app-maker/Layout';
+import { Layout } from '@models/app-maker';
 
 interface LayoutDividerProps extends ViewProps {
   layout: Layout;
@@ -27,7 +27,7 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
   return (
     <View
       {...props}
-      style={[{ flex: 1 }, tailwind('flex-wrap'), props?.style ?? {}]}>
+      style={[{ flex: 1 }, tailwind('flex-row flex-wrap'), props?.style ?? {}]}>
       {Array(boxCount)
         .fill(null)
         .map((_, index) => (

@@ -7,6 +7,8 @@ type AppMakerContext = {
   setConfig: Dispatch<SetStateAction<MakerConfig>>;
   shouldExpandConfigView: boolean;
   setShouldExpandConfigView: Dispatch<SetStateAction<boolean>>;
+  focusedPageIndex: number;
+  setFocusedPageIndex: Dispatch<SetStateAction<number>>;
 };
 
 export const initialAppMakerContext: AppMakerContext = {
@@ -14,6 +16,8 @@ export const initialAppMakerContext: AppMakerContext = {
   setConfig: () => {},
   shouldExpandConfigView: false,
   setShouldExpandConfigView: () => {},
+  focusedPageIndex: 0,
+  setFocusedPageIndex: () => {},
 };
 
 export const AppMakerContext = createContext<AppMakerContext>(
