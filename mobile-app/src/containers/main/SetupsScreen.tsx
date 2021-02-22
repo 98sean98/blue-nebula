@@ -169,16 +169,14 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         </View>
 
         {/* save new setup */}
-        {mode === SetupsMode.SavingNew ? (
-          <Button
-            style={[
-              tailwind('absolute w-12 h-12 rounded-full'),
-              { bottom: 15, right: 12 },
-            ]}
-            accessoryLeft={renderIcon('plus')}
-            onPress={onSaveNewSetupPress}
-          />
-        ) : null}
+        <Button
+          style={[
+            tailwind('absolute w-12 h-12 rounded-full'),
+            { bottom: 15, right: 12 },
+          ]}
+          accessoryLeft={renderIcon('plus')}
+          onPress={onSaveNewSetupPress}
+        />
       </View>
 
       <Modal
