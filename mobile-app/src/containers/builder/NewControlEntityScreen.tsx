@@ -2,7 +2,7 @@ import React, { FC, useMemo, useState, Fragment } from 'react';
 import { Alert, ScrollView, View } from 'react-native';
 import { Select, IndexPath, SelectItem, Button } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
-import { capitalCase, camelCase } from 'change-case';
+import { capitalCase } from 'change-case';
 import deepmerge from 'deepmerge';
 
 import { NewControlEntityScreenProps } from '@navigation/builder';
@@ -114,7 +114,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
       typeof updatedName !== 'undefined' && updatedName !== ''
         ? updatedName
         : newControlEntity.name;
-    const newControlEntityKey = camelCase(name);
+    const newControlEntityKey = name;
     if (!takenControlEntityNames.includes(newControlEntityKey)) {
       dispatch(
         setControlEntities({

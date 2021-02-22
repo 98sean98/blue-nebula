@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { camelCase } from 'change-case';
 
 import { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
 
@@ -56,7 +55,7 @@ export const useControlEntities = (): UseControlEntities => {
         i * objectKeysCount,
         (i + 1) * objectKeysCount,
       );
-      const entity = camelCase(stringArray[0]);
+      const entity = stringArray[0];
       newControlEntities[entity] = {
         ...mapStringArrayToControlEntity(
           stringArray,

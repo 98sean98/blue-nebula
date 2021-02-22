@@ -3,7 +3,6 @@ import { Alert, ScrollView, View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@ui-kitten/components';
 import { EvaStatus } from '@ui-kitten/components/devsupport';
-import { camelCase } from 'camel-case';
 
 import { SetupFormScreenProps } from '@navigation/builder';
 
@@ -110,7 +109,7 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
       typeof updatedName !== 'undefined' && updatedName !== ''
         ? updatedName
         : setup.name;
-    const newSetupKey = camelCase(name);
+    const newSetupKey = name;
     if (!takenSetupNames.includes(newSetupKey)) {
       if (
         typeof keyOfSetupToBeEdited !== 'undefined' &&
