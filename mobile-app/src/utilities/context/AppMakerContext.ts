@@ -5,6 +5,7 @@ type AppMakerContext = {
   setShouldExpandConfigView: Dispatch<SetStateAction<boolean>>;
   focusedPageIndex: number;
   setFocusedPageIndex: Dispatch<SetStateAction<number>>;
+  createNewPage: (pageIndex: number, goToLastPage?: boolean) => void;
 };
 
 export const initialAppMakerContext: AppMakerContext = {
@@ -12,6 +13,7 @@ export const initialAppMakerContext: AppMakerContext = {
   setShouldExpandConfigView: () => {},
   focusedPageIndex: 0,
   setFocusedPageIndex: () => {},
+  createNewPage: () => {},
 };
 
 export const AppMakerContext = createContext<AppMakerContext>(

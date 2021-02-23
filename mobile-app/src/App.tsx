@@ -18,6 +18,7 @@ import {
   AsyncStorageLayer,
   SettingsLayer,
   TimerLayer,
+  AppMakerLayer,
 } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
@@ -41,12 +42,14 @@ export const App: FC = () => {
         <SettingsLayer>
           <AsyncStorageLayer>
             <TimerLayer>
-              <IconRegistry icons={EvaIconsPack} />
-              <ApplicationProvider {...eva} theme={themes.eva}>
-                <NavigationContainer theme={themes.navigation}>
-                  <RootNavigator />
-                </NavigationContainer>
-              </ApplicationProvider>
+              <AppMakerLayer>
+                <IconRegistry icons={EvaIconsPack} />
+                <ApplicationProvider {...eva} theme={themes.eva}>
+                  <NavigationContainer theme={themes.navigation}>
+                    <RootNavigator />
+                  </NavigationContainer>
+                </ApplicationProvider>
+              </AppMakerLayer>
             </TimerLayer>
           </AsyncStorageLayer>
         </SettingsLayer>

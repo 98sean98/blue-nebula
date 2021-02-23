@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Dimensions, View } from 'react-native';
 import { ViewPager } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import {
 } from '@components/app-maker';
 import { PressableBox } from '@components/shared/actionable';
 
-import { AppMakerContext, initialAppMakerContext } from '@utilities/context';
+import { useAppMakerContext } from '@utilities/hooks';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -33,11 +33,7 @@ const configurationViewHeight: ConfigurationViewHeight = {
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
-  const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
-    initialAppMakerContext.shouldExpandConfigView,
-  );
-
-  const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
+  const { focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
 
   const renderItem = (boxIndex: number) => (
     <PressableBox
@@ -47,46 +43,38 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   );
 
   return (
-    <AppMakerContext.Provider
-      value={{
-        shouldExpandConfigView,
-        setShouldExpandConfigView,
-        focusedPageIndex,
-        setFocusedPageIndex,
-      }}>
-      <View style={[{ flex: 1 }, tailwind('relative')]}>
-        {Object.entries(makerConfig.pages).length !== 0 ? (
-          <ViewPager
-            style={{ flex: 1 }}
-            selectedIndex={focusedPageIndex}
-            onSelect={setFocusedPageIndex}>
-            {Object.entries(makerConfig.pages).map(
-              ([key, { layout, scrollEnabled }]) => (
-                <LayoutDivider
-                  key={key}
-                  layout={layout}
-                  renderItem={renderItem}
-                  scrollEnabled={scrollEnabled}
-                />
-              ),
-            )}
-          </ViewPager>
-        ) : null}
+    <View style={[{ flex: 1 }, tailwind('relative')]}>
+      {Object.entries(makerConfig.pages).length !== 0 ? (
+        <ViewPager
+          style={{ flex: 1 }}
+          selectedIndex={focusedPageIndex}
+          onSelect={setFocusedPageIndex}>
+          {Object.entries(makerConfig.pages).map(
+            ([key, { layout, scrollEnabled }]) => (
+              <LayoutDivider
+                key={key}
+                layout={layout}
+                renderItem={renderItem}
+                scrollEnabled={scrollEnabled}
+              />
+            ),
+          )}
+        </ViewPager>
+      ) : null}
 
-        <View style={{ height: configurationViewHeight.collapsed }} />
-        <AnimatedFlingContainer
-          configurationViewHeight={configurationViewHeight}
-          style={[
-            tailwind('absolute z-10 w-full'),
-            {
-              bottom:
-                configurationViewHeight.collapsed -
-                configurationViewHeight.expanded,
-            },
-          ]}>
-          <MakerConfiguration style={{ flex: 1 }} />
-        </AnimatedFlingContainer>
-      </View>
-    </AppMakerContext.Provider>
+      <View style={{ height: configurationViewHeight.collapsed }} />
+      <AnimatedFlingContainer
+        configurationViewHeight={configurationViewHeight}
+        style={[
+          tailwind('absolute z-10 w-full'),
+          {
+            bottom:
+              configurationViewHeight.collapsed -
+              configurationViewHeight.expanded,
+          },
+        ]}>
+        <MakerConfiguration style={{ flex: 1 }} />
+      </AnimatedFlingContainer>
+    </View>
   );
 };

@@ -5,14 +5,12 @@ import {
   LayoutProps,
   Text,
 } from '@ui-kitten/components';
-import deepmerge from 'deepmerge';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Layout, Page } from '@models/app-maker';
 
-import { RootState } from '@reduxApp';
 import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { ThemedSlider } from '@components/shared/actionable';
@@ -26,8 +24,6 @@ interface LayoutBoxProps extends LayoutProps {
 export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
   const dispatch = useDispatch();
 
-  const { makerConfig } = useSelector((state: RootState) => state.builder);
-
   const { focusedPageIndex } = useAppMakerContext();
 
   const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
@@ -36,11 +32,11 @@ export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
   ];
 
   const onLayoutVariableChange = (type: keyof Layout, value: number) => {
-    const newMakerConfig = deepmerge(
-      { pages: makerConfig.pages },
-      { pages: { [focusedPageIndex]: { layout: { [type]: value } } } },
+    dispatch(
+      setMakerConfig({
+        pages: { [focusedPageIndex]: { layout: { [type]: value } } },
+      }),
     );
-    dispatch(setMakerConfig(newMakerConfig));
   };
 
   return (

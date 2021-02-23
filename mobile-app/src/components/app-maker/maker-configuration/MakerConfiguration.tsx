@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import {
   KeyboardAvoidingView,
   ScrollView,
@@ -6,45 +6,35 @@ import {
   ViewProps,
 } from 'react-native';
 import { Button, Text } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Page } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { LayoutBox } from './LayoutBox';
 import { PageInfo } from './PageInfo';
 
 import { useAppMakerContext } from '@utilities/hooks';
-import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
 
 interface MakerConfigurationProps extends ViewProps {}
 
 export const MakerConfiguration: FC<MakerConfigurationProps> = ({
   ...props
 }) => {
-  const dispatch = useDispatch();
-
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
-  const { setShouldExpandConfigView, focusedPageIndex } = useAppMakerContext();
+  const {
+    setShouldExpandConfigView,
+    focusedPageIndex,
+    createNewPage,
+  } = useAppMakerContext();
 
   const focusedPage: Page | undefined = useMemo(
     () => makerConfig.pages[focusedPageIndex],
     [makerConfig.pages, focusedPageIndex],
-  );
-
-  const createNewPage = useCallback(
-    (pageIndex: number) => {
-      const newMakerConfig = {
-        pages: { ...makerConfig.pages, [pageIndex]: initialiseNewPage() },
-      };
-      dispatch(setMakerConfig(newMakerConfig));
-    },
-    [dispatch, makerConfig.pages],
   );
 
   const onFirstPageCreatePress = () => {

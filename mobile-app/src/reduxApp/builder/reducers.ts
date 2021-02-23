@@ -1,6 +1,10 @@
+import deepmerge from 'deepmerge';
+
 import { BuilderConstants } from './constants';
 import { BuilderState } from './types';
 import { BuilderActionTypes } from './actions';
+
+import { MakerConfig } from '@models/app-maker';
 
 const initialState: BuilderState = {
   setups: {},
@@ -33,10 +37,10 @@ export const builderReducer = (
     case BuilderConstants.SET_MAKER_CONFIG:
       return {
         ...state,
-        makerConfig: {
-          ...state.makerConfig,
-          ...action.payload,
-        },
+        makerConfig: deepmerge(
+          state.makerConfig,
+          action.payload,
+        ) as MakerConfig,
       };
     default:
       // saga actions would just return the state
