@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
-import { Dimensions, Pressable, View } from 'react-native';
-import { Text, ViewPager } from '@ui-kitten/components';
+import { Dimensions, View } from 'react-native';
+import { ViewPager } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
 import { AppMakerScreenProps } from '@navigation/main';
@@ -14,6 +14,7 @@ import {
   LayoutDivider,
   MakerConfiguration,
 } from '@components/app-maker';
+import { PressableBox } from '@components/shared/actionable';
 
 import { AppMakerContext, initialAppMakerContext } from '@utilities/context';
 
@@ -39,11 +40,10 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
   const renderItem = (boxIndex: number) => (
-    <Pressable
-      style={[{ flex: 1 }, tailwind('m-1 bg-blue-900')]}
-      onPress={() => console.log(boxIndex)}>
-      <Text>{boxIndex}</Text>
-    </Pressable>
+    <PressableBox
+      text={boxIndex.toString()}
+      style={[{ flex: 1 }, tailwind('m-1')]}
+    />
   );
 
   return (
@@ -73,7 +73,14 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
         <View style={{ height: configurationViewHeight.collapsed }} />
         <AnimatedFlingContainer
           configurationViewHeight={configurationViewHeight}
-          style={tailwind('absolute bottom-0 z-10 w-full')}>
+          style={[
+            tailwind('absolute z-10 w-full'),
+            {
+              bottom:
+                configurationViewHeight.collapsed -
+                configurationViewHeight.expanded,
+            },
+          ]}>
           <MakerConfiguration style={{ flex: 1 }} />
         </AnimatedFlingContainer>
       </View>

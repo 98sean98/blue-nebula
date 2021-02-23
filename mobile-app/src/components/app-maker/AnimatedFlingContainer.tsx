@@ -35,19 +35,19 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
 
   const slideUp = useCallback(() => {
     Animated.timing(slideAnimation, {
-      toValue: expanded,
+      toValue: collapsed - expanded, // translate upwards
       duration: 200,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
-  }, [slideAnimation, expanded]);
+  }, [slideAnimation, collapsed, expanded]);
 
   const slideDown = useCallback(() => {
     Animated.timing(slideAnimation, {
-      toValue: collapsed,
+      toValue: 0,
       duration: 200,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
-  }, [slideAnimation, collapsed]);
+  }, [slideAnimation]);
 
   const onHandlerStateChange = ({
     nativeEvent,
@@ -61,7 +61,11 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
   }, [shouldExpandConfigView, slideUp, slideDown]);
 
   return (
-    <Animated.View style={[{ height: slideAnimation }, props?.style ?? {}]}>
+    <Animated.View
+      style={[
+        { height: expanded, transform: [{ translateY: slideAnimation }] },
+        props?.style ?? {},
+      ]}>
       <Layout level={'2'} style={[{ flex: 1 }, tailwind('rounded-t-xl')]}>
         <FlingGestureHandler
           direction={shouldExpandConfigView ? Directions.DOWN : Directions.UP}
