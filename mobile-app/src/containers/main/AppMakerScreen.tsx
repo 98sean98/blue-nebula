@@ -60,13 +60,16 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
             style={{ flex: 1 }}
             selectedIndex={focusedPageIndex}
             onSelect={setFocusedPageIndex}>
-            {Object.entries(makerConfig.pages).map(([key, { layout }]) => (
-              <LayoutDivider
-                key={key}
-                layout={layout}
-                renderItem={renderItem}
-              />
-            ))}
+            {Object.entries(makerConfig.pages).map(
+              ([key, { layout, scrollEnabled }]) => (
+                <LayoutDivider
+                  key={key}
+                  layout={layout}
+                  renderItem={renderItem}
+                  scrollEnabled={scrollEnabled}
+                />
+              ),
+            )}
           </ViewPager>
         ) : null}
 

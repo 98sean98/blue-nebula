@@ -1,11 +1,19 @@
-import React, { FC, ReactNode } from 'react';
-import { StyleSheet, View, ViewProps } from 'react-native';
+import React, { FC, ReactNode, useState } from 'react';
+import {
+  LayoutChangeEvent,
+  LayoutRectangle,
+  ScrollView,
+  ScrollViewProps,
+  StyleSheet,
+  View,
+  Dimensions,
+} from 'react-native';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Layout } from '@models/app-maker';
 
-interface LayoutDividerProps extends ViewProps {
+interface LayoutDividerProps extends ScrollViewProps {
   layout: Layout;
   renderItem: (boxIndex: number) => ReactNode;
 }
@@ -17,17 +25,32 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
 }) => {
   const boxCount = rows * columns;
 
+  const [layout, setLayout] = useState<LayoutRectangle>();
+
+  const onLayout = (e: LayoutChangeEvent) => {
+    const {
+      nativeEvent: { layout },
+    } = e;
+    setLayout(layout);
+    if (typeof props?.onLayout !== 'undefined') props.onLayout(e);
+  };
+
   const styles = StyleSheet.create({
     box: {
-      height: `${100 / rows}%`,
-      width: `${100 / columns}%`,
+      height: (layout?.height ?? Dimensions.get('window').height) / rows,
+      width: (layout?.width ?? Dimensions.get('window').width) / columns,
     },
   });
 
   return (
-    <View
+    <ScrollView
       {...props}
-      style={[{ flex: 1 }, tailwind('flex-row flex-wrap'), props?.style ?? {}]}>
+      style={[{ flex: 1 }, props?.style ?? {}]}
+      contentContainerStyle={[
+        tailwind('flex-row flex-wrap'),
+        props?.contentContainerStyle ?? {},
+      ]}
+      onLayout={onLayout}>
       {Array(boxCount)
         .fill(null)
         .map((_, index) => (
@@ -35,6 +58,6 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
             {renderItem(index)}
           </View>
         ))}
-    </View>
+    </ScrollView>
   );
 };
