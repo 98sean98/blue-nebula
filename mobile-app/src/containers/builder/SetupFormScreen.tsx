@@ -1,5 +1,11 @@
 import React, { FC, useCallback, useMemo, useState, Fragment } from 'react';
-import { Alert, ScrollView, View, ViewProps } from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+  ViewProps,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@ui-kitten/components';
 import { EvaStatus } from '@ui-kitten/components/devsupport';
@@ -174,67 +180,72 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   );
 
   return (
-    <ScrollView style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
-      {/* name */}
-      <ResponsiveInput
-        label={'Name'}
-        caption={'A unique name'}
-        placeholder={'50 characters max'}
-        maxLength={50}
-        storedValue={setup.name}
-        onInputBlur={(value) => onSetupKeyChange('name', value ?? '')}
-      />
-      {/* description */}
-      <ResponsiveInput
-        label={'Description'}
-        caption={'Describe what this setup achieves'}
-        placeholder={'140 characters max'}
-        maxLength={140}
-        style={tailwind('mt-3')}
-        storedValue={setup.description ?? ''}
-        onInputBlur={(value) => onSetupKeyChange('description', value ?? '')}
-      />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={'padding'}
+      keyboardVerticalOffset={80}>
+      <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>
+        {/* name */}
+        <ResponsiveInput
+          label={'Name'}
+          caption={'A unique name'}
+          placeholder={'50 characters max'}
+          maxLength={50}
+          storedValue={setup.name}
+          onInputBlur={(value) => onSetupKeyChange('name', value ?? '')}
+        />
+        {/* description */}
+        <ResponsiveInput
+          label={'Description'}
+          caption={'Describe what this setup achieves'}
+          placeholder={'140 characters max'}
+          maxLength={140}
+          style={tailwind('mt-3')}
+          storedValue={setup.description ?? ''}
+          onInputBlur={(value) => onSetupKeyChange('description', value ?? '')}
+        />
 
-      {/* fields */}
-      <View style={tailwind('mt-3')}>
-        {Object.entries(setup.fields).map(([fieldKey, fieldValue], index) => (
-          <Fragment key={index}>
-            {renderFieldInputs(fieldKey, fieldValue, {
-              style: index !== 0 ? tailwind('mt-3') : {},
-            })}
-          </Fragment>
-        ))}
-        <View
-          style={
-            Object.entries(setup.fields).length !== 0 ? tailwind('mt-3') : {}
-          }>
-          {hasEmptyField ? (
-            renderFieldInputs(
-              cachedNewField.key,
-              cachedNewField.value ?? '',
-              {},
-              'warning',
-            )
-          ) : (
-            <Button
-              accessoryLeft={renderIcon('plus')}
-              appearance={'outline'}
-              status={'basic'}
-              onPress={() => {
-                setHasEmptyField(true);
-                setCachedNewField({ key: '', value: '' });
-              }}>
-              Add another field
-            </Button>
-          )}
+        {/* fields */}
+        <View style={tailwind('mt-3')}>
+          {Object.entries(setup.fields).map(([fieldKey, fieldValue], index) => (
+            <Fragment key={index}>
+              {renderFieldInputs(fieldKey, fieldValue, {
+                style: index !== 0 ? tailwind('mt-3') : {},
+              })}
+            </Fragment>
+          ))}
+          <View
+            style={
+              Object.entries(setup.fields).length !== 0 ? tailwind('mt-3') : {}
+            }>
+            {hasEmptyField ? (
+              renderFieldInputs(
+                cachedNewField.key,
+                cachedNewField.value ?? '',
+                {},
+                'warning',
+              )
+            ) : (
+              <Button
+                accessoryLeft={renderIcon('plus')}
+                appearance={'outline'}
+                status={'basic'}
+                onPress={() => {
+                  setHasEmptyField(true);
+                  setCachedNewField({ key: '', value: '' });
+                }}>
+                Add another field
+              </Button>
+            )}
+          </View>
         </View>
-      </View>
 
-      {setup.name !== '' && setup.name !== undefined ? (
-        <Button style={tailwind('mt-4')} onPress={() => onSubmitPress()}>
-          Submit
-        </Button>
-      ) : null}
-    </ScrollView>
+        {setup.name !== '' && setup.name !== undefined ? (
+          <Button style={tailwind('mt-4')} onPress={() => onSubmitPress()}>
+            Submit
+          </Button>
+        ) : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };

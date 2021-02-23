@@ -1,5 +1,10 @@
 import React, { FC, useCallback, useMemo } from 'react';
-import { ScrollView, View, ViewProps } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+  ViewProps,
+} from 'react-native';
 import { Button, Layout as LayoutComponent, Text } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import deepmerge from 'deepmerge';
@@ -71,41 +76,44 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           </Button>
         </View>
       ) : (
-        <ScrollView
-          style={tailwind('px-4')}
-          showsVerticalScrollIndicator={false}>
-          <LayoutComponent style={tailwind('p-2')}>
-            <Text category={'h6'}>Layout boxes</Text>
-            {/* layout rows and columns */}
-            <View style={tailwind('mt-1')}>
-              {layoutTypes.map(({ type, min, max }) => (
-                <View
-                  key={type}
-                  style={tailwind(
-                    'w-full flex-row justify-between items-center',
-                  )}>
-                  <Text>{type}</Text>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={'padding'}
+          keyboardVerticalOffset={150}>
+          <ScrollView contentContainerStyle={tailwind('px-4')}>
+            <LayoutComponent style={tailwind('p-2')}>
+              <Text category={'h6'}>Layout boxes</Text>
+              {/* layout rows and columns */}
+              <View style={tailwind('mt-1')}>
+                {layoutTypes.map(({ type, min, max }) => (
                   <View
+                    key={type}
                     style={tailwind(
-                      'w-2/3 flex-row justify-between items-center',
+                      'w-full flex-row justify-between items-center',
                     )}>
-                    <ThemedSlider
-                      style={tailwind('w-11/12 h-8')}
-                      minimumValue={min}
-                      maximumValue={max}
-                      step={1}
-                      value={focusedPage.layout[type]}
-                      onSlidingComplete={(value: number) =>
-                        onLayoutVariableChange(type, value)
-                      }
-                    />
-                    <Text category={'s1'}>{focusedPage.layout[type]}</Text>
+                    <Text>{type}</Text>
+                    <View
+                      style={tailwind(
+                        'w-2/3 flex-row justify-between items-center',
+                      )}>
+                      <ThemedSlider
+                        style={tailwind('w-11/12 h-8')}
+                        minimumValue={min}
+                        maximumValue={max}
+                        step={1}
+                        value={focusedPage.layout[type]}
+                        onSlidingComplete={(value: number) =>
+                          onLayoutVariableChange(type, value)
+                        }
+                      />
+                      <Text category={'s1'}>{focusedPage.layout[type]}</Text>
+                    </View>
                   </View>
-                </View>
-              ))}
-            </View>
-          </LayoutComponent>
-        </ScrollView>
+                ))}
+              </View>
+            </LayoutComponent>
+          </ScrollView>
+        </KeyboardAvoidingView>
       )}
     </View>
   );

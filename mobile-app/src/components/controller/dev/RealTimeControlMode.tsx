@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { FlatList, ListRenderItem, View } from 'react-native';
+import { FlatList, KeyboardAvoidingView, ListRenderItem } from 'react-native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -104,13 +104,16 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={'padding'}
+        keyboardVerticalOffset={150}>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
         />
-      </View>
+      </KeyboardAvoidingView>
 
       <Modal
         visible={shouldShowModal}

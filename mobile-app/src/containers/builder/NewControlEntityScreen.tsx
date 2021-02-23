@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState, Fragment } from 'react';
-import { Alert, ScrollView, View } from 'react-native';
+import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { Select, IndexPath, SelectItem, Button } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import { capitalCase } from 'change-case';
@@ -139,102 +139,110 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   };
 
   return (
-    <ScrollView style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
-      {/* select a control entity type */}
-      <Select
-        label={'Control Entity Type'}
-        value={capitalCase(selectedControlEntityType)}
-        selectedIndex={selectedControlEntityTypeIndex}
-        onSelect={(index) =>
-          setSelectedControlEntityTypeIndex(index as IndexPath)
-        }>
-        {controlEntityTypes.map((controlEntityType) => (
-          <SelectItem
-            key={controlEntityType}
-            title={capitalCase(controlEntityType)}
-          />
-        ))}
-      </Select>
-
-      {/* object keys */}
-      <View>
-        {controlEntityObjectKeys.ordinary.map(
-          ({ key, valueType, description }) => (
-            <ResponsiveInput
-              key={key}
-              label={capitalCase(key)}
-              caption={description}
-              storedValue={getCachedValue(key)}
-              onInputBlur={(value) => onParameterChange(key, value, valueType)}
-              keyboardType={getKeyboardType(valueType)}
-              style={tailwind('mt-3')}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={'padding'}
+      keyboardVerticalOffset={90}>
+      <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>
+        {/* select a control entity type */}
+        <Select
+          label={'Control Entity Type'}
+          value={capitalCase(selectedControlEntityType)}
+          selectedIndex={selectedControlEntityTypeIndex}
+          onSelect={(index) =>
+            setSelectedControlEntityTypeIndex(index as IndexPath)
+          }>
+          {controlEntityTypes.map((controlEntityType) => (
+            <SelectItem
+              key={controlEntityType}
+              title={capitalCase(controlEntityType)}
             />
-          ),
-        )}
-        {controlEntityObjectKeys.special.map(
-          ({ key, valueType, description }) => (
-            <Fragment key={key}>
-              {key === 'direction' ? (
-                <Select
-                  label={capitalCase(key)}
-                  caption={description}
-                  value={getCachedValue(key) === Direction.CW ? 'CW' : 'CCW'}
-                  selectedIndex={
-                    getCachedValue(key) === Direction.CW
-                      ? new IndexPath(0)
-                      : new IndexPath(1)
-                  }
-                  onSelect={(index) =>
-                    onParameterChange(
-                      key,
-                      ((index as IndexPath).row === 0
-                        ? Direction.CW
-                        : Direction.CCW
-                      ).toString(),
-                      valueType,
-                    )
-                  }
-                  style={tailwind('mt-3')}>
-                  <SelectItem title={'CW'} />
-                  <SelectItem title={'CCW'} />
-                </Select>
-              ) : null}
-              {key === 'enable' ? (
-                <Select
-                  label={capitalCase(key)}
-                  caption={description}
-                  value={getCachedValue(key) === Enable.Low ? 'Low' : 'High'}
-                  selectedIndex={
-                    getCachedValue(key) === Enable.Low
-                      ? new IndexPath(0)
-                      : new IndexPath(1)
-                  }
-                  onSelect={(index) =>
-                    onParameterChange(
-                      key,
-                      ((index as IndexPath).row === 0
-                        ? Enable.Low
-                        : Enable.High
-                      ).toString(),
-                      valueType,
-                    )
-                  }
-                  style={tailwind('mt-3')}>
-                  <SelectItem title={'Low'} />
-                  <SelectItem title={'High'} />
-                </Select>
-              ) : null}
-            </Fragment>
-          ),
-        )}
-      </View>
+          ))}
+        </Select>
 
-      {/* submit button */}
-      {getCachedValue('name') !== '' && getCachedValue('name') !== undefined ? (
-        <Button style={tailwind('mt-4')} onPress={() => onSubmitPress()}>
-          Submit
-        </Button>
-      ) : null}
-    </ScrollView>
+        {/* object keys */}
+        <View>
+          {controlEntityObjectKeys.ordinary.map(
+            ({ key, valueType, description }) => (
+              <ResponsiveInput
+                key={key}
+                label={capitalCase(key)}
+                caption={description}
+                storedValue={getCachedValue(key)}
+                onInputBlur={(value) =>
+                  onParameterChange(key, value, valueType)
+                }
+                keyboardType={getKeyboardType(valueType)}
+                style={tailwind('mt-3')}
+              />
+            ),
+          )}
+          {controlEntityObjectKeys.special.map(
+            ({ key, valueType, description }) => (
+              <Fragment key={key}>
+                {key === 'direction' ? (
+                  <Select
+                    label={capitalCase(key)}
+                    caption={description}
+                    value={getCachedValue(key) === Direction.CW ? 'CW' : 'CCW'}
+                    selectedIndex={
+                      getCachedValue(key) === Direction.CW
+                        ? new IndexPath(0)
+                        : new IndexPath(1)
+                    }
+                    onSelect={(index) =>
+                      onParameterChange(
+                        key,
+                        ((index as IndexPath).row === 0
+                          ? Direction.CW
+                          : Direction.CCW
+                        ).toString(),
+                        valueType,
+                      )
+                    }
+                    style={tailwind('mt-3')}>
+                    <SelectItem title={'CW'} />
+                    <SelectItem title={'CCW'} />
+                  </Select>
+                ) : null}
+                {key === 'enable' ? (
+                  <Select
+                    label={capitalCase(key)}
+                    caption={description}
+                    value={getCachedValue(key) === Enable.Low ? 'Low' : 'High'}
+                    selectedIndex={
+                      getCachedValue(key) === Enable.Low
+                        ? new IndexPath(0)
+                        : new IndexPath(1)
+                    }
+                    onSelect={(index) =>
+                      onParameterChange(
+                        key,
+                        ((index as IndexPath).row === 0
+                          ? Enable.Low
+                          : Enable.High
+                        ).toString(),
+                        valueType,
+                      )
+                    }
+                    style={tailwind('mt-3')}>
+                    <SelectItem title={'Low'} />
+                    <SelectItem title={'High'} />
+                  </Select>
+                ) : null}
+              </Fragment>
+            ),
+          )}
+        </View>
+
+        {/* submit button */}
+        {getCachedValue('name') !== '' &&
+        getCachedValue('name') !== undefined ? (
+          <Button style={tailwind('mt-4')} onPress={() => onSubmitPress()}>
+            Submit
+          </Button>
+        ) : null}
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };

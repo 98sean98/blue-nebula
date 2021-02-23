@@ -1,5 +1,10 @@
 import React, { FC, useMemo, useState } from 'react';
-import { FlatList, ListRenderItem, View } from 'react-native';
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  ListRenderItem,
+  View,
+} from 'react-native';
 import { Divider } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -85,13 +90,18 @@ export const TestingMode: FC<TestingModeProps> = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        ListFooterComponent={listFooterComponent}
-        ListFooterComponentStyle={tailwind('px-4 pb-3')}
-      />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={'padding'}
+        keyboardVerticalOffset={150}>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ListFooterComponent={listFooterComponent}
+          ListFooterComponentStyle={tailwind('px-4 pb-3')}
+        />
+      </KeyboardAvoidingView>
 
       <Divider />
 
