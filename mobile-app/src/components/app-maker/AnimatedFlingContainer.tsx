@@ -62,7 +62,7 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
 
   return (
     <Animated.View style={[{ height: slideAnimation }, props?.style ?? {}]}>
-      <Layout level={'2'} style={[{ flex: 1 }, tailwind('rounded-t-lg')]}>
+      <Layout level={'2'} style={[{ flex: 1 }, tailwind('rounded-t-xl')]}>
         <FlingGestureHandler
           direction={shouldExpandConfigView ? Directions.DOWN : Directions.UP}
           onHandlerStateChange={onHandlerStateChange}>

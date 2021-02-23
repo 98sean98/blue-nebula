@@ -5,21 +5,20 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { Button, Layout as LayoutComponent, Text } from '@ui-kitten/components';
+import { Button, Text } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
-import deepmerge from 'deepmerge';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Layout, Page } from '@models/app-maker';
+import { Page } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
+import { setMakerConfig } from '@reduxApp/builder/actions';
 
-import { ThemedSlider } from '@components/shared/actionable';
+import { LayoutBox } from './LayoutBox';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
-import { setMakerConfig } from '@reduxApp/builder/actions';
 
 interface MakerConfigurationProps extends ViewProps {}
 
@@ -50,19 +49,6 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
     createNewPage();
   };
 
-  const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
-    { type: 'rows', min: 1, max: 8 },
-    { type: 'columns', min: 1, max: 5 },
-  ];
-
-  const onLayoutVariableChange = (type: keyof Layout, value: number) => {
-    const newMakerConfig = deepmerge(
-      { pages: makerConfig.pages },
-      { pages: { [focusedPageIndex]: { layout: { [type]: value } } } },
-    );
-    dispatch(setMakerConfig(newMakerConfig));
-  };
-
   return (
     <View {...props}>
       {Object.entries(makerConfig.pages).length === 0 &&
@@ -81,37 +67,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           behavior={'padding'}
           keyboardVerticalOffset={150}>
           <ScrollView contentContainerStyle={tailwind('px-4')}>
-            <LayoutComponent style={tailwind('p-2')}>
-              <Text category={'h6'}>Layout boxes</Text>
-              {/* layout rows and columns */}
-              <View style={tailwind('mt-1')}>
-                {layoutTypes.map(({ type, min, max }) => (
-                  <View
-                    key={type}
-                    style={tailwind(
-                      'w-full flex-row justify-between items-center',
-                    )}>
-                    <Text>{type}</Text>
-                    <View
-                      style={tailwind(
-                        'w-2/3 flex-row justify-between items-center',
-                      )}>
-                      <ThemedSlider
-                        style={tailwind('w-11/12 h-8')}
-                        minimumValue={min}
-                        maximumValue={max}
-                        step={1}
-                        value={focusedPage.layout[type]}
-                        onSlidingComplete={(value: number) =>
-                          onLayoutVariableChange(type, value)
-                        }
-                      />
-                      <Text category={'s1'}>{focusedPage.layout[type]}</Text>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </LayoutComponent>
+            <LayoutBox focusedPage={focusedPage} />
           </ScrollView>
         </KeyboardAvoidingView>
       )}
