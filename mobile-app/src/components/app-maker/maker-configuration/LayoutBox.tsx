@@ -20,7 +20,7 @@ import { ThemedSlider } from '@components/shared/actionable';
 import { useAppMakerContext } from '@utilities/hooks';
 
 interface LayoutBoxProps extends LayoutProps {
-  focusedPage: Page | undefined;
+  focusedPage: Page;
 }
 
 export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
@@ -60,12 +60,12 @@ export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
                 minimumValue={min}
                 maximumValue={max}
                 step={1}
-                value={focusedPage?.layout[type] ?? min}
+                value={focusedPage.layout[type]}
                 onSlidingComplete={(value: number) =>
                   onLayoutVariableChange(type, value)
                 }
               />
-              <Text category={'s1'}>{focusedPage?.layout[type] ?? max}</Text>
+              <Text category={'s1'}>{focusedPage.layout[type]}</Text>
             </View>
           </View>
         ))}

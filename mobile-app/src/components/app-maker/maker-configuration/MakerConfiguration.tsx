@@ -16,6 +16,7 @@ import { RootState } from '@reduxApp';
 import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { LayoutBox } from './LayoutBox';
+import { PageInfo } from './PageInfo';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
@@ -36,26 +37,28 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
     [makerConfig.pages, focusedPageIndex],
   );
 
-  const createNewPage = useCallback(() => {
-    const pageCount = Object.keys(makerConfig.pages).length;
-    const newMakerConfig = {
-      pages: { ...makerConfig.pages, [pageCount]: initialiseNewPage() },
-    };
-    dispatch(setMakerConfig(newMakerConfig));
-  }, [dispatch, makerConfig.pages]);
+  const createNewPage = useCallback(
+    (pageIndex: number) => {
+      const newMakerConfig = {
+        pages: { ...makerConfig.pages, [pageIndex]: initialiseNewPage() },
+      };
+      dispatch(setMakerConfig(newMakerConfig));
+    },
+    [dispatch, makerConfig.pages],
+  );
 
   const onFirstPageCreatePress = () => {
     setShouldExpandConfigView(true);
-    createNewPage();
+    createNewPage(0);
   };
 
   return (
     <View {...props}>
       {Object.entries(makerConfig.pages).length === 0 &&
       typeof focusedPage === 'undefined' ? (
-        <View style={tailwind('mt-1 px-4 flex-row')}>
+        <View style={tailwind('mt-1 px-4 flex-row justify-between')}>
           <Text style={tailwind('w-4/5')}>
-            Your app does not have any pages yet. Create the first one?
+            Your app doesn't have any pages yet. Create the first one?
           </Text>
           <Button appearance={'ghost'} onPress={onFirstPageCreatePress}>
             Yes
@@ -66,8 +69,13 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           style={{ flex: 1 }}
           behavior={'padding'}
           keyboardVerticalOffset={150}>
-          <ScrollView contentContainerStyle={tailwind('px-4')}>
-            <LayoutBox focusedPage={focusedPage} />
+          <ScrollView contentContainerStyle={tailwind('px-4 pt-1 pb-2')}>
+            <PageInfo focusedPage={focusedPage} />
+
+            {/* layout box */}
+            <LayoutBox focusedPage={focusedPage} style={tailwind('mt-2')} />
+
+            {/* todo: figure out how to tie configurations to setups */}
           </ScrollView>
         </KeyboardAvoidingView>
       )}
