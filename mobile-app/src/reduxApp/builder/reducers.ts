@@ -4,6 +4,9 @@ import { BuilderActionTypes } from './actions';
 
 const initialState: BuilderState = {
   setups: {},
+  makerConfig: {
+    pages: {},
+  },
 };
 
 export const builderReducer = (
@@ -26,6 +29,14 @@ export const builderReducer = (
       return {
         ...state,
         setups,
+      };
+    case BuilderConstants.SET_MAKER_CONFIG:
+      return {
+        ...state,
+        makerConfig: {
+          ...state.makerConfig,
+          ...action.payload,
+        },
       };
     default:
       // saga actions would just return the state

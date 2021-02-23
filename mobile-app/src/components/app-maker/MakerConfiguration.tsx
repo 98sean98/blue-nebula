@@ -1,43 +1,44 @@
 import React, { FC, useCallback, useMemo } from 'react';
 import { ScrollView, View, ViewProps } from 'react-native';
 import { Button, Layout as LayoutComponent, Text } from '@ui-kitten/components';
+import { useDispatch, useSelector } from 'react-redux';
 import deepmerge from 'deepmerge';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Layout, Page } from '@models/app-maker';
 
+import { RootState } from '@reduxApp';
+
 import { ThemedSlider } from '@components/shared/actionable';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
+import { setMakerConfig } from '@reduxApp/builder/actions';
 
 interface MakerConfigurationProps extends ViewProps {}
 
 export const MakerConfiguration: FC<MakerConfigurationProps> = ({
   ...props
 }) => {
-  const {
-    config,
-    setConfig,
-    setShouldExpandConfigView,
-    focusedPageIndex,
-  } = useAppMakerContext();
+  const dispatch = useDispatch();
+
+  const { makerConfig } = useSelector((state: RootState) => state.builder);
+
+  const { setShouldExpandConfigView, focusedPageIndex } = useAppMakerContext();
 
   const focusedPage: Page | undefined = useMemo(
-    () => config.pages[focusedPageIndex],
-    [config.pages, focusedPageIndex],
+    () => makerConfig.pages[focusedPageIndex],
+    [makerConfig.pages, focusedPageIndex],
   );
 
   const createNewPage = useCallback(() => {
-    setConfig((thisConfig) => {
-      const pageCount = Object.keys(thisConfig.pages).length;
-      return {
-        ...thisConfig,
-        pages: { ...thisConfig.pages, [pageCount]: initialiseNewPage() },
-      };
-    });
-  }, [setConfig]);
+    const pageCount = Object.keys(makerConfig.pages).length;
+    const newMakerConfig = {
+      pages: { ...makerConfig.pages, [pageCount]: initialiseNewPage() },
+    };
+    dispatch(setMakerConfig(newMakerConfig));
+  }, [dispatch, makerConfig.pages]);
 
   const onFirstPageCreatePress = () => {
     setShouldExpandConfigView(true);
@@ -50,16 +51,16 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
   ];
 
   const onLayoutVariableChange = (type: keyof Layout, value: number) => {
-    setConfig((thisConfig) =>
-      deepmerge(thisConfig, {
-        pages: { [focusedPageIndex]: { layout: { [type]: value } } },
-      }),
+    const newMakerConfig = deepmerge(
+      { pages: makerConfig.pages },
+      { pages: { [focusedPageIndex]: { layout: { [type]: value } } } },
     );
+    dispatch(setMakerConfig(newMakerConfig));
   };
 
   return (
     <View {...props}>
-      {Object.entries(config.pages).length === 0 &&
+      {Object.entries(makerConfig.pages).length === 0 &&
       typeof focusedPage === 'undefined' ? (
         <View style={tailwind('mt-1 px-4 flex-row')}>
           <Text style={tailwind('w-4/5')}>

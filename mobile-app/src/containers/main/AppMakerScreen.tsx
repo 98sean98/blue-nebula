@@ -1,12 +1,13 @@
 import React, { FC, useState } from 'react';
 import { Dimensions, Pressable, View } from 'react-native';
 import { Text, ViewPager } from '@ui-kitten/components';
+import { useSelector } from 'react-redux';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 
-import { MakerConfig } from '@models/app-maker';
+import { RootState } from '@reduxApp';
 
 import {
   AnimatedFlingContainer,
@@ -29,9 +30,8 @@ const configurationViewHeight: ConfigurationViewHeight = {
 };
 
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
-  const [config, setConfig] = useState<MakerConfig>(
-    initialAppMakerContext.config,
-  );
+  const { makerConfig } = useSelector((state: RootState) => state.builder);
+
   const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
     initialAppMakerContext.shouldExpandConfigView,
   );
@@ -49,20 +49,18 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   return (
     <AppMakerContext.Provider
       value={{
-        config,
-        setConfig,
         shouldExpandConfigView,
         setShouldExpandConfigView,
         focusedPageIndex,
         setFocusedPageIndex,
       }}>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
-        {Object.entries(config.pages).length !== 0 ? (
+        {Object.entries(makerConfig.pages).length !== 0 ? (
           <ViewPager
             style={{ flex: 1 }}
             selectedIndex={focusedPageIndex}
             onSelect={setFocusedPageIndex}>
-            {Object.entries(config.pages).map(([key, { layout }]) => (
+            {Object.entries(makerConfig.pages).map(([key, { layout }]) => (
               <LayoutDivider
                 key={key}
                 layout={layout}
