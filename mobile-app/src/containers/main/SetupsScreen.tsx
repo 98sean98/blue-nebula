@@ -169,6 +169,15 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
     }
   };
 
+  const renderLoadButton = () => (
+    <Button
+      status={'info'}
+      accessoryRight={renderIcon('arrowhead-right-outline')}
+      onPress={onLoadSetupPress}>
+      Load into the controller
+    </Button>
+  );
+
   return (
     <>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
@@ -200,8 +209,9 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         {typeof selectedSetupKey !== 'undefined' ? (
           <SetupDetailsCard
             setup={setups[selectedSetupKey]}
-            showLoadSetupButton={mode === SetupsMode.Normal}
-            onLoadSetupPress={onLoadSetupPress}
+            renderLoadButton={
+              mode === SetupsMode.Normal ? renderLoadButton : undefined
+            }
             style={{ flex: 1 }}
           />
         ) : null}

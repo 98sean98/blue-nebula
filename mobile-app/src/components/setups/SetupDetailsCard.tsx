@@ -1,20 +1,19 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Button, Card, CardProps, Text } from '@ui-kitten/components';
+import { Card, CardProps, Text } from '@ui-kitten/components';
 import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Setup } from '@models/setup';
 
-import { ControlEntitySummary, renderIcon } from '@components/shared/interface';
+import { ControlEntitySummary } from '@components/shared/interface';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
 
 interface SetupDetailsCardProps extends CardProps {
   setup: Setup;
-  showLoadSetupButton: boolean;
-  onLoadSetupPress: () => void;
+  renderLoadButton?: () => ReactNode;
 }
 
 export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
@@ -26,11 +25,12 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
     fields,
     controlEntitiesState,
   },
-  showLoadSetupButton,
-  onLoadSetupPress,
+  renderLoadButton,
   ...props
 }) => {
   const fieldsArray = Object.entries(fields);
+
+  const showLoadButton = typeof renderLoadButton !== 'undefined';
 
   return (
     <Card
@@ -39,7 +39,7 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
       style={[tailwind('justify-between'), props?.style ?? {}]}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={{ height: showLoadSetupButton ? '85%' : '100%' }}>
+        style={{ height: showLoadButton ? '85%' : '100%' }}>
         {/*main pieces of information*/}
         <View>
           <Text category={'h5'}>{name}</Text>
@@ -74,14 +74,8 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
         />
       </ScrollView>
 
-      {showLoadSetupButton ? (
-        <Button
-          status={'info'}
-          accessoryRight={renderIcon('arrowhead-right-outline')}
-          style={tailwind('mt-4')}
-          onPress={onLoadSetupPress}>
-          Load into the controller
-        </Button>
+      {typeof renderLoadButton !== 'undefined' ? (
+        <View style={tailwind('mt-4')}>{renderLoadButton()}</View>
       ) : null}
     </Card>
   );
