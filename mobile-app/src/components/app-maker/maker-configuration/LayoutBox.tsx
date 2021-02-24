@@ -15,16 +15,17 @@ import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { ThemedSlider } from '@components/shared/actionable';
 
-import { useAppMakerContext } from '@utilities/hooks';
-
 interface LayoutBoxProps extends LayoutProps {
-  focusedPage: Page;
+  pageIndex: number;
+  page: Page;
 }
 
-export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
+export const LayoutBox: FC<LayoutBoxProps> = ({
+  pageIndex,
+  page,
+  ...props
+}) => {
   const dispatch = useDispatch();
-
-  const { focusedPageIndex } = useAppMakerContext();
 
   const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
     { type: 'rows', min: 1, max: 8 },
@@ -34,7 +35,7 @@ export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
   const onLayoutVariableChange = (type: keyof Layout, value: number) => {
     dispatch(
       setMakerConfig({
-        pages: { [focusedPageIndex]: { layout: { [type]: value } } },
+        pages: { [pageIndex]: { layout: { [type]: value } } },
       }),
     );
   };
@@ -56,12 +57,12 @@ export const LayoutBox: FC<LayoutBoxProps> = ({ focusedPage, ...props }) => {
                 minimumValue={min}
                 maximumValue={max}
                 step={1}
-                value={focusedPage.layout[type]}
+                value={page.layout[type]}
                 onSlidingComplete={(value: number) =>
                   onLayoutVariableChange(type, value)
                 }
               />
-              <Text category={'s1'}>{focusedPage.layout[type]}</Text>
+              <Text category={'s1'}>{page.layout[type]}</Text>
             </View>
           </View>
         ))}

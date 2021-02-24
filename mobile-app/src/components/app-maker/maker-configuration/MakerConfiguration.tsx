@@ -60,10 +60,14 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           behavior={'padding'}
           keyboardVerticalOffset={150}>
           <ScrollView contentContainerStyle={tailwind('px-4 pt-1 pb-2')}>
-            <PageInfo focusedPage={focusedPage} />
+            <PageInfo pageIndex={focusedPageIndex} page={focusedPage} />
 
             {/* layout box */}
-            <LayoutBox focusedPage={focusedPage} style={tailwind('mt-2')} />
+            <LayoutBox
+              pageIndex={focusedPageIndex}
+              page={focusedPage}
+              style={tailwind('mt-2')}
+            />
 
             {/* todo: figure out how to tie configurations to setups */}
           </ScrollView>
