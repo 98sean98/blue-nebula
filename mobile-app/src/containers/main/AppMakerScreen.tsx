@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { Dimensions, View } from 'react-native';
 import { ViewPager } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -14,9 +14,10 @@ import {
   LayoutDivider,
   MakerConfiguration,
 } from '@components/app-maker';
-import { PressableBox } from '@components/shared/actionable';
 
 import { useAppMakerContext } from '@utilities/hooks';
+import { Box, Boxes } from '@models/app-maker';
+import { MakerBox } from '@components/app-maker/MakerBox';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -35,11 +36,8 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
 
   const { focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
 
-  const renderItem = (boxIndex: number) => (
-    <PressableBox
-      text={boxIndex.toString()}
-      style={[{ flex: 1 }, tailwind('m-1')]}
-    />
+  const renderItem = (item: { boxKey: keyof Boxes; box: Box }): ReactNode => (
+    <MakerBox {...item} style={[{ flex: 1 }, tailwind('m-1')]} />
   );
 
   return (
@@ -50,10 +48,11 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
           selectedIndex={focusedPageIndex}
           onSelect={setFocusedPageIndex}>
           {Object.entries(makerConfig.pages).map(
-            ([key, { layout, scrollEnabled }]) => (
+            ([key, { layout, scrollEnabled, boxes }]) => (
               <LayoutDivider
                 key={key}
                 layout={layout}
+                boxes={boxes}
                 renderItem={renderItem}
                 scrollEnabled={scrollEnabled}
               />

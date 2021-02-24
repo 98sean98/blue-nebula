@@ -11,27 +11,27 @@ import {
 
 import { tailwind } from '@styles/tailwind';
 
-import { Layout } from '@models/app-maker';
+import { Box, Boxes, Layout } from '@models/app-maker';
 
 interface LayoutDividerProps extends ScrollViewProps {
   layout: Layout;
-  renderItem: (boxIndex: number) => ReactNode;
+  boxes: Boxes;
+  renderItem: (item: { boxKey: keyof Boxes; box: Box }) => ReactNode;
 }
 
 export const LayoutDivider: FC<LayoutDividerProps> = ({
   layout: { rows, columns },
   renderItem,
+  boxes,
   ...props
 }) => {
-  const boxCount = rows * columns;
-
   const [layout, setLayout] = useState<LayoutRectangle>();
 
   const onLayout = (e: LayoutChangeEvent) => {
     const {
-      nativeEvent: { layout },
+      nativeEvent: { layout: newLayout },
     } = e;
-    setLayout(layout);
+    setLayout(newLayout);
     if (typeof props?.onLayout !== 'undefined') props.onLayout(e);
   };
 
@@ -51,13 +51,11 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
         props?.contentContainerStyle ?? {},
       ]}
       onLayout={onLayout}>
-      {Array(boxCount)
-        .fill(null)
-        .map((_, index) => (
-          <View key={index} style={styles.box}>
-            {renderItem(index)}
-          </View>
-        ))}
+      {Object.entries(boxes).map(([boxKey, box]) => (
+        <View key={boxKey} style={styles.box}>
+          {renderItem({ boxKey, box })}
+        </View>
+      ))}
     </ScrollView>
   );
 };

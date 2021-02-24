@@ -1,5 +1,3 @@
-import { PartialDeep } from 'type-fest';
-
 import { Setups } from '@models/setup';
 import { MakerConfig } from '@models/app-maker';
 
@@ -10,7 +8,7 @@ export type SetSetups = Setups;
 
 export type RemoveSetup = string; // setup key
 
-export type SetMakerConfig = PartialDeep<MakerConfig>;
+export type SetMakerConfig = Partial<MakerConfig>;
 
 // feature state
 export type BuilderState = {

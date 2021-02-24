@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { RootState } from '@reduxApp';
 import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import {
@@ -11,6 +12,8 @@ import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
 
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
+
+  const { makerConfig } = useSelector((state: RootState) => state.builder);
 
   const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
     initialAppMakerContext.shouldExpandConfigView,
@@ -26,7 +29,7 @@ export const AppMakerLayer: FC = ({ children }) => {
   const createNewPage = useCallback(
     (pageIndex: number, goToLastPage?: boolean) => {
       const newMakerConfig = {
-        pages: { [pageIndex]: initialiseNewPage() },
+        pages: { ...makerConfig.pages, [pageIndex]: initialiseNewPage() },
       };
       dispatch(setMakerConfig(newMakerConfig));
       if (goToLastPage) {
@@ -34,7 +37,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         setLastPage(pageIndex);
       }
     },
-    [dispatch],
+    [dispatch, makerConfig.pages],
   );
 
   useEffect(() => {
