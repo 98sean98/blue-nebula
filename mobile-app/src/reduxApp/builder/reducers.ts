@@ -10,6 +10,7 @@ const initialState: BuilderState = {
   setups: {},
   makerConfig: {
     pages: {},
+    actions: {},
   },
 };
 

@@ -1,5 +1,7 @@
-import { Page } from './Page';
+import { Pages } from './Pages';
+import { Actions } from './Actions';
 
 export type MakerConfig = {
-  pages: Record<string, Page>;
+  pages: Pages;
+  actions: Actions;
 };
