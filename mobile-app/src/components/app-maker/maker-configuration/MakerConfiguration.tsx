@@ -14,10 +14,11 @@ import { Page } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
 
-import { LayoutBox } from './LayoutBox';
+import { LayoutBoxControl } from './LayoutBoxControl';
 import { PageInfo } from './PageInfo';
 
 import { useAppMakerContext } from '@utilities/hooks';
+import { PageStylesControl } from '@components/app-maker/maker-configuration/PageStylesControl';
 
 interface MakerConfigurationProps extends ViewProps {}
 
@@ -71,9 +72,14 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
             />
 
             {/* layout box */}
-            <LayoutBox
+            <LayoutBoxControl
               pageIndex={focusedPageIndex}
-              page={focusedPage}
+              style={tailwind('mt-2')}
+            />
+
+            {/* page styles */}
+            <PageStylesControl
+              pageIndex={focusedPageIndex}
               style={tailwind('mt-2')}
             />
 

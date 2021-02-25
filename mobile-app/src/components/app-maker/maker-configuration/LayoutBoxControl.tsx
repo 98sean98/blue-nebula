@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import {
   Layout as LayoutComponent,
@@ -15,17 +15,20 @@ import { Boxes, Layout, Page } from '@models/app-maker';
 import { RootState } from '@reduxApp';
 import { setMakerConfig } from '@reduxApp/builder/actions';
 
-import { ThemedSlider } from '@components/shared/actionable';
+import { SliderInput } from '@components/shared/actionable';
 import { initialiseNewBox } from '@utilities/functions/initialiseNewBox';
 
-interface LayoutBoxProps extends LayoutProps {
+interface LayoutBoxControlProps extends LayoutProps {
   pageIndex: number;
-  page: Page;
 }
 
-export const LayoutBox: FC<LayoutBoxProps> = ({
+const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
+  { type: 'rows', min: 1, max: 8 },
+  { type: 'columns', min: 1, max: 5 },
+];
+
+export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
   pageIndex,
-  page,
   ...props
 }) => {
   const dispatch = useDispatch();
@@ -34,10 +37,7 @@ export const LayoutBox: FC<LayoutBoxProps> = ({
     makerConfig: { pages },
   } = useSelector((state: RootState) => state.builder);
 
-  const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
-    { type: 'rows', min: 1, max: 8 },
-    { type: 'columns', min: 1, max: 5 },
-  ];
+  const page = useMemo(() => pages[pageIndex], [pages, pageIndex]);
 
   const onLayoutVariableChange = useCallback(
     (type: keyof Layout, value: number) => {
@@ -80,25 +80,18 @@ export const LayoutBox: FC<LayoutBoxProps> = ({
       {/* layout rows and columns */}
       <View style={tailwind('mt-1')}>
         {layoutTypes.map(({ type, min, max }) => (
-          <View
+          <SliderInput
             key={type}
-            style={tailwind('w-full flex-row justify-between items-center')}>
-            <Text>{type}</Text>
-            <View
-              style={tailwind('w-2/3 flex-row justify-between items-center')}>
-              <ThemedSlider
-                style={tailwind('w-11/12 h-8')}
-                minimumValue={min}
-                maximumValue={max}
-                step={1}
-                value={page.layout[type]}
-                onSlidingComplete={(value: number) =>
-                  onLayoutVariableChange(type, value)
-                }
-              />
-              <Text category={'s1'}>{page.layout[type]}</Text>
-            </View>
-          </View>
+            title={type}
+            sliderProps={{
+              minimumValue: min,
+              maximumValue: max,
+              step: 1,
+              value: page.layout[type],
+              onSlidingComplete: (value: number) =>
+                onLayoutVariableChange(type, value),
+            }}
+          />
         ))}
       </View>
     </LayoutComponent>

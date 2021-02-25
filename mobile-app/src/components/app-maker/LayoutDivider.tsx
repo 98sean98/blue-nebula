@@ -11,15 +11,21 @@ import {
 
 import { tailwind } from '@styles/tailwind';
 
-import { Box, Boxes, Layout } from '@models/app-maker';
+import { Box, Boxes, Layout, Pages } from '@models/app-maker';
 
 interface LayoutDividerProps extends ScrollViewProps {
+  pageKey: keyof Pages;
   layout: Layout;
   boxes: Boxes;
-  renderItem: (item: { boxKey: keyof Boxes; box: Box }) => ReactNode;
+  renderItem: (item: {
+    pageKey: keyof Pages;
+    boxKey: keyof Boxes;
+    box: Box;
+  }) => ReactNode;
 }
 
 export const LayoutDivider: FC<LayoutDividerProps> = ({
+  pageKey,
   layout: { rows, columns },
   renderItem,
   boxes,
@@ -53,7 +59,7 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
       onLayout={onLayout}>
       {Object.entries(boxes).map(([boxKey, box]) => (
         <View key={boxKey} style={styles.box}>
-          {renderItem({ boxKey, box })}
+          {renderItem({ pageKey, boxKey, box })}
         </View>
       ))}
     </ScrollView>

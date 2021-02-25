@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, KeyboardAvoidingView, View } from 'react-native';
 import { ViewPager } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -9,15 +9,16 @@ import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp';
 
+import { Box, Boxes, Pages } from '@models/app-maker';
+
 import {
   AnimatedFlingContainer,
   LayoutDivider,
   MakerConfiguration,
+  MakerBox,
 } from '@components/app-maker';
 
 import { useAppMakerContext } from '@utilities/hooks';
-import { Box, Boxes } from '@models/app-maker';
-import { MakerBox } from '@components/app-maker/MakerBox';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -36,7 +37,11 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
 
   const { focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
 
-  const renderItem = (item: { boxKey: keyof Boxes; box: Box }): ReactNode => (
+  const renderItem = (item: {
+    pageKey: keyof Pages;
+    boxKey: keyof Boxes;
+    box: Box;
+  }): ReactNode => (
     <MakerBox {...item} style={[{ flex: 1 }, tailwind('m-1')]} />
   );
 
@@ -49,13 +54,19 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
           onSelect={setFocusedPageIndex}>
           {Object.entries(makerConfig.pages).map(
             ([key, { layout, scrollEnabled, boxes }]) => (
-              <LayoutDivider
+              <KeyboardAvoidingView
                 key={key}
-                layout={layout}
-                boxes={boxes}
-                renderItem={renderItem}
-                scrollEnabled={scrollEnabled}
-              />
+                style={{ flex: 1 }}
+                behavior={'padding'}
+                keyboardVerticalOffset={90}>
+                <LayoutDivider
+                  pageKey={key}
+                  layout={layout}
+                  boxes={boxes}
+                  renderItem={renderItem}
+                  scrollEnabled={scrollEnabled}
+                />
+              </KeyboardAvoidingView>
             ),
           )}
         </ViewPager>

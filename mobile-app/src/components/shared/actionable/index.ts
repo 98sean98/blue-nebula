@@ -5,7 +5,6 @@ export { Timer } from './Timer';
 
 export { ConfirmationModal } from './ConfirmationModal';
 
-export { ThemedSlider } from './ThemedSlider';
-
 export * from './box';
 export * from './button';
+export * from './slider';

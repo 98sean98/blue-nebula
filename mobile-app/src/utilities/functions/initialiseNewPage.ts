@@ -1,4 +1,4 @@
-import { Page, Boxes, Layout } from '@models/app-maker';
+import { Page, Boxes, Layout, PageStyles } from '@models/app-maker';
 import { initialiseNewBox } from './initialiseNewBox';
 
 export const initialiseNewPage = (): Page => {
@@ -12,9 +12,14 @@ export const initialiseNewPage = (): Page => {
       boxes[index] = initialiseNewBox();
     });
 
+  const styles: PageStyles = {
+    box: { text: {} },
+  };
+
   return {
     layout,
     scrollEnabled: false,
     boxes,
+    styles,
   };
 };
