@@ -7,6 +7,5 @@ export { ConfirmationModal } from './ConfirmationModal';
 
 export { ThemedSlider } from './ThemedSlider';
 
-export { PressableBox } from './PressableBox';
-
+export * from './box';
 export * from './button';

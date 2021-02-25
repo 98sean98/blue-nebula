@@ -11,7 +11,7 @@ import {
   SimpleControllerOptionType,
 } from '@models/SimpleController';
 
-import { PressableBox } from '@components/shared/actionable';
+import { PressableBoxWithText } from '@components/shared/actionable';
 import {
   BleRunIdleButton,
   RenderBleComponent,
@@ -36,7 +36,11 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     item: { optionText, onPress },
   }) => (
     <View style={tailwind('w-1/2 h-40 p-2')}>
-      <PressableBox text={optionText} onPress={onPress} style={{ flex: 1 }} />
+      <PressableBoxWithText
+        text={optionText}
+        onPress={onPress}
+        style={{ flex: 1 }}
+      />
     </View>
   );
 

@@ -1,17 +1,66 @@
-import React, { ComponentProps, FC } from 'react';
+import React, { FC, useCallback, useState } from 'react';
+import { StyleSheet, TextInput } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { PressableBox } from '@components/shared/actionable';
-import { Box, Boxes } from '@models/app-maker';
+import { Box, Boxes, Page, Pages } from '@models/app-maker';
 
-interface MakerBoxProps extends Partial<ComponentProps<typeof PressableBox>> {
+import { RootState } from '@reduxApp';
+import { setMakerConfig } from '@reduxApp/builder/actions';
+
+import {
+  PressableBox,
+  PressableBoxProps,
+} from '@components/shared/actionable/box/PressableBox';
+
+import { useAppMakerContext } from '@utilities/hooks';
+
+interface MakerBoxProps extends PressableBoxProps {
   boxKey: keyof Boxes;
   box: Box;
 }
 
 export const MakerBox: FC<MakerBoxProps> = ({
-  // boxKey,
+  boxKey,
   box: { title },
   ...props
 }) => {
-  return <PressableBox text={title} {...props} />;
+  const dispatch = useDispatch();
+
+  const {
+    makerConfig: { pages },
+  } = useSelector((state: RootState) => state.builder);
+
+  const { focusedPageIndex } = useAppMakerContext();
+
+  const [cachedTitle, setCachedTitle] = useState<string>(title);
+
+  const onBlur = useCallback(() => {
+    const updatedPage: Page = {
+      ...pages[focusedPageIndex],
+      boxes: {
+        ...pages[focusedPageIndex].boxes,
+        [boxKey]: { title: cachedTitle },
+      },
+    };
+    const updatedPages: Pages = { ...pages, [focusedPageIndex]: updatedPage };
+    dispatch(setMakerConfig({ pages: updatedPages }));
+  }, [boxKey, cachedTitle, dispatch, pages, focusedPageIndex]);
+
+  const styles = StyleSheet.create({
+    textInput: {
+      color: 'white',
+    },
+  });
+
+  return (
+    <PressableBox {...props}>
+      <TextInput
+        style={styles.textInput}
+        value={cachedTitle}
+        onChangeText={setCachedTitle}
+        placeholder={'Write a title'}
+        onBlur={onBlur}
+      />
+    </PressableBox>
+  );
 };
