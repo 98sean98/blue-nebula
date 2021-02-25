@@ -4,7 +4,6 @@ import { PageStyles } from './PageStyles';
 
 export type Page = {
   layout: Layout;
-  scrollEnabled: boolean;
   boxes: Record<string, Box>;
   styles: PageStyles;
 };

@@ -19,6 +19,7 @@ import {
 } from '@components/app-maker';
 
 import { useAppMakerContext } from '@utilities/hooks';
+import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -52,23 +53,20 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
           style={{ flex: 1 }}
           selectedIndex={focusedPageIndex}
           onSelect={setFocusedPageIndex}>
-          {Object.entries(makerConfig.pages).map(
-            ([key, { layout, scrollEnabled, boxes }]) => (
-              <KeyboardAvoidingView
-                key={key}
-                style={{ flex: 1 }}
-                behavior={'padding'}
-                keyboardVerticalOffset={90}>
-                <LayoutDivider
-                  pageKey={key}
-                  layout={layout}
-                  boxes={boxes}
-                  renderItem={renderItem}
-                  scrollEnabled={scrollEnabled}
-                />
-              </KeyboardAvoidingView>
-            ),
-          )}
+          {Object.entries(makerConfig.pages).map(([key, { layout, boxes }]) => (
+            <KeyboardAvoidingView
+              key={key}
+              style={{ flex: 1 }}
+              behavior={'padding'}
+              keyboardVerticalOffset={90}>
+              <LayoutDivider
+                pageKey={key}
+                layout={layout}
+                boxes={getBoxesBasedOnLayout(boxes, layout)}
+                renderItem={renderItem}
+              />
+            </KeyboardAvoidingView>
+          ))}
         </ViewPager>
       ) : null}
 

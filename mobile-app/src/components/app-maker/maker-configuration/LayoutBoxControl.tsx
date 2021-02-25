@@ -7,6 +7,7 @@ import {
 } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import deepmerge from 'deepmerge';
+import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -23,6 +24,7 @@ interface LayoutBoxControlProps extends LayoutProps {
 }
 
 const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
+  { type: 'boxCount', min: 1, max: 40 },
   { type: 'rows', min: 1, max: 8 },
   { type: 'columns', min: 1, max: 5 },
 ];
@@ -41,24 +43,17 @@ export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
 
   const onLayoutVariableChange = useCallback(
     (type: keyof Layout, value: number) => {
-      const oldBoxCount = page.layout.rows * page.layout.columns;
-      let newBoxCount = 0;
-      switch (type) {
-        case 'rows':
-          newBoxCount = page.layout.columns * value;
-          break;
-        case 'columns':
-          newBoxCount = page.layout.rows * value;
-          break;
-      }
-      const boxCountDifference = newBoxCount - oldBoxCount;
       const newBoxes: Boxes = {};
-      if (boxCountDifference > 0)
-        Array(boxCountDifference)
-          .fill(null)
-          .forEach((_, index) => {
-            newBoxes[oldBoxCount + index] = initialiseNewBox();
-          });
+      if (type === 'boxCount') {
+        const oldBoxCount = page.layout.boxCount;
+        const boxCountDifference = value - oldBoxCount;
+        if (boxCountDifference > 0)
+          Array(boxCountDifference)
+            .fill(null)
+            .forEach((_, index) => {
+              newBoxes[oldBoxCount + index] = initialiseNewBox();
+            });
+      }
 
       const updatedPage: Page = deepmerge(page, {
         layout: { [type]: value },
@@ -82,7 +77,7 @@ export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
         {layoutTypes.map(({ type, min, max }) => (
           <SliderInput
             key={type}
-            title={type}
+            title={sentenceCase(type)}
             sliderProps={{
               minimumValue: min,
               maximumValue: max,

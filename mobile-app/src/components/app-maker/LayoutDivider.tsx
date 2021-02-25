@@ -24,27 +24,40 @@ interface LayoutDividerProps extends ScrollViewProps {
   }) => ReactNode;
 }
 
+const getIsScrollingEnabled = ({
+  rows,
+  columns,
+  boxCount,
+}: Layout): boolean => {
+  const boxesInView = rows * columns;
+  return boxesInView < boxCount;
+};
+
 export const LayoutDivider: FC<LayoutDividerProps> = ({
   pageKey,
-  layout: { rows, columns },
+  layout,
   renderItem,
   boxes,
   ...props
 }) => {
-  const [layout, setLayout] = useState<LayoutRectangle>();
+  const { rows, columns } = layout;
+
+  const [componentLayout, setComponentLayout] = useState<LayoutRectangle>();
 
   const onLayout = (e: LayoutChangeEvent) => {
     const {
       nativeEvent: { layout: newLayout },
     } = e;
-    setLayout(newLayout);
+    setComponentLayout(newLayout);
     if (typeof props?.onLayout !== 'undefined') props.onLayout(e);
   };
 
   const styles = StyleSheet.create({
     box: {
-      height: (layout?.height ?? Dimensions.get('window').height) / rows,
-      width: (layout?.width ?? Dimensions.get('window').width) / columns,
+      height:
+        (componentLayout?.height ?? Dimensions.get('window').height) / rows,
+      width:
+        (componentLayout?.width ?? Dimensions.get('window').width) / columns,
     },
   });
 
@@ -56,7 +69,8 @@ export const LayoutDivider: FC<LayoutDividerProps> = ({
         tailwind('flex-row flex-wrap'),
         props?.contentContainerStyle ?? {},
       ]}
-      onLayout={onLayout}>
+      onLayout={onLayout}
+      scrollEnabled={getIsScrollingEnabled(layout)}>
       {Object.entries(boxes).map(([boxKey, box]) => (
         <View key={boxKey} style={styles.box}>
           {renderItem({ pageKey, boxKey, box })}
