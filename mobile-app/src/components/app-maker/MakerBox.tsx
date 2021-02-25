@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
+import { useTheme } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Box, Boxes, Page, Pages } from '@models/app-maker';
@@ -24,6 +25,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
   box: { title },
   ...props
 }) => {
+  const theme = useTheme();
+
   const dispatch = useDispatch();
 
   const {
@@ -48,7 +51,7 @@ export const MakerBox: FC<MakerBoxProps> = ({
 
   const styles = StyleSheet.create({
     textInput: {
-      color: 'white',
+      color: theme['text-basic-color'],
     },
   });
 
@@ -58,7 +61,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
         style={styles.textInput}
         value={cachedTitle}
         onChangeText={setCachedTitle}
-        placeholder={'Write a title'}
+        placeholder={'Title'}
+        placeholderTextColor={theme['text-hint-color']}
         onBlur={onBlur}
       />
     </PressableBox>

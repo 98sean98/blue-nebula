@@ -9,18 +9,30 @@ import { Page } from '@models/app-maker';
 interface PageInfoProps extends LayoutProps {
   pageIndex: number;
   page: Page;
+  pageCount: number;
 }
 
-export const PageInfo: FC<PageInfoProps> = ({ pageIndex, page, ...props }) => {
+export const PageInfo: FC<PageInfoProps> = ({
+  pageIndex,
+  page,
+  pageCount,
+  ...props
+}) => {
   console.log(page);
 
   return (
     <Layout {...props} style={[tailwind('p-2'), props?.style ?? {}]}>
       <Text category={'h6'}>Page information</Text>
 
-      <View style={tailwind('mt-1 flex-row')}>
-        <Text category={'s1'}>Index:</Text>
-        <Text style={tailwind('ml-1')}>{pageIndex}</Text>
+      <View style={tailwind('mt-1 flex-row flex-wrap justify-between')}>
+        <Text>
+          {`Focused page index: `}
+          <Text category={'s1'}>{pageIndex}</Text>
+        </Text>
+        <Text>
+          {`Total page count: `}
+          <Text category={'s1'}>{pageCount}</Text>
+        </Text>
       </View>
     </Layout>
   );

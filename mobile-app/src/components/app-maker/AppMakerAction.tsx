@@ -47,6 +47,10 @@ export const AppMakerAction: FC<AppMakerActionProps> = ({ iconProps }) => {
     pages,
   ]);
 
+  const onChartActionsPress = () => {
+    console.log('start charting actions!');
+  };
+
   const renderMenuAction = () => (
     <TopNavigationAction
       icon={renderIcon('more-vertical', iconProps)}
@@ -68,12 +72,17 @@ export const AppMakerAction: FC<AppMakerActionProps> = ({ iconProps }) => {
         {showNewPageAction ? (
           <MenuItem
             accessoryLeft={renderIcon('plus-square-outline', iconProps)}
-            title={`Add a new page`}
+            title={'Add a new page'}
             onPress={onNewPagePress}
           />
         ) : (
           <></>
         )}
+        <MenuItem
+          accessoryLeft={renderIcon('map-outline')}
+          title={'Start charting page actions'}
+          onPress={onChartActionsPress}
+        />
       </OverflowMenu>
     </View>
   );

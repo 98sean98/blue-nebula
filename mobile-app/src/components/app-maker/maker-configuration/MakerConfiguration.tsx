@@ -37,6 +37,11 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
     [makerConfig.pages, focusedPageIndex],
   );
 
+  const pageCount: number = useMemo(
+    () => Object.entries(makerConfig.pages).length,
+    [makerConfig.pages],
+  );
+
   const onFirstPageCreatePress = () => {
     setShouldExpandConfigView(true);
     createNewPage(0);
@@ -44,8 +49,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
 
   return (
     <View {...props}>
-      {Object.entries(makerConfig.pages).length === 0 &&
-      typeof focusedPage === 'undefined' ? (
+      {pageCount === 0 && typeof focusedPage === 'undefined' ? (
         <View style={tailwind('mt-1 px-4 flex-row justify-between')}>
           <Text style={tailwind('w-4/5')}>
             Your app doesn't have any pages yet. Create the first one?
@@ -60,7 +64,11 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           behavior={'padding'}
           keyboardVerticalOffset={150}>
           <ScrollView contentContainerStyle={tailwind('px-4 pt-1 pb-2')}>
-            <PageInfo pageIndex={focusedPageIndex} page={focusedPage} />
+            <PageInfo
+              pageIndex={focusedPageIndex}
+              page={focusedPage}
+              pageCount={pageCount}
+            />
 
             {/* layout box */}
             <LayoutBox
