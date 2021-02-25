@@ -6,6 +6,8 @@ export * from './Boxes';
 
 export * from './Layout';
 
+export * from './PageStyles';
+
 export * from './Page';
 export * from './Pages';
 
