@@ -14,12 +14,10 @@ interface PageInfoProps extends LayoutProps {
 
 export const PageInfo: FC<PageInfoProps> = ({
   pageIndex,
-  page,
+  // page,
   pageCount,
   ...props
 }) => {
-  console.log(page);
-
   return (
     <Layout {...props} style={[tailwind('p-2'), props?.style ?? {}]}>
       <Text category={'h6'}>Page information</Text>
