@@ -8,25 +8,26 @@ export const PermissionsLayer: FC = ({ children }) => {
   ] = useState<boolean>(false);
 
   useEffect(() => {
-    PermissionsAndroid.check(
-      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-    ).then((isGrantedAlready) => {
-      if (isGrantedAlready) setAndroidBluetoothPermissions(true);
-      else
-        PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Permission Localisation Bluetooth',
-            message: 'Requirement for Bluetooth',
-            buttonNeutral: 'Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        ).then((granted) => {
-          if (granted === 'granted') setAndroidBluetoothPermissions(true);
-          else setAndroidBluetoothPermissions(false);
-        });
-    });
+    if (Platform.OS === 'android')
+      PermissionsAndroid.check(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      ).then((isGrantedAlready) => {
+        if (isGrantedAlready) setAndroidBluetoothPermissions(true);
+        else
+          PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            {
+              title: 'Permission Localisation Bluetooth',
+              message: 'Requirement for Bluetooth',
+              buttonNeutral: 'Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          ).then((granted) => {
+            if (granted === 'granted') setAndroidBluetoothPermissions(true);
+            else setAndroidBluetoothPermissions(false);
+          });
+      });
   }, []);
 
   return (
