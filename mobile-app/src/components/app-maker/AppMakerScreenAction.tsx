@@ -1,19 +1,18 @@
 import React, { FC, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import {
   OverflowMenu,
   TopNavigationAction,
   MenuItem,
   IconProps,
 } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Pages } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { renderIcon } from '@components/shared/interface';
 
@@ -21,6 +20,7 @@ import { useAppMakerContext } from '@utilities/hooks';
 import { getBackdropStyle } from '@utilities/functions/ui';
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 import { constructActionTree } from '@utilities/functions/constructActionTree';
+import { AppMakerMode } from '@utilities/context';
 
 interface AppMakerScreenActionProps {
   iconProps?: IconProps;
@@ -29,9 +29,7 @@ interface AppMakerScreenActionProps {
 export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
   iconProps,
 }) => {
-  const dispatch = useDispatch();
-
-  const { createNewPage } = useAppMakerContext();
+  const { setMode, createNewPage, setChartingActions } = useAppMakerContext();
 
   const {
     makerConfig: { pages },
@@ -68,7 +66,26 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
         }),
     );
     const actions = constructActionTree(prunedPages);
-    dispatch(setMakerConfig({ pages: prunedPages, actions }));
+
+    // begin charting
+    if (typeof actions === 'undefined' || typeof actions[0] === 'undefined')
+      // alert an error as the top level actions array should contain at least 1 action node
+      Alert.alert(
+        'Actions Charting Error',
+        'There was an error trying to initialise the actions tree for your pages.',
+      );
+    else {
+      // set context's charting actions state to the first action
+      setChartingActions((thisChartingAction) => ({
+        ...thisChartingAction,
+        cachedActionTree: actions,
+        currentlyCharting: actions[0],
+      }));
+      // set app maker mode
+      setMode(AppMakerMode.ActionsCharting);
+    }
+
+    setShowMenu(false);
   };
 
   const renderMenuAction = () => (

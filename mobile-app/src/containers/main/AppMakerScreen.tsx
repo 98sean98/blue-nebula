@@ -14,8 +14,8 @@ import { Box, Boxes, Pages } from '@models/app-maker';
 import {
   AnimatedFlingContainer,
   LayoutDivider,
-  MakerConfiguration,
   MakerBox,
+  MakerConfiguration,
 } from '@components/app-maker';
 
 import { useAppMakerContext } from '@utilities/hooks';

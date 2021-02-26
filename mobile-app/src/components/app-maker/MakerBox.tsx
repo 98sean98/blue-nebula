@@ -3,6 +3,8 @@ import { StyleSheet, TextInput } from 'react-native';
 import { useTheme } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { tailwind } from '@styles/tailwind';
+
 import { Box, Boxes, Page, Pages } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
@@ -12,6 +14,9 @@ import {
   PressableBox,
   PressableBoxProps,
 } from '@components/shared/actionable/box/PressableBox';
+
+import { useAppMakerContext } from '@utilities/hooks';
+import { AppMakerMode } from '@utilities/context';
 
 interface MakerBoxProps extends PressableBoxProps {
   pageKey: keyof Pages;
@@ -32,6 +37,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
   const {
     makerConfig: { pages },
   } = useSelector((state: RootState) => state.builder);
+
+  const { mode } = useAppMakerContext();
 
   const page = useMemo(() => pages[pageKey], [pages, pageKey]);
 
@@ -58,7 +65,14 @@ export const MakerBox: FC<MakerBoxProps> = ({
   });
 
   return (
-    <PressableBox {...props}>
+    <PressableBox
+      {...props}
+      style={[
+        mode === AppMakerMode.ActionsCharting
+          ? tailwind('border-4 border-blue-500') // todo: style this properly
+          : {},
+        props?.style ?? {},
+      ]}>
       <TextInput
         style={styles.textInput}
         value={cachedTitle}

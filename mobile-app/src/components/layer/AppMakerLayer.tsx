@@ -6,6 +6,7 @@ import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import {
   AppMakerContext,
+  AppMakerMode,
   ChartingActions,
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
@@ -20,6 +21,8 @@ export const AppMakerLayer: FC = ({ children }) => {
       // actions
     },
   } = useSelector((state: RootState) => state.builder);
+
+  const [mode, setMode] = useState<AppMakerMode>(AppMakerMode.ContentBuilding);
 
   const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
     initialAppMakerContext.shouldExpandConfigView,
@@ -46,17 +49,19 @@ export const AppMakerLayer: FC = ({ children }) => {
     [dispatch, pages],
   );
 
-  const [
-    chartingActions,
-    // setChartingActions
-  ] = useState<ChartingActions>({
+  const [chartingActions, setChartingActions] = useState<ChartingActions>({
     isCompleted: false,
-    currentlyCharting: { boxKey: '0' },
+    cachedActionTree: [],
   });
 
-  // const goToNext = useCallback(() => {
-  //   // dfs the actions tree to chart every option to a setup
-  // }, [actions, chartingActions.currentlyCharting]);
+  const goToNextAction = useCallback(
+    () => {
+      // dfs the action tree to chart every option to a setup
+    },
+    [
+      // actions, chartingActions.currentlyCharting
+    ],
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -71,12 +76,16 @@ export const AppMakerLayer: FC = ({ children }) => {
   return (
     <AppMakerContext.Provider
       value={{
+        mode,
+        setMode,
         shouldExpandConfigView,
         setShouldExpandConfigView,
         focusedPageIndex,
         setFocusedPageIndex,
         createNewPage,
         chartingActions,
+        setChartingActions,
+        goToNextAction,
       }}>
       {children}
     </AppMakerContext.Provider>
