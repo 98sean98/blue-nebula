@@ -10,6 +10,7 @@
          https://developer.android.com/guide/topics/connectivity/bluetooth-le.html#permissions
       -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
       android:name=".MainApplication"
