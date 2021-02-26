@@ -32,7 +32,6 @@ export const SliderInput: FC<SliderInputProps> = ({
         <ThemedSlider
           style={tailwind('w-5/6 h-8')}
           {...sliderProps}
-          value={cachedValue}
           onValueChange={setCachedValue}
         />
         <Text style={tailwind('w-1/6 text-right')} category={'s1'}>
