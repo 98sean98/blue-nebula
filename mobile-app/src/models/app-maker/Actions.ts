@@ -1,3 +1,3 @@
-import { Action } from './Action';
+import { ActionNode } from './ActionNode';
 
-export type Actions = Record<string, Action>;
+export type Actions = Array<ActionNode>;

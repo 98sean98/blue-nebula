@@ -1,4 +1,4 @@
-export * from './Action';
+export * from './ActionNode';
 export * from './Actions';
 
 export * from './Box';
