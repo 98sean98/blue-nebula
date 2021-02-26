@@ -4,7 +4,7 @@ import { Enable } from './Enable';
 
 export type StepperMotor = {
   name: string;
-  type: ControlEntityEnum;
+  type: ControlEntityEnum.StepperMotor;
   pulseInterval: number;
   revolution: number;
   pulsePerRevolution: number;

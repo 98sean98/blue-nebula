@@ -19,6 +19,7 @@ import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';
+import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
 
 interface RealTimeControlModeProps {
   isFocused: boolean;
@@ -76,16 +77,12 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   const onEnablePinOff = async () => {
     try {
-      const strings = [
-        mapControlEntityToString({
-          ...controlEntities.wheelMotor,
-          enable: Enable.Low,
-        }),
-        mapControlEntityToString({
-          ...controlEntities.screwMotor,
-          enable: Enable.Low,
-        }),
-      ];
+      const strings = Object.values(controlEntities).map((controlEntity) =>
+        controlEntity.type === ControlEntityEnum.StepperMotor &&
+        checkIfObjectValuesAreDefined(controlEntity)
+          ? mapControlEntityToString(controlEntity)
+          : '',
+      );
 
       for (const string of strings) {
         if (string.length > 0) await writeStepMotor(string);

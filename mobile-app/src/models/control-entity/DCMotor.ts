@@ -3,6 +3,6 @@ import { Enable } from './Enable';
 
 export type DCMotor = {
   name: string;
-  type: ControlEntityEnum;
+  type: ControlEntityEnum.DCMotor;
   enable: Enable;
 };
