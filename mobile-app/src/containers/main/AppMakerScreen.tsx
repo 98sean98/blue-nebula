@@ -1,7 +1,13 @@
-import React, { FC, ReactNode } from 'react';
-import { Dimensions, KeyboardAvoidingView, View } from 'react-native';
-import { ViewPager } from '@ui-kitten/components';
+import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  ListRenderItem,
+  View,
+} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 import { useSelector } from 'react-redux';
+import { IterableElement } from 'type-fest';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
@@ -33,12 +39,40 @@ const configurationViewHeight: ConfigurationViewHeight = {
   fling: 28,
 };
 
+const carouselDimensions = {
+  slider: Dimensions.get('window').width,
+  item: Dimensions.get('window').width,
+};
+
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
   const { focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
 
-  const renderItem = (item: {
+  const data = useMemo(() => Object.entries(makerConfig.pages), [
+    makerConfig.pages,
+  ]);
+
+  const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
+
+  const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
+    item: [key, { layout, boxes }],
+  }) => (
+    <KeyboardAvoidingView
+      key={key}
+      style={{ flex: 1 }}
+      behavior={'padding'}
+      keyboardVerticalOffset={90}>
+      <LayoutDivider
+        pageKey={key}
+        layout={layout}
+        boxes={getBoxesBasedOnLayout(boxes, layout)}
+        renderItem={renderLayoutDividerItem}
+      />
+    </KeyboardAvoidingView>
+  );
+
+  const renderLayoutDividerItem = (item: {
     pageKey: keyof Pages;
     boxKey: keyof Boxes;
     box: Box;
@@ -46,29 +80,28 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     <MakerBox {...item} style={[{ flex: 1 }, tailwind('m-1')]} />
   );
 
+  useEffect(() => {
+    if (carouselRef.current !== null) {
+      const carouselItemIndex = carouselRef.current.currentIndex;
+      if (
+        typeof carouselItemIndex !== 'undefined' &&
+        carouselItemIndex !== focusedPageIndex
+      )
+        carouselRef.current.snapToItem(focusedPageIndex);
+    }
+  }, [focusedPageIndex]);
+
   return (
     <View style={[{ flex: 1 }, tailwind('relative')]}>
-      {Object.entries(makerConfig.pages).length !== 0 ? (
-        <ViewPager
-          style={{ flex: 1 }}
-          selectedIndex={focusedPageIndex}
-          onSelect={setFocusedPageIndex}>
-          {Object.entries(makerConfig.pages).map(([key, { layout, boxes }]) => (
-            <KeyboardAvoidingView
-              key={key}
-              style={{ flex: 1 }}
-              behavior={'padding'}
-              keyboardVerticalOffset={90}>
-              <LayoutDivider
-                pageKey={key}
-                layout={layout}
-                boxes={getBoxesBasedOnLayout(boxes, layout)}
-                renderItem={renderItem}
-              />
-            </KeyboardAvoidingView>
-          ))}
-        </ViewPager>
-      ) : null}
+      <Carousel
+        ref={carouselRef}
+        data={data}
+        renderItem={renderCarouselItem}
+        sliderWidth={carouselDimensions.slider}
+        itemWidth={carouselDimensions.item}
+        onSnapToItem={setFocusedPageIndex}
+        style={{ flex: 1 }}
+      />
 
       <View style={{ height: configurationViewHeight.collapsed }} />
       <AnimatedFlingContainer
