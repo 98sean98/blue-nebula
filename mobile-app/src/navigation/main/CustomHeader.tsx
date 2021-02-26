@@ -16,7 +16,7 @@ import { tailwind } from '@styles/tailwind';
 import { navigationItems } from './navigationItems';
 
 import { BleConnectIcon } from '@components/shared/bluetooth';
-import { AppMakerAction } from '@components/app-maker';
+import { AppMakerScreenAction } from '@components/app-maker';
 import { renderIcon } from '@components/shared/interface';
 
 export const CustomHeader: FC<StackHeaderProps> = ({
@@ -48,7 +48,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
       case 'Setups':
         return <></>;
       case 'AppMaker':
-        return <AppMakerAction />;
+        return <AppMakerScreenAction />;
       default:
         return (
           <BleConnectIcon iconProps={iconProps} style={tailwind('w-8 h-8')} />

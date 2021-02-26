@@ -6,22 +6,31 @@ import {
   MenuItem,
   IconProps,
 } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
+import { Pages } from '@models/app-maker';
+
 import { RootState } from '@reduxApp';
+import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { renderIcon } from '@components/shared/interface';
 
-import { getBackdropStyle } from '@utilities/functions/ui';
 import { useAppMakerContext } from '@utilities/hooks';
+import { getBackdropStyle } from '@utilities/functions/ui';
+import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+import { constructActionTree } from '@utilities/functions/constructActionTree';
 
-interface AppMakerActionProps {
+interface AppMakerScreenActionProps {
   iconProps?: IconProps;
 }
 
-export const AppMakerAction: FC<AppMakerActionProps> = ({ iconProps }) => {
+export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
+  iconProps,
+}) => {
+  const dispatch = useDispatch();
+
   const { createNewPage } = useAppMakerContext();
 
   const {
@@ -49,6 +58,17 @@ export const AppMakerAction: FC<AppMakerActionProps> = ({ iconProps }) => {
 
   const onChartActionsPress = () => {
     console.log('start charting actions!');
+    // get rid of unnecessary boxes based on box count in layout for each page
+    const prunedPages: Pages = {};
+    Object.entries(pages).forEach(
+      ([key, page]) =>
+        (prunedPages[key] = {
+          ...page,
+          boxes: getBoxesBasedOnLayout(page.boxes, page.layout),
+        }),
+    );
+    const actions = constructActionTree(prunedPages);
+    dispatch(setMakerConfig({ pages: prunedPages, actions }));
   };
 
   const renderMenuAction = () => (

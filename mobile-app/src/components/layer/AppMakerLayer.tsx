@@ -6,6 +6,7 @@ import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import {
   AppMakerContext,
+  ChartingActions,
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
@@ -13,7 +14,12 @@ import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
-  const { makerConfig } = useSelector((state: RootState) => state.builder);
+  const {
+    makerConfig: {
+      pages,
+      // actions
+    },
+  } = useSelector((state: RootState) => state.builder);
 
   const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
     initialAppMakerContext.shouldExpandConfigView,
@@ -29,7 +35,7 @@ export const AppMakerLayer: FC = ({ children }) => {
   const createNewPage = useCallback(
     (pageIndex: number, goToLastPage?: boolean) => {
       const newMakerConfig = {
-        pages: { ...makerConfig.pages, [pageIndex]: initialiseNewPage() },
+        pages: { ...pages, [pageIndex]: initialiseNewPage() },
       };
       dispatch(setMakerConfig(newMakerConfig));
       if (goToLastPage) {
@@ -37,8 +43,20 @@ export const AppMakerLayer: FC = ({ children }) => {
         setLastPage(pageIndex);
       }
     },
-    [dispatch, makerConfig.pages],
+    [dispatch, pages],
   );
+
+  const [
+    chartingActions,
+    // setChartingActions
+  ] = useState<ChartingActions>({
+    isCompleted: false,
+    currentlyCharting: { boxKey: '0' },
+  });
+
+  // const goToNext = useCallback(() => {
+  //   // dfs the actions tree to chart every option to a setup
+  // }, [actions, chartingActions.currentlyCharting]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -58,6 +76,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         focusedPageIndex,
         setFocusedPageIndex,
         createNewPage,
+        chartingActions,
       }}>
       {children}
     </AppMakerContext.Provider>
