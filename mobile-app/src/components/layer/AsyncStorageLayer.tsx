@@ -35,6 +35,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(`successfully read ${storageKey} data from storage!`);
       return JSON.parse(json);
     }
+    return {};
   }, []);
 
   // --- read storage on first render ---
