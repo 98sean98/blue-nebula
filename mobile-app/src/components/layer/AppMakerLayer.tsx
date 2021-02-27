@@ -11,9 +11,10 @@ import {
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
-import { ActionNode, RootActionNode } from '@models/app-maker';
+import { ActionNode, Pages, RootActionNode } from '@models/app-maker';
 import { traverseActionTree } from '@src/utilities/functions/traverseActionTree';
 import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
+import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -41,19 +42,67 @@ export const AppMakerLayer: FC = ({ children }) => {
         pages: { ...pages, [pageIndex]: initialiseNewPage() },
       };
       dispatch(setMakerConfig(newMakerConfig));
-      if (goToLastPage) {
-        setShouldFocusOnLastPage(true);
-      }
+      if (goToLastPage) setShouldFocusOnLastPage(true);
       setLastPage(pageIndex);
     },
     [dispatch, pages],
   );
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (shouldFocusOnLastPage) {
+        setFocusedPageIndex(lastPage);
+        setShouldFocusOnLastPage(false);
+      }
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [shouldFocusOnLastPage, lastPage]);
 
   const [chartingActions, setChartingActions] = useState<ChartingActions>({
     isCompleted: false,
     chartedActionTree: { children: [] },
     currentlyTrackedPath: [],
   });
+
+  const toggleActionsCharting = useCallback(() => {
+    if (mode !== AppMakerMode.ActionsCharting) {
+      console.log('start charting actions!');
+      // get rid of unnecessary boxes based on box count in layout for each page
+      const prunedPages: Pages = {};
+      Object.entries(pages).forEach(
+        ([key, page]) =>
+          (prunedPages[key] = {
+            ...page,
+            boxes: getBoxesBasedOnLayout(page.boxes, page.layout),
+          }),
+      );
+
+      // begin charting
+      const rootActionNode: RootActionNode = {
+        children: [], // todo: replace with redux store maker config actions so that update operations can be performed
+        fullChildrenCount: prunedPages[0].layout.boxCount,
+      };
+      // set context's charting actions state to the root action node
+      setChartingActions((thisChartingAction) => ({
+        ...thisChartingAction,
+        chartedActionTree: rootActionNode,
+        currentlyTrackedPath: [],
+      }));
+
+      // set pruned pages state into redux
+      dispatch(setMakerConfig({ pages: prunedPages }));
+
+      // set focused page to the first one
+      setFocusedPageIndex(0);
+
+      // set app maker mode
+      setMode(AppMakerMode.ActionsCharting);
+    } else {
+      console.log('stop charting actions!');
+      setMode(AppMakerMode.ContentBuilding);
+      dispatch(setMakerConfig({ actions: chartingActions.chartedActionTree }));
+    }
+  }, [dispatch, mode, pages, chartingActions.chartedActionTree]);
 
   const chartActionIntoTree = useCallback(
     (
@@ -113,18 +162,6 @@ export const AppMakerLayer: FC = ({ children }) => {
     [chartingActions],
   );
 
-  console.log(chartingActions);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (shouldFocusOnLastPage) {
-        setFocusedPageIndex(lastPage);
-        setShouldFocusOnLastPage(false);
-      }
-    }, 50);
-    return () => clearTimeout(timeout);
-  }, [shouldFocusOnLastPage, lastPage]);
-
   return (
     <AppMakerContext.Provider
       value={{
@@ -135,6 +172,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         focusedPageIndex,
         setFocusedPageIndex,
         createNewPage,
+        toggleActionsCharting,
         chartingActions,
         setChartingActions,
         chartActionIntoTree,

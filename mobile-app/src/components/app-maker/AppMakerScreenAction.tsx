@@ -6,20 +6,16 @@ import {
   OverflowMenu,
   TopNavigationAction,
 } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Pages, RootActionNode } from '@models/app-maker';
-
 import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import { renderIcon } from '@components/shared/interface';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { getBackdropStyle } from '@utilities/functions/ui';
-import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 import { AppMakerMode } from '@utilities/context';
 
 interface AppMakerScreenActionProps {
@@ -29,16 +25,7 @@ interface AppMakerScreenActionProps {
 export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
   iconProps,
 }) => {
-  const dispatch = useDispatch();
-
-  const {
-    mode,
-    setMode,
-    setFocusedPageIndex,
-    createNewPage,
-    chartingActions,
-    setChartingActions,
-  } = useAppMakerContext();
+  const { mode, createNewPage, toggleActionsCharting } = useAppMakerContext();
 
   const {
     makerConfig: { pages },
@@ -65,46 +52,8 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     [mode, pages],
   );
 
-  const onStartActionsChartingPress = () => {
-    console.log('start charting actions!');
-    // get rid of unnecessary boxes based on box count in layout for each page
-    const prunedPages: Pages = {};
-    Object.entries(pages).forEach(
-      ([key, page]) =>
-        (prunedPages[key] = {
-          ...page,
-          boxes: getBoxesBasedOnLayout(page.boxes, page.layout),
-        }),
-    );
-
-    // begin charting
-    const rootActionNode: RootActionNode = {
-      children: [], // todo: replace with redux store maker config actions so that update operations can be performed
-      fullChildrenCount: prunedPages[0].layout.boxCount,
-    };
-    // set context's charting actions state to the root action node
-    setChartingActions((thisChartingAction) => ({
-      ...thisChartingAction,
-      chartedActionTree: rootActionNode,
-      currentlyTrackedPath: [],
-    }));
-
-    // set pruned pages state into redux
-    dispatch(setMakerConfig({ pages: prunedPages }));
-
-    // set focused page to the first one
-    setFocusedPageIndex(0);
-
-    // set app maker mode
-    setMode(AppMakerMode.ActionsCharting);
-
-    setShowMenu(false);
-  };
-
-  const onStopActionsChartingPress = () => {
-    console.log('stop charting actions!');
-    setMode(AppMakerMode.ContentBuilding);
-    dispatch(setMakerConfig({ actions: chartingActions.chartedActionTree }));
+  const onActionsChartingPress = () => {
+    toggleActionsCharting();
     setShowMenu(false);
   };
 
@@ -139,13 +88,13 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
           <MenuItem
             accessoryLeft={renderIcon('map-outline')}
             title={'Start charting page actions'}
-            onPress={onStartActionsChartingPress}
+            onPress={onActionsChartingPress}
           />
         ) : (
           <MenuItem
             accessoryLeft={renderIcon('stop-circle-outline')}
             title={'Stop charting page actions'}
-            onPress={onStopActionsChartingPress}
+            onPress={onActionsChartingPress}
           />
         )}
       </OverflowMenu>

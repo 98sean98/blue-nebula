@@ -21,6 +21,7 @@ type AppMakerContext = {
   focusedPageIndex: number;
   setFocusedPageIndex: Dispatch<SetStateAction<number>>;
   createNewPage: (pageIndex: number, goToLastPage?: boolean) => void;
+  toggleActionsCharting: () => void;
   chartingActions: ChartingActions;
   setChartingActions: Dispatch<SetStateAction<ChartingActions>>;
   chartActionIntoTree: (
@@ -37,6 +38,7 @@ export const initialAppMakerContext: AppMakerContext = {
   focusedPageIndex: 0,
   setFocusedPageIndex: () => {},
   createNewPage: () => {},
+  toggleActionsCharting: () => {},
   chartingActions: {
     isCompleted: false,
     chartedActionTree: { children: [] },
