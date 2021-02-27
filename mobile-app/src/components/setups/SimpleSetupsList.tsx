@@ -1,14 +1,17 @@
 import React, { ComponentProps, FC, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
-
-import { RootState } from '@reduxApp';
-import { Setup, Setups } from '@models/setup';
-import { Divider, ListItem, ListItemProps, Modal } from '@ui-kitten/components';
 import { FlatList, FlatListProps, ListRenderItem } from 'react-native';
+import { Divider, ListItem, ListItemProps, Modal } from '@ui-kitten/components';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { SetupDetailsCard } from '@components/setups/index';
+import { Setup, Setups } from '@models/setup';
+
+import { RootState } from '@reduxApp';
+
+import { SetupDetailsCard } from '@components/setups';
+
+import { getBackdropStyle } from '@utilities/functions/ui';
 
 export type SetupsListData = {
   key: string;
@@ -73,7 +76,7 @@ export const SimpleSetupsList: FC<SimpleSetupsList> = ({
 
       <Modal
         visible={showSetupDetailsModal}
-        backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        backdropStyle={getBackdropStyle()}
         onBackdropPress={() => setShowSetupDetailsModal(false)}
         style={tailwind('w-4/5 h-4/5')}>
         {typeof selectedSetupKey !== 'undefined' ? (

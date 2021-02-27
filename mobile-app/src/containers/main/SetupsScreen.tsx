@@ -209,7 +209,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
         {typeof selectedSetupKey !== 'undefined' ? (
           <SetupDetailsCard
             setup={setups[selectedSetupKey]}
-            renderLoadButton={
+            renderButton={
               mode === SetupsMode.Normal ? renderLoadButton : undefined
             }
             style={{ flex: 1 }}

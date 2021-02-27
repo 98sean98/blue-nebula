@@ -13,7 +13,7 @@ import { parseFromTypeToString } from '@utilities/functions/parse';
 
 interface SetupDetailsCardProps extends CardProps {
   setup: Setup;
-  renderLoadButton?: () => ReactNode;
+  renderButton?: () => ReactNode;
 }
 
 export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
@@ -25,12 +25,12 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
     fields,
     controlEntitiesState,
   },
-  renderLoadButton,
+  renderButton,
   ...props
 }) => {
   const fieldsArray = Object.entries(fields);
 
-  const showLoadButton = typeof renderLoadButton !== 'undefined';
+  const showLoadButton = typeof renderButton !== 'undefined';
 
   return (
     <Card
@@ -74,8 +74,8 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
         />
       </ScrollView>
 
-      {typeof renderLoadButton !== 'undefined' ? (
-        <View style={tailwind('mt-4')}>{renderLoadButton()}</View>
+      {typeof renderButton !== 'undefined' ? (
+        <View style={tailwind('mt-4')}>{renderButton()}</View>
       ) : null}
     </Card>
   );
