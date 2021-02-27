@@ -21,6 +21,7 @@ import { initialiseNewBox } from '@utilities/functions/initialiseNewBox';
 
 interface LayoutBoxControlProps extends LayoutProps {
   pageIndex: number;
+  disabled?: boolean;
 }
 
 const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
@@ -31,6 +32,7 @@ const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
 
 export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
   pageIndex,
+  disabled,
   ...props
 }) => {
   const dispatch = useDispatch();
@@ -70,7 +72,14 @@ export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
   );
 
   return (
-    <LayoutComponent {...props} style={[tailwind('p-2'), props?.style ?? {}]}>
+    <LayoutComponent
+      {...props}
+      style={[
+        tailwind('p-2'),
+        disabled ? tailwind('opacity-50') : {},
+        props?.style ?? {},
+      ]}
+      pointerEvents={disabled ? 'none' : undefined}>
       <Text category={'h6'}>Layout boxes</Text>
       {/* layout rows and columns */}
       <View style={tailwind('mt-1')}>

@@ -19,6 +19,7 @@ import { PageInfo } from './PageInfo';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { PageStylesControl } from '@components/app-maker/maker-configuration/PageStylesControl';
+import { AppMakerMode } from '@utilities/context';
 
 interface MakerConfigurationProps extends ViewProps {}
 
@@ -28,6 +29,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
   const {
+    mode,
     setShouldExpandConfigView,
     focusedPageIndex,
     createNewPage,
@@ -74,6 +76,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
             {/* layout box */}
             <LayoutBoxControl
               pageIndex={focusedPageIndex}
+              disabled={mode === AppMakerMode.ActionsCharting}
               style={tailwind('mt-2')}
             />
 
