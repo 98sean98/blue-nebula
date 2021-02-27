@@ -81,7 +81,11 @@ export const SetupsSelection: FC<SetupsSelection> = ({
   };
 
   const renderSelectButton = () => (
-    <Button onPress={onSelectButtonPress}>Select</Button>
+    <Button
+      accessoryLeft={renderIcon('link-2-outline')}
+      onPress={onSelectButtonPress}>
+      Select
+    </Button>
   );
 
   return (
