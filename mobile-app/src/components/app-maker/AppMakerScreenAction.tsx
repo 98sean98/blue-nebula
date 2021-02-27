@@ -66,7 +66,10 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     );
 
     // begin charting
-    const rootActionNode: RootActionNode = { children: [] };
+    const rootActionNode: RootActionNode = {
+      children: [], // todo: replace with redux store maker config actions so that update operations can be performed
+      fullChildrenCount: prunedPages[0].layout.boxCount,
+    };
     // set context's charting actions state to the root action node
     setChartingActions((thisChartingAction) => ({
       ...thisChartingAction,

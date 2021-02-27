@@ -27,6 +27,8 @@ import {
 import { useAppMakerContext } from '@utilities/hooks';
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 import { AppMakerMode } from '@utilities/context';
+import { traverseActionTree } from '@utilities/functions/traverseActionTree';
+import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -52,6 +54,7 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     mode,
     focusedPageIndex,
     setFocusedPageIndex,
+    chartingActions,
     chartActionIntoTree,
   } = useAppMakerContext();
 
@@ -78,28 +81,67 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     </KeyboardAvoidingView>
   );
 
+  const checkIfMakerBoxIsPopulated = (boxKey: keyof Boxes): boolean => {
+    const { chartedActionTree, currentlyTrackedPath } = chartingActions;
+    const thisBoxPath = currentlyTrackedPath.concat([boxKey]);
+    const subTree = traverseActionTree(chartedActionTree, thisBoxPath);
+    return (
+      typeof subTree !== 'undefined' && checkIfActionTreeIsPopulated(subTree)
+    );
+  };
+
   const onMakerBoxPress = (boxKey: keyof Boxes) => {
-    if (mode === AppMakerMode.ActionsCharting) {
-      const actionNode: ActionNode = { boxKey };
-      const chartIntoRootNode = focusedPageIndex === 0;
-      chartActionIntoTree(actionNode, chartIntoRootNode);
-      // go to the next page if it exists
-      if (focusedPageIndex < data.length - 1)
-        setFocusedPageIndex(focusedPageIndex + 1);
-    }
+    const isNotLastPage = focusedPageIndex < data.length - 1;
+
+    // create the action node
+    const fullChildrenCount = isNotLastPage
+      ? makerConfig.pages[focusedPageIndex + 1].layout.boxCount
+      : undefined;
+    const setupKey = !isNotLastPage ? 'default' : undefined; // todo: let the user pick the setup after pressing an action node in the last page
+    const actionNode: ActionNode = {
+      boxKey,
+      fullChildrenCount,
+      setupKey,
+    };
+    const chartIntoRootNode = focusedPageIndex === 0;
+    chartActionIntoTree(actionNode, {
+      chartIntoRootNode,
+      resetPath: !isNotLastPage,
+    });
+
+    // go to the next page if it exists, else go to the first page
+    if (isNotLastPage) setFocusedPageIndex(focusedPageIndex + 1);
+    else setFocusedPageIndex(0);
   };
 
   const renderLayoutDividerItem = (item: {
     pageKey: keyof Pages;
     boxKey: keyof Boxes;
     box: Box;
-  }): ReactNode => (
-    <MakerBox
-      {...item}
-      onPress={() => onMakerBoxPress(item.boxKey)}
-      style={[{ flex: 1 }, tailwind('m-1')]}
-    />
-  );
+  }): ReactNode => {
+    const pressable =
+      mode === AppMakerMode.ActionsCharting &&
+      !checkIfMakerBoxIsPopulated(item.boxKey);
+    return (
+      <MakerBox
+        {...item}
+        disabled={!pressable}
+        onPress={pressable ? () => onMakerBoxPress(item.boxKey) : undefined}
+        style={[
+          { flex: 1 },
+          tailwind('m-1'),
+          mode === AppMakerMode.ActionsCharting
+            ? [
+                tailwind('border-4'),
+                pressable
+                  ? tailwind('border-yellow-500')
+                  : tailwind('border-green-500'),
+              ] // todo: style this properly
+            : {},
+        ]}
+      />
+    );
+  };
 
   useEffect(() => {
     if (carouselRef.current !== null) {
@@ -111,6 +153,11 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
         carouselRef.current.snapToItem(focusedPageIndex);
     }
   }, [focusedPageIndex]);
+
+  useEffect(() => {
+    if (chartingActions.isCompleted)
+      console.log('every possible action has been populated! yay!');
+  }, [chartingActions.isCompleted]);
 
   return (
     <View style={[{ flex: 1 }, tailwind('relative')]}>

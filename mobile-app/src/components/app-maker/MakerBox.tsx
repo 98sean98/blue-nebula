@@ -1,9 +1,7 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import { useTheme } from '@ui-kitten/components';
+import { Text, useTheme } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { tailwind } from '@styles/tailwind';
 
 import { Box, Boxes, Page, Pages } from '@models/app-maker';
 
@@ -59,7 +57,7 @@ export const MakerBox: FC<MakerBoxProps> = ({
   const editable = useMemo(() => mode === AppMakerMode.ContentBuilding, [mode]);
 
   const styles = StyleSheet.create({
-    textInput: {
+    text: {
       color: theme['text-basic-color'],
       textAlign: 'center',
       ...page.styles.box.text,
@@ -67,24 +65,20 @@ export const MakerBox: FC<MakerBoxProps> = ({
   });
 
   return (
-    <PressableBox
-      {...props}
-      style={[
-        mode === AppMakerMode.ActionsCharting
-          ? tailwind('border-4 border-blue-500') // todo: style this properly
-          : {},
-        props?.style ?? {},
-      ]}>
-      <TextInput
-        style={styles.textInput}
-        value={cachedTitle}
-        onChangeText={setCachedTitle}
-        onBlur={onBlur}
-        placeholder={'Title'}
-        placeholderTextColor={theme['text-hint-color']}
-        editable={editable}
-        multiline
-      />
+    <PressableBox {...props}>
+      {editable ? (
+        <TextInput
+          style={styles.text}
+          value={cachedTitle}
+          onChangeText={setCachedTitle}
+          onBlur={onBlur}
+          placeholder={'Title'}
+          placeholderTextColor={theme['text-hint-color']}
+          multiline
+        />
+      ) : (
+        <Text style={styles.text}>{cachedTitle}</Text>
+      )}
     </PressableBox>
   );
 };

@@ -25,7 +25,7 @@ type AppMakerContext = {
   setChartingActions: Dispatch<SetStateAction<ChartingActions>>;
   chartActionIntoTree: (
     actionNode: ActionNode,
-    chartIntoRootNode?: boolean,
+    options?: { chartIntoRootNode?: boolean; resetPath?: boolean },
   ) => void;
 };
 

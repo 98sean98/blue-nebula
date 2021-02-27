@@ -5,7 +5,7 @@ import { ActionNode, ActionTreePath, RootActionNode } from '@models/app-maker';
 export const traverseActionTree = (
   actionTree: RootActionNode | ActionNode,
   path: ActionTreePath,
-): RootActionNode | ActionNode => {
+): RootActionNode | ActionNode | undefined => {
   const { children } = actionTree;
 
   if (
@@ -19,11 +19,8 @@ export const traverseActionTree = (
   const key = path[0];
   const childNode = children.find(({ boxKey }) => boxKey === key);
 
-  // throw error if childNode is not found
-  if (typeof childNode === 'undefined')
-    throw new Error(
-      `child action node of key ${key} cannot be found in the tree`,
-    );
+  // if the child node cannot be found, it means the tree cannot be traversed correctly based on the given path, return undefined
+  if (typeof childNode === 'undefined') return undefined;
 
   // remove the first item in the path
   const slicedPath = path.slice(1);
