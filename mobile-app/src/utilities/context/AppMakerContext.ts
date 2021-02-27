@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
-import { ActionNode, Actions } from '@models/app-maker';
+import { ActionNode, ActionTreePath, RootActionNode } from '@models/app-maker';
 
 export enum AppMakerMode {
   ContentBuilding = '@@AppMakerMode/ContentBuilding',
@@ -9,8 +9,8 @@ export enum AppMakerMode {
 
 export type ChartingActions = {
   isCompleted: boolean;
-  cachedActionTree: Actions;
-  currentlyCharting?: ActionNode;
+  chartedActionTree: RootActionNode;
+  currentlyTrackedPath: ActionTreePath;
 };
 
 type AppMakerContext = {
@@ -23,7 +23,10 @@ type AppMakerContext = {
   createNewPage: (pageIndex: number, goToLastPage?: boolean) => void;
   chartingActions: ChartingActions;
   setChartingActions: Dispatch<SetStateAction<ChartingActions>>;
-  goToNextAction: () => void;
+  chartActionIntoTree: (
+    actionNode: ActionNode,
+    chartIntoRootNode?: boolean,
+  ) => void;
 };
 
 export const initialAppMakerContext: AppMakerContext = {
@@ -36,10 +39,11 @@ export const initialAppMakerContext: AppMakerContext = {
   createNewPage: () => {},
   chartingActions: {
     isCompleted: false,
-    cachedActionTree: [],
+    chartedActionTree: { children: [] },
+    currentlyTrackedPath: [],
   },
   setChartingActions: () => {},
-  goToNextAction: () => {},
+  chartActionIntoTree: () => {},
 };
 
 export const AppMakerContext = createContext<AppMakerContext>(

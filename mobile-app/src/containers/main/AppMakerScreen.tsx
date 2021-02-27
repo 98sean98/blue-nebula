@@ -15,7 +15,7 @@ import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp';
 
-import { Box, Boxes, Pages } from '@models/app-maker';
+import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
 
 import {
   AnimatedFlingContainer,
@@ -48,7 +48,12 @@ const carouselDimensions = {
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
-  const { mode, focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
+  const {
+    mode,
+    focusedPageIndex,
+    setFocusedPageIndex,
+    chartActionIntoTree,
+  } = useAppMakerContext();
 
   const data = useMemo(() => Object.entries(makerConfig.pages), [
     makerConfig.pages,
@@ -73,12 +78,27 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     </KeyboardAvoidingView>
   );
 
+  const onMakerBoxPress = (boxKey: keyof Boxes) => {
+    if (mode === AppMakerMode.ActionsCharting) {
+      const actionNode: ActionNode = { boxKey };
+      const chartIntoRootNode = focusedPageIndex === 0;
+      chartActionIntoTree(actionNode, chartIntoRootNode);
+      // go to the next page if it exists
+      if (focusedPageIndex < data.length - 1)
+        setFocusedPageIndex(focusedPageIndex + 1);
+    }
+  };
+
   const renderLayoutDividerItem = (item: {
     pageKey: keyof Pages;
     boxKey: keyof Boxes;
     box: Box;
   }): ReactNode => (
-    <MakerBox {...item} style={[{ flex: 1 }, tailwind('m-1')]} />
+    <MakerBox
+      {...item}
+      onPress={() => onMakerBoxPress(item.boxKey)}
+      style={[{ flex: 1 }, tailwind('m-1')]}
+    />
   );
 
   useEffect(() => {

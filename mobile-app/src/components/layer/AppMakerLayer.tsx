@@ -11,15 +11,14 @@ import {
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
 import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
+import { ActionNode, RootActionNode } from '@models/app-maker';
+import { traverseActionTree } from '@src/utilities/functions/traverseActionTree';
 
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const {
-    makerConfig: {
-      pages,
-      // actions
-    },
+    makerConfig: { pages },
   } = useSelector((state: RootState) => state.builder);
 
   const [mode, setMode] = useState<AppMakerMode>(AppMakerMode.ContentBuilding);
@@ -51,17 +50,48 @@ export const AppMakerLayer: FC = ({ children }) => {
 
   const [chartingActions, setChartingActions] = useState<ChartingActions>({
     isCompleted: false,
-    cachedActionTree: [],
+    chartedActionTree: { children: [] },
+    currentlyTrackedPath: [],
   });
 
-  const goToNextAction = useCallback(
-    () => {
-      // dfs the action tree to chart every option to a setup
+  const chartActionIntoTree = useCallback(
+    (actionNode: ActionNode, chartIntoRootNode?: boolean) => {
+      const { chartedActionTree, currentlyTrackedPath } = chartingActions;
+
+      let currentActionNode: RootActionNode | ActionNode | undefined;
+      let newPath = currentlyTrackedPath;
+
+      if (chartIntoRootNode) {
+        // chart the new action node into the root action node
+        currentActionNode = chartedActionTree;
+        // set the path to simply containing the new action node's key
+        newPath = [actionNode.boxKey];
+      } else {
+        // traverse the tree according to the currently tracked path
+        currentActionNode = traverseActionTree(
+          chartedActionTree,
+          currentlyTrackedPath,
+        );
+        // put the new action node's key into the path list
+        newPath.push(actionNode.boxKey);
+      }
+
+      // put this action node into the children of the node that is currently being charted, either the root node, or a child node
+      if (typeof currentActionNode.children === 'undefined')
+        currentActionNode.children = [];
+      currentActionNode.children.push(actionNode);
+
+      // set charting actions with the updated tree
+      setChartingActions({
+        ...chartingActions,
+        chartedActionTree,
+        currentlyTrackedPath: newPath,
+      });
     },
-    [
-      // actions, chartingActions.currentlyCharting
-    ],
+    [chartingActions],
   );
+
+  console.log(chartingActions);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -85,7 +115,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         createNewPage,
         chartingActions,
         setChartingActions,
-        goToNextAction,
+        chartActionIntoTree,
       }}>
       {children}
     </AppMakerContext.Provider>

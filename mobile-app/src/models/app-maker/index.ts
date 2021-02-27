@@ -1,5 +1,6 @@
 export * from './ActionNode';
-export * from './Actions';
+export * from './RootActionNode';
+export * from './ActionTreePath';
 
 export * from './Box';
 export * from './Boxes';

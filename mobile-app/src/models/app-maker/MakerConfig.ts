@@ -1,7 +1,7 @@
 import { Pages } from './Pages';
-import { Actions } from './Actions';
+import { RootActionNode } from './RootActionNode';
 
 export type MakerConfig = {
   pages: Pages;
-  actions: Actions;
+  actions: RootActionNode;
 };
