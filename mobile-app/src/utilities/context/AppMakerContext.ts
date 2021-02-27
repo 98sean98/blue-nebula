@@ -1,6 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
 import { ActionNode, ActionTreePath, RootActionNode } from '@models/app-maker';
+import { Setups } from '@models/setup';
 
 export enum AppMakerMode {
   ContentBuilding = '@@AppMakerMode/ContentBuilding',
@@ -26,8 +27,9 @@ type AppMakerContext = {
   setChartingActions: Dispatch<SetStateAction<ChartingActions>>;
   chartActionIntoTree: (
     actionNode: ActionNode,
-    options?: { chartIntoRootNode?: boolean; resetPath?: boolean },
+    options?: { chartIntoRootNode?: boolean },
   ) => void;
+  setSetupIntoActionNode: (setupKey: keyof Setups) => void;
 };
 
 export const initialAppMakerContext: AppMakerContext = {
@@ -46,6 +48,7 @@ export const initialAppMakerContext: AppMakerContext = {
   },
   setChartingActions: () => {},
   chartActionIntoTree: () => {},
+  setSetupIntoActionNode: () => {},
 };
 
 export const AppMakerContext = createContext<AppMakerContext>(

@@ -15,6 +15,7 @@ import { ActionNode, Pages, RootActionNode } from '@models/app-maker';
 import { traverseActionTree } from '@src/utilities/functions/traverseActionTree';
 import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+import { Setups } from '@models/setup';
 
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -105,14 +106,10 @@ export const AppMakerLayer: FC = ({ children }) => {
   }, [dispatch, mode, pages, chartingActions.chartedActionTree]);
 
   const chartActionIntoTree = useCallback(
-    (
-      actionNode: ActionNode,
-      options?: { chartIntoRootNode?: boolean; resetPath?: boolean },
-    ) => {
+    (actionNode: ActionNode, options?: { chartIntoRootNode?: boolean }) => {
       const { chartedActionTree, currentlyTrackedPath } = chartingActions;
-      const { chartIntoRootNode, resetPath } = options ?? {
+      const { chartIntoRootNode } = options ?? {
         chartIntoRootNode: false,
-        resetPath: false,
       };
 
       let currentActionNode: RootActionNode | ActionNode | undefined;
@@ -135,9 +132,6 @@ export const AppMakerLayer: FC = ({ children }) => {
         newPath.push(actionNode.boxKey);
       }
 
-      // set the path to empty if reset path is true
-      if (resetPath) newPath = [];
-
       // put this action node into the children of the node that is currently being charted, either the root node, or a child node
       if (typeof currentActionNode.children === 'undefined')
         currentActionNode.children = [];
@@ -149,10 +143,42 @@ export const AppMakerLayer: FC = ({ children }) => {
       )
         currentActionNode.children.push(actionNode);
 
+      // set charting actions with the updated state
+      setChartingActions({
+        ...chartingActions,
+        chartedActionTree,
+        currentlyTrackedPath: newPath,
+      });
+    },
+    [chartingActions],
+  );
+
+  const setSetupIntoActionNode = useCallback(
+    (setupKey: keyof Setups) => {
+      const { chartedActionTree, currentlyTrackedPath } = chartingActions;
+
+      // if the path is empty, not leading to any action node, nothing should be updated as this is a no-op
+      if (currentlyTrackedPath.length === 0) return;
+
+      // traverse the tree according to the currently tracked path
+      const currentActionNode = traverseActionTree(
+        chartedActionTree,
+        currentlyTrackedPath,
+      );
+
+      // if the current action node is undefined, nothing should be updated as this is a no-op
+      if (typeof currentActionNode === 'undefined') return;
+
+      // put the setup key into the action node
+      (currentActionNode as ActionNode).setupKey = setupKey;
+
       // update is completed state if the root action node is populated
       const isCompleted = checkIfActionTreeIsPopulated(chartedActionTree);
 
-      // set charting actions with the updated tree
+      // clear the currently tracked path as the first page should be shown
+      const newPath: ChartingActions['currentlyTrackedPath'] = [];
+
+      // set charting actions with the updated state
       setChartingActions({
         isCompleted,
         chartedActionTree,
@@ -176,6 +202,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         chartingActions,
         setChartingActions,
         chartActionIntoTree,
+        setSetupIntoActionNode,
       }}>
       {children}
     </AppMakerContext.Provider>

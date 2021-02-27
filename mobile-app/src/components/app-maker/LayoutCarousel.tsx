@@ -23,9 +23,14 @@ import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayou
 type Data = Array<[keyof Pages, Page]>;
 
 interface LayoutCarouselProps
-  extends Omit<CarouselProps<IterableElement<Data>>, 'data' | 'renderItem'> {}
+  extends Omit<CarouselProps<IterableElement<Data>>, 'data' | 'renderItem'> {
+  toggleShowSetupsSelection: () => void;
+}
 
-export const LayoutCarousel: FC<LayoutCarouselProps> = ({ ...props }) => {
+export const LayoutCarousel: FC<LayoutCarouselProps> = ({
+  toggleShowSetupsSelection,
+  ...props
+}) => {
   const theme = useTheme();
 
   const styles = StyleSheet.create({
@@ -82,21 +87,21 @@ export const LayoutCarousel: FC<LayoutCarouselProps> = ({ ...props }) => {
     const fullChildrenCount = isNotLastPage
       ? makerConfig.pages[focusedPageIndex + 1].layout.boxCount
       : undefined;
-    const setupKey = !isNotLastPage ? 'default' : undefined; // todo: let the user pick the setup after pressing an action node in the last page
     const actionNode: ActionNode = {
       boxKey,
       fullChildrenCount,
-      setupKey,
     };
     const chartIntoRootNode = focusedPageIndex === 0;
     chartActionIntoTree(actionNode, {
       chartIntoRootNode,
-      resetPath: !isNotLastPage,
     });
 
     // go to the next page if it exists, else go to the first page
     if (isNotLastPage) setFocusedPageIndex(focusedPageIndex + 1);
     else setFocusedPageIndex(0);
+
+    // show the setups selection if this is the last page
+    if (!isNotLastPage) toggleShowSetupsSelection();
   };
 
   const renderLayoutDividerItem = (item: {
