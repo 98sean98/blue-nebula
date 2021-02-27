@@ -9,6 +9,7 @@ const initialState: BuilderState = {
   makerConfig: {
     pages: {},
     actions: { children: [] },
+    updatedAt: new Date(),
   },
 };
 

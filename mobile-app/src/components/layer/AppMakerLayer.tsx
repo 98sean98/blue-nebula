@@ -101,7 +101,12 @@ export const AppMakerLayer: FC = ({ children }) => {
     } else {
       console.log('stop charting actions!');
       setMode(AppMakerMode.ContentBuilding);
-      dispatch(setMakerConfig({ actions: chartingActions.chartedActionTree }));
+      dispatch(
+        setMakerConfig({
+          actions: chartingActions.chartedActionTree,
+          updatedAt: new Date(),
+        }),
+      );
     }
   }, [dispatch, mode, pages, chartingActions.chartedActionTree]);
 

@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { convertObjectWithTimestampKeys } from './convertObjectWithTimestampKeys';
 
 export type ConvertibleState = Record<string, Record<string, any>>;
 
@@ -7,16 +7,8 @@ export const convertStateWithTimestamps = (
   keys: Array<string>,
 ): ConvertibleState => {
   const array = Object.entries(state).map(([objectKey, object]) => {
-    keys.forEach((key) => {
-      if (
-        typeof object[key] !== 'undefined' &&
-        typeof object[key] === 'string' &&
-        moment(object[key]).isValid()
-      ) {
-        object[key] = moment(object[key]).toDate();
-      }
-    });
-    return { key: objectKey, object };
+    const convertedObject = convertObjectWithTimestampKeys(object, keys);
+    return { key: objectKey, object: convertedObject };
   });
 
   const convertedState: ConvertibleState = {};
