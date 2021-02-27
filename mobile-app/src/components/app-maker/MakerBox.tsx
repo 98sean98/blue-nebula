@@ -56,6 +56,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
     dispatch(setMakerConfig({ pages: updatedPages }));
   }, [pageKey, boxKey, cachedTitle, dispatch, pages, page]);
 
+  const editable = useMemo(() => mode === AppMakerMode.ContentBuilding, [mode]);
+
   const styles = StyleSheet.create({
     textInput: {
       color: theme['text-basic-color'],
@@ -80,6 +82,7 @@ export const MakerBox: FC<MakerBoxProps> = ({
         onBlur={onBlur}
         placeholder={'Title'}
         placeholderTextColor={theme['text-hint-color']}
+        editable={editable}
         multiline
       />
     </PressableBox>

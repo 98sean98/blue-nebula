@@ -26,6 +26,7 @@ import {
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+import { AppMakerMode } from '@utilities/context';
 
 export type ConfigurationViewHeight = {
   collapsed: number;
@@ -47,7 +48,7 @@ const carouselDimensions = {
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const { makerConfig } = useSelector((state: RootState) => state.builder);
 
-  const { focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
+  const { mode, focusedPageIndex, setFocusedPageIndex } = useAppMakerContext();
 
   const data = useMemo(() => Object.entries(makerConfig.pages), [
     makerConfig.pages,
@@ -100,6 +101,7 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
         sliderWidth={carouselDimensions.slider}
         itemWidth={carouselDimensions.item}
         onSnapToItem={setFocusedPageIndex}
+        scrollEnabled={mode !== AppMakerMode.ActionsCharting}
         style={{ flex: 1 }}
       />
 
