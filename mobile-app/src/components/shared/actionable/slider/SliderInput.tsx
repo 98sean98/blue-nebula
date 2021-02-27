@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC, useState } from 'react';
+import React, { ComponentProps, FC, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Text } from '@ui-kitten/components';
 
@@ -19,6 +19,11 @@ export const SliderInput: FC<SliderInputProps> = ({
   const [cachedValue, setCachedValue] = useState<number | undefined>(
     sliderProps?.value,
   );
+
+  useEffect(() => {
+    if (typeof sliderProps?.value !== 'undefined')
+      setCachedValue(sliderProps.value);
+  }, [sliderProps]);
 
   return (
     <View
