@@ -43,7 +43,7 @@ export const AnimatedFlingContainer: FC<AnimatedFlingContainerProps> = ({
 
   const slideDown = useCallback(() => {
     Animated.timing(slideAnimation, {
-      toValue: 0,
+      toValue: 0, // translate downwards,back to initial position
       duration: 200,
       useNativeDriver: true,
     }).start();

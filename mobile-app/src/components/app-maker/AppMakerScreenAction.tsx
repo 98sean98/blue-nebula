@@ -31,6 +31,8 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     makerConfig: { pages },
   } = useSelector((state: RootState) => state.builder);
 
+  const pageCount = useMemo(() => Object.keys(pages).length, [pages]);
+
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
   const toggleMenu = () => {
@@ -41,15 +43,13 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
   const onHelpPress = () => {};
 
   const onNewPagePress = () => {
-    const newPageIndex = Object.keys(pages).length;
-    createNewPage(newPageIndex, true);
+    createNewPage(pageCount, true);
     setShowMenu(false);
   };
 
   const showNewPageAction = useMemo(
-    () =>
-      mode === AppMakerMode.ContentBuilding && Object.keys(pages).length < 5,
-    [mode, pages],
+    () => mode === AppMakerMode.ContentBuilding && pageCount < 5,
+    [mode, pageCount],
   );
 
   const onActionsChartingPress = () => {
@@ -84,18 +84,22 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
         ) : (
           <></>
         )}
-        {mode !== AppMakerMode.ActionsCharting ? (
-          <MenuItem
-            accessoryLeft={renderIcon('map-outline')}
-            title={'Start charting page actions'}
-            onPress={onActionsChartingPress}
-          />
+        {pageCount > 0 ? (
+          mode !== AppMakerMode.ActionsCharting ? (
+            <MenuItem
+              accessoryLeft={renderIcon('map-outline')}
+              title={'Start charting page actions'}
+              onPress={onActionsChartingPress}
+            />
+          ) : (
+            <MenuItem
+              accessoryLeft={renderIcon('stop-circle-outline')}
+              title={'Stop charting page actions'}
+              onPress={onActionsChartingPress}
+            />
+          )
         ) : (
-          <MenuItem
-            accessoryLeft={renderIcon('stop-circle-outline')}
-            title={'Stop charting page actions'}
-            onPress={onActionsChartingPress}
-          />
+          <></>
         )}
       </OverflowMenu>
     </View>
