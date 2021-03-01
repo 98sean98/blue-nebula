@@ -6,13 +6,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  Dimensions,
-  KeyboardAvoidingView,
-  ListRenderItem,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
+import { Text } from '@ui-kitten/components';
 import Carousel from 'react-native-snap-carousel';
 import { useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
@@ -60,18 +55,12 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
     item: [key, { layout, boxes }],
   }) => (
-    <KeyboardAvoidingView
-      key={key}
-      style={{ flex: 1 }}
-      behavior={'padding'}
-      keyboardVerticalOffset={90}>
-      <LayoutDivider
-        pageKey={key}
-        layout={layout}
-        boxes={getBoxesBasedOnLayout(boxes, layout)}
-        renderItem={renderLayoutDividerItem}
-      />
-    </KeyboardAvoidingView>
+    <LayoutDivider
+      pageKey={key}
+      layout={layout}
+      boxes={getBoxesBasedOnLayout(boxes, layout)}
+      renderItem={renderLayoutDividerItem}
+    />
   );
 
   const onBoxPress = (boxKey: keyof Boxes) => {
@@ -106,19 +95,33 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     }
   }, [focusedPageIndex]);
 
+  const showController = useMemo(() => data.length > 0, [data]);
+
   return (
-    <RenderBleComponent overrideShouldShow>
+    <RenderBleComponent>
       <View style={{ flex: 1 }}>
-        <Carousel
-          ref={carouselRef}
-          data={data}
-          renderItem={renderCarouselItem}
-          onSnapToItem={setFocusedPageIndex}
-          sliderWidth={carouselDimensions.slider}
-          itemWidth={carouselDimensions.item}
-          scrollEnabled={false}
-        />
-        <BleRunIdleButton style={tailwind('m-4')} />
+        {showController ? (
+          <>
+            <Carousel
+              ref={carouselRef}
+              data={data}
+              renderItem={renderCarouselItem}
+              onSnapToItem={setFocusedPageIndex}
+              sliderWidth={carouselDimensions.slider}
+              itemWidth={carouselDimensions.item}
+              scrollEnabled={false}
+            />
+            <BleRunIdleButton style={tailwind('m-4')} />
+          </>
+        ) : (
+          <View
+            style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
+            <Text style={tailwind('text-center')}>
+              This simple controller has not been configured by the App Maker
+              yet.
+            </Text>
+          </View>
+        )}
       </View>
     </RenderBleComponent>
   );
