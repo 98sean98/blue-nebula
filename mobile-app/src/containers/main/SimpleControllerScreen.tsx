@@ -24,9 +24,11 @@ import {
   Page,
   Pages,
 } from '@models/app-maker';
+import { Setup } from '@models/setup';
 import { PageCarouselData } from '@models/ui';
 
 import { RootState } from '@reduxApp';
+import { setControlEntities } from '@reduxApp/control/actions';
 
 import { PressableBoxWithText } from '@components/shared/actionable';
 import {
@@ -35,10 +37,8 @@ import {
 } from '@components/shared/bluetooth';
 import { LayoutDivider } from '@components/shared/interface';
 
-import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 import { traverseActionTree } from '@utilities/functions/traverseActionTree';
-import { Setup } from '@models/setup';
-import { setControlEntities } from '@reduxApp/control/actions';
+import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/checkIfActionTreeLeadsToSetup';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
@@ -73,7 +73,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     <LayoutDivider
       pageKey={key}
       layout={layout}
-      boxes={getBoxesBasedOnLayout(boxes, layout)}
+      boxes={boxes}
       renderItem={renderLayoutDividerItem}
     />
   );
@@ -82,8 +82,6 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     let newPath = actionTreePath;
     if (focusedPageIndex === 0) newPath = [boxKey];
     else newPath.push(boxKey);
-
-    setActionTreePath(newPath);
 
     if (focusedPageIndex === pageCount - 1) {
       const lastActionNode = traverseActionTree(actions, newPath);
@@ -97,27 +95,48 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
           dispatch(setControlEntities(setup.controlEntitiesState));
       }
       setFocusedPageIndex(0);
+      newPath = [];
     } else {
       setFocusedPageIndex(focusedPageIndex + 1);
     }
+
+    setActionTreePath(newPath);
   };
 
   const styles = StyleSheet.create({
     text: { ...(focusedPage?.styles.box.text ?? {}) },
+    pressableBox: {},
+    unPressableBox: { opacity: 0.4 },
   });
+
+  const checkIfBoxLeadsToSetup = (boxKey: keyof Boxes): boolean => {
+    const thisBoxPath = actionTreePath.concat([boxKey]);
+    const subTree = traverseActionTree(actions, thisBoxPath);
+    return (
+      typeof subTree !== 'undefined' && checkIfActionTreeLeadsToSetup(subTree)
+    );
+  };
 
   const renderLayoutDividerItem = (item: {
     pageKey: keyof Pages;
     boxKey: keyof Boxes;
     box: Box;
-  }): ReactNode => (
-    <PressableBoxWithText
-      text={item.box.title}
-      textProps={{ style: styles.text }}
-      onPress={() => onBoxPress(item.boxKey)}
-      style={[{ flex: 1 }, tailwind('m-1')]}
-    />
-  );
+  }): ReactNode => {
+    const pressable = checkIfBoxLeadsToSetup(item.boxKey);
+    return (
+      <PressableBoxWithText
+        text={item.box.title}
+        textProps={{ style: styles.text }}
+        disabled={!pressable}
+        onPress={() => onBoxPress(item.boxKey)}
+        style={[
+          { flex: 1 },
+          tailwind('m-1'),
+          pressable ? styles.pressableBox : styles.unPressableBox,
+        ]}
+      />
+    );
+  };
 
   useEffect(() => {
     if (carouselRef.current !== null) {
