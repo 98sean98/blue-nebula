@@ -5,6 +5,7 @@ import {
   MenuItem,
   OverflowMenu,
   TopNavigationAction,
+  useTheme,
 } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -25,7 +26,15 @@ interface AppMakerScreenActionProps {
 export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
   iconProps,
 }) => {
-  const { mode, createNewPage, toggleActionsCharting } = useAppMakerContext();
+  const theme = useTheme();
+
+  const {
+    mode,
+    focusedPageIndex,
+    createNewPage,
+    deletePage,
+    toggleActionsCharting,
+  } = useAppMakerContext();
 
   const {
     makerConfig: { pages },
@@ -49,6 +58,22 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
 
   const showNewPageAction = useMemo(
     () => mode === AppMakerMode.ContentBuilding && pageCount < 5,
+    [mode, pageCount],
+  );
+
+  const onDeletePagePress = () => {
+    const goToPageIndex =
+      focusedPageIndex === 0 || focusedPageIndex < pageCount - 1
+        ? undefined
+        : pageCount - 2;
+    // undefined: no navigation, stay on currently focused page which is being deleted, so the next page is shown
+    // pageCount - 2: navigate to the new last page
+    deletePage(focusedPageIndex, goToPageIndex);
+    setShowMenu(false);
+  };
+
+  const showDeletePageAction = useMemo(
+    () => mode === AppMakerMode.ContentBuilding && pageCount > 0,
     [mode, pageCount],
   );
 
@@ -77,9 +102,24 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
         backdropStyle={getBackdropStyle()}>
         {showNewPageAction ? (
           <MenuItem
-            accessoryLeft={renderIcon('plus-square-outline', iconProps)}
+            accessoryLeft={renderIcon('plus-square-outline', {
+              fill: theme['color-primary-default'],
+              ...iconProps,
+            })}
             title={'Add a new page'}
             onPress={onNewPagePress}
+          />
+        ) : (
+          <></>
+        )}
+        {showDeletePageAction ? (
+          <MenuItem
+            accessoryLeft={renderIcon('trash-outline', {
+              fill: theme['color-danger-default'],
+              ...iconProps,
+            })}
+            title={'Delete this page'}
+            onPress={onDeletePagePress}
           />
         ) : (
           <></>
@@ -87,13 +127,19 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
         {pageCount > 0 ? (
           mode !== AppMakerMode.ActionsCharting ? (
             <MenuItem
-              accessoryLeft={renderIcon('map-outline')}
+              accessoryLeft={renderIcon('map-outline', {
+                fill: theme['color-success-default'],
+                ...iconProps,
+              })}
               title={'Start charting page actions'}
               onPress={onActionsChartingPress}
             />
           ) : (
             <MenuItem
-              accessoryLeft={renderIcon('stop-circle-outline')}
+              accessoryLeft={renderIcon('stop-circle-outline', {
+                fill: theme['color-warning-default'],
+                ...iconProps,
+              })}
               title={'Stop charting page actions'}
               onPress={onActionsChartingPress}
             />

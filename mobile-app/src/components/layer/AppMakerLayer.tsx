@@ -32,10 +32,10 @@ export const AppMakerLayer: FC = ({ children }) => {
 
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
-  const [shouldFocusOnLastPage, setShouldFocusOnLastPage] = useState<boolean>(
-    false,
-  );
-  const [lastPage, setLastPage] = useState<number>(0);
+  const [shouldGoToNextFocusedPage, setShouldGoToNextFocusedPage] = useState<
+    boolean
+  >(false);
+  const [nextFocusedPageIndex, setNextFocusedPageIndex] = useState<number>(0);
 
   const createNewPage = useCallback(
     (pageIndex: number, goToLastPage?: boolean) => {
@@ -43,21 +43,40 @@ export const AppMakerLayer: FC = ({ children }) => {
         pages: { ...pages, [pageIndex]: initialiseNewPage() },
       };
       dispatch(setMakerConfig(newMakerConfig));
-      if (goToLastPage) setShouldFocusOnLastPage(true);
-      setLastPage(pageIndex);
+      if (goToLastPage) {
+        setShouldGoToNextFocusedPage(true);
+        setNextFocusedPageIndex(pageIndex);
+      }
+    },
+    [dispatch, pages],
+  );
+
+  const deletePage = useCallback(
+    (pageIndex: number, goToPage?: number) => {
+      const lastPageIndex = Object.keys(pages).length - 1;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [pageIndex]: d1, ...provisionalPages } = pages;
+      for (let i = pageIndex; i < lastPageIndex; i++)
+        provisionalPages[i] = provisionalPages[i + 1];
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [lastPageIndex]: d2, ...newPages } = provisionalPages;
+
+      dispatch(setMakerConfig({ pages: newPages }));
+
+      if (typeof goToPage !== 'undefined') setFocusedPageIndex(goToPage);
     },
     [dispatch, pages],
   );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      if (shouldFocusOnLastPage) {
-        setFocusedPageIndex(lastPage);
-        setShouldFocusOnLastPage(false);
+      if (shouldGoToNextFocusedPage) {
+        setFocusedPageIndex(nextFocusedPageIndex);
+        setShouldGoToNextFocusedPage(false);
       }
     }, 50);
     return () => clearTimeout(timeout);
-  }, [shouldFocusOnLastPage, lastPage]);
+  }, [shouldGoToNextFocusedPage, nextFocusedPageIndex]);
 
   const [chartingActions, setChartingActions] = useState<ChartingActions>({
     isCompleted: false,
@@ -203,6 +222,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         focusedPageIndex,
         setFocusedPageIndex,
         createNewPage,
+        deletePage,
         toggleActionsCharting,
         chartingActions,
         setChartingActions,
