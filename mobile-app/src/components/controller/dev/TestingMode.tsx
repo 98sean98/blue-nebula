@@ -12,8 +12,8 @@ import { tailwind } from '@styles/tailwind';
 
 import { SetupsMode } from '@navigation/main';
 
-import { DevControlInterface } from '@models/DevControlInterface';
 import { ControlEntityEnum, StepperMotor } from '@models/control-entity';
+import { DevControlInterface } from '@models/ui';
 
 import { RootState } from '@reduxApp';
 

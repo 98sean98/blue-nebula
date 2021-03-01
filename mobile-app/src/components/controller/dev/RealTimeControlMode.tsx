@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { DevControlInterface } from '@models/DevControlInterface';
+import { DevControlInterface } from '@models/ui';
 import {
   ControlEntityEnum,
   Enable,

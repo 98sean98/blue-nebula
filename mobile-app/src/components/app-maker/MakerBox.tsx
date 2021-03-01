@@ -3,6 +3,8 @@ import { StyleSheet, TextInput } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { tailwind } from '@styles/tailwind';
+
 import { Box, Boxes, Page, Pages } from '@models/app-maker';
 
 import { RootState } from '@reduxApp';
@@ -60,6 +62,7 @@ export const MakerBox: FC<MakerBoxProps> = ({
     text: {
       color: theme['text-basic-color'],
       textAlign: 'center',
+      ...tailwind('font-bold text-2xl text-center'),
       ...page.styles.box.text,
     },
   });

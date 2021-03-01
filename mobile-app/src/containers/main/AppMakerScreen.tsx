@@ -7,7 +7,7 @@ import { tailwind } from '@styles/tailwind';
 
 import {
   AnimatedFlingContainer,
-  LayoutCarousel,
+  MakerLayoutCarousel,
   MakerConfiguration,
   SetupsSelection,
 } from '@components/app-maker';
@@ -94,7 +94,7 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
       ]}>
       {/* first view (layout) */}
       <View style={[{ flex: 1 }, tailwind('relative')]}>
-        <LayoutCarousel
+        <MakerLayoutCarousel
           sliderWidth={carouselDimensions.slider}
           itemWidth={carouselDimensions.item}
           toggleShowSetupsSelection={toggleShowSetupsSelection}

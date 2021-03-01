@@ -7,11 +7,12 @@ import { IterableElement } from 'type-fest';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ActionNode, Box, Boxes, Page, Pages } from '@models/app-maker';
+import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
+import { PageCarouselData } from '@models/ui';
 
 import { RootState } from '@reduxApp';
 
-import { LayoutDivider } from './LayoutDivider';
+import { LayoutDivider } from '@components/shared/interface';
 import { MakerBox } from './MakerBox';
 
 import { useAppMakerContext } from '@utilities/hooks';
@@ -20,14 +21,15 @@ import { traverseActionTree } from '@utilities/functions/traverseActionTree';
 import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
 
-type Data = Array<[keyof Pages, Page]>;
-
-interface LayoutCarouselProps
-  extends Omit<CarouselProps<IterableElement<Data>>, 'data' | 'renderItem'> {
+interface MakerLayoutCarouselProps
+  extends Omit<
+    CarouselProps<IterableElement<PageCarouselData>>,
+    'data' | 'renderItem'
+  > {
   toggleShowSetupsSelection: () => void;
 }
 
-export const LayoutCarousel: FC<LayoutCarouselProps> = ({
+export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
   toggleShowSetupsSelection,
   ...props
 }) => {
@@ -48,9 +50,10 @@ export const LayoutCarousel: FC<LayoutCarouselProps> = ({
     chartActionIntoTree,
   } = useAppMakerContext();
 
-  const data: Data = useMemo(() => Object.entries(makerConfig.pages), [
-    makerConfig.pages,
-  ]);
+  const data: PageCarouselData = useMemo(
+    () => Object.entries(makerConfig.pages),
+    [makerConfig.pages],
+  );
 
   const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
 

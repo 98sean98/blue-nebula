@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { tailwind } from '@styles/tailwind';
 
 import { DeclarableValueType } from '@models/ValueType';
-import { DevControlInterface } from '@models/DevControlInterface';
+import { DevControlInterface } from '@models/ui';
 import {
   ControlEntities,
   Direction,

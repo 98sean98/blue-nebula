@@ -1,60 +1,122 @@
-import React, { FC } from 'react';
-import { FlatList, ListRenderItem, View } from 'react-native';
+import React, {
+  FC,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  Dimensions,
+  KeyboardAvoidingView,
+  ListRenderItem,
+  StyleSheet,
+  View,
+} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import { useSelector } from 'react-redux';
+import { IterableElement } from 'type-fest';
 
 import { tailwind } from '@styles/tailwind';
 
 import { SimpleControllerScreenProps } from '@navigation/main';
 
-import {
-  Diameter,
-  SDR,
-  SimpleControllerOptionType,
-} from '@models/SimpleController';
+import { Box, Boxes, Page, Pages } from '@models/app-maker';
+import { PageCarouselData } from '@models/ui';
+
+import { RootState } from '@reduxApp';
 
 import { PressableBoxWithText } from '@components/shared/actionable';
 import {
   BleRunIdleButton,
   RenderBleComponent,
 } from '@components/shared/bluetooth';
+import { LayoutDivider } from '@components/shared/interface';
+
+import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+
+const carouselDimensions = {
+  slider: Dimensions.get('window').width,
+  item: Dimensions.get('window').width,
+};
 
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
-  const onOptionPress = (diameter: Diameter, sdr: SDR): void =>
-    console.log(`${diameter}_${sdr}`);
+  const {
+    // setups,
+    makerConfig: { pages },
+  } = useSelector((state: RootState) => state.builder);
 
-  const simpleOptions: Array<SimpleControllerOptionType> = [
-    { diameter: Diameter.DN400, sdr: SDR.TypeA, optionText: 'DN400\nSDR17.6' },
-    { diameter: Diameter.DN315, sdr: SDR.TypeA, optionText: 'DN315\nSDR17.6' },
-    { diameter: Diameter.DN250, sdr: SDR.TypeA, optionText: 'DN250\nSDR17.6' },
-    { diameter: Diameter.DN200, sdr: SDR.TypeA, optionText: 'DN200\nSDR17.6' },
-  ].map((option) => ({
-    ...option,
-    id: `${option.diameter}_${option.sdr}`,
-    onPress: () => onOptionPress(option.diameter, option.sdr),
-  }));
+  const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
-  const renderItem: ListRenderItem<SimpleControllerOptionType> = ({
-    item: { optionText, onPress },
+  const focusedPage: Page | undefined = useMemo(() => pages[focusedPageIndex], [
+    pages,
+    focusedPageIndex,
+  ]);
+
+  const data: PageCarouselData = useMemo(() => Object.entries(pages), [pages]);
+
+  const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
+
+  const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
+    item: [key, { layout, boxes }],
   }) => (
-    <View style={tailwind('w-1/2 h-40 p-2')}>
-      <PressableBoxWithText
-        text={optionText}
-        onPress={onPress}
-        style={{ flex: 1 }}
+    <KeyboardAvoidingView
+      key={key}
+      style={{ flex: 1 }}
+      behavior={'padding'}
+      keyboardVerticalOffset={90}>
+      <LayoutDivider
+        pageKey={key}
+        layout={layout}
+        boxes={getBoxesBasedOnLayout(boxes, layout)}
+        renderItem={renderLayoutDividerItem}
       />
-    </View>
+    </KeyboardAvoidingView>
   );
 
-  const keyExtractor = ({ id }: SimpleControllerOptionType): string => id;
+  const onBoxPress = (boxKey: keyof Boxes) => {
+    console.log(boxKey, 'box pressed!');
+  };
+
+  const styles = StyleSheet.create({
+    text: { ...(focusedPage?.styles.box.text ?? {}) },
+  });
+
+  const renderLayoutDividerItem = (item: {
+    pageKey: keyof Pages;
+    boxKey: keyof Boxes;
+    box: Box;
+  }): ReactNode => (
+    <PressableBoxWithText
+      text={item.box.title}
+      textProps={{ style: styles.text }}
+      onPress={() => onBoxPress(item.boxKey)}
+      style={[{ flex: 1 }, tailwind('m-1')]}
+    />
+  );
+
+  useEffect(() => {
+    if (carouselRef.current !== null) {
+      const carouselItemIndex = carouselRef.current.currentIndex;
+      if (
+        typeof carouselItemIndex !== 'undefined' &&
+        carouselItemIndex !== focusedPageIndex
+      )
+        carouselRef.current.snapToItem(focusedPageIndex);
+    }
+  }, [focusedPageIndex]);
 
   return (
-    <RenderBleComponent>
+    <RenderBleComponent overrideShouldShow>
       <View style={{ flex: 1 }}>
-        <FlatList
-          style={tailwind('flex-1 px-4')}
-          data={simpleOptions}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          numColumns={2}
+        <Carousel
+          ref={carouselRef}
+          data={data}
+          renderItem={renderCarouselItem}
+          onSnapToItem={setFocusedPageIndex}
+          sliderWidth={carouselDimensions.slider}
+          itemWidth={carouselDimensions.item}
+          scrollEnabled={false}
         />
         <BleRunIdleButton style={tailwind('m-4')} />
       </View>
