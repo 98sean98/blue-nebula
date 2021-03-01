@@ -10,7 +10,11 @@ import { tailwind } from '@styles/tailwind';
 import { Setups } from '@models/setup';
 
 import { RootState } from '@reduxApp';
-import { removeSetup, setSetups } from '@reduxApp/builder/actions';
+import {
+  removeSetup,
+  setMakerConfig,
+  setSetups,
+} from '@reduxApp/builder/actions';
 import {
   clearAllControlEntity,
   setControlEntities,
@@ -20,12 +24,16 @@ import { SetupDetailsCard } from '@components/setups';
 import { renderIcon } from '@components/shared/interface';
 import { ConfirmationModal } from '@components/shared/actionable';
 
+import { replaceSetupKeyInActionTree } from '@utilities/functions/replaceSetupKeyInActionTree';
+
 export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const { mode } = route.params;
 
   const dispatch = useDispatch();
 
-  const { setups } = useSelector((state: RootState) => state.builder);
+  const { setups, makerConfig } = useSelector(
+    (state: RootState) => state.builder,
+  );
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const data = useMemo(
@@ -55,6 +63,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   };
 
   const onEditSetupPress = (setupKey: keyof Setups) => {
+    setSelectedSetupKey(undefined);
     setShowSetupDetailsModal(false);
     navigation.navigate('Builder', {
       screen: 'SetupForm',
@@ -70,6 +79,12 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const onDeleteConfirmationPress = () => {
     if (typeof selectedSetupKey !== 'undefined') {
       dispatch(removeSetup(selectedSetupKey));
+      replaceSetupKeyInActionTree(
+        makerConfig.actions,
+        selectedSetupKey,
+        undefined,
+      );
+      dispatch(setMakerConfig({ actions: makerConfig.actions }));
       setSelectedSetupKey(undefined);
       setShowDeleteConfirmationModal(false);
     }

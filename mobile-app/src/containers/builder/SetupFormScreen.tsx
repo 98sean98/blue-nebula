@@ -17,10 +17,15 @@ import { tailwind } from '@styles/tailwind';
 import { Setup } from '@models/setup';
 
 import { RootState } from '@reduxApp';
-import { removeSetup, setSetups } from '@reduxApp/builder/actions';
+import {
+  removeSetup,
+  setMakerConfig,
+  setSetups,
+} from '@reduxApp/builder/actions';
 
 import { ResponsiveInput } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
+import { replaceSetupKeyInActionTree } from '@utilities/functions/replaceSetupKeyInActionTree';
 
 export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   route,
@@ -30,7 +35,9 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
 
   const dispatch = useDispatch();
 
-  const { setups } = useSelector((state: RootState) => state.builder);
+  const { setups, makerConfig } = useSelector(
+    (state: RootState) => state.builder,
+  );
   const takenSetupNames = useMemo(
     () => Object.keys(setups).filter((name) => name !== keyOfSetupToBeEdited),
     [keyOfSetupToBeEdited, setups],
@@ -120,8 +127,15 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
       if (
         typeof keyOfSetupToBeEdited !== 'undefined' &&
         keyOfSetupToBeEdited !== newSetupKey
-      )
+      ) {
         dispatch(removeSetup(keyOfSetupToBeEdited));
+        replaceSetupKeyInActionTree(
+          makerConfig.actions,
+          keyOfSetupToBeEdited,
+          newSetupKey,
+        );
+        dispatch(setMakerConfig({ actions: makerConfig.actions }));
+      }
       dispatch(
         setSetups({ [newSetupKey]: { ...setup, name, updatedAt: new Date() } }),
       );
