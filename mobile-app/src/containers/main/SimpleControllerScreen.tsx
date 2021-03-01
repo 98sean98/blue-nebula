@@ -9,14 +9,21 @@ import React, {
 import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
 import { Text } from '@ui-kitten/components';
 import Carousel from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
 
 import { tailwind } from '@styles/tailwind';
 
 import { SimpleControllerScreenProps } from '@navigation/main';
 
-import { Box, Boxes, Page, Pages } from '@models/app-maker';
+import {
+  ActionNode,
+  ActionTreePath,
+  Box,
+  Boxes,
+  Page,
+  Pages,
+} from '@models/app-maker';
 import { PageCarouselData } from '@models/ui';
 
 import { RootState } from '@reduxApp';
@@ -29,6 +36,9 @@ import {
 import { LayoutDivider } from '@components/shared/interface';
 
 import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+import { traverseActionTree } from '@utilities/functions/traverseActionTree';
+import { Setup } from '@models/setup';
+import { setControlEntities } from '@reduxApp/control/actions';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
@@ -36,17 +46,22 @@ const carouselDimensions = {
 };
 
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
+  const dispatch = useDispatch();
+
   const {
-    // setups,
-    makerConfig: { pages },
+    setups,
+    makerConfig: { pages, actions },
   } = useSelector((state: RootState) => state.builder);
 
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
+  const [actionTreePath, setActionTreePath] = useState<ActionTreePath>([]);
 
   const focusedPage: Page | undefined = useMemo(() => pages[focusedPageIndex], [
     pages,
     focusedPageIndex,
   ]);
+
+  const pageCount = useMemo(() => Object.keys(pages).length, [pages]);
 
   const data: PageCarouselData = useMemo(() => Object.entries(pages), [pages]);
 
@@ -63,8 +78,28 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     />
   );
 
-  const onBoxPress = (boxKey: keyof Boxes) => {
-    console.log(boxKey, 'box pressed!');
+  const onBoxPress = (boxKey: keyof Boxes): void => {
+    let newPath = actionTreePath;
+    if (focusedPageIndex === 0) newPath = [boxKey];
+    else newPath.push(boxKey);
+
+    setActionTreePath(newPath);
+
+    if (focusedPageIndex === pageCount - 1) {
+      const lastActionNode = traverseActionTree(actions, newPath);
+      // if the action node is undefined, return as this should be a no-op
+      if (typeof lastActionNode === 'undefined') return;
+
+      const setupKey = (lastActionNode as ActionNode).setupKey;
+      if (typeof setupKey !== 'undefined') {
+        const setup: Setup | undefined = setups[setupKey];
+        if (typeof setup !== 'undefined')
+          dispatch(setControlEntities(setup.controlEntitiesState));
+      }
+      setFocusedPageIndex(0);
+    } else {
+      setFocusedPageIndex(focusedPageIndex + 1);
+    }
   };
 
   const styles = StyleSheet.create({
@@ -95,7 +130,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     }
   }, [focusedPageIndex]);
 
-  const showController = useMemo(() => data.length > 0, [data]);
+  const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
     <RenderBleComponent>
