@@ -1,7 +1,9 @@
 import moment from 'moment';
 
+export type ConvertibleObject = Record<string, any>;
+
 export const convertObjectWithTimestampKeys = (
-  object: Record<string, any>,
+  object: ConvertibleObject,
   keys: Array<string>,
 ): Record<string, any> => {
   const convertedObject = object;

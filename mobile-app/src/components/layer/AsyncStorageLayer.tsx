@@ -20,12 +20,12 @@ import {
   ConvertibleState,
   convertStateWithTimestamps,
 } from '@utilities/functions/convertStateWithTimestamps';
-// import { convertObjectWithTimestampKeys } from '@utilities/functions/convertObjectWithTimestampKeys';
+// import { ConvertibleObject, convertObjectWithTimestampKeys } from '@utilities/functions/convertObjectWithTimestampKeys';
 
 const renderAlert = (type: 'reading' | 'writing') =>
   Alert.alert(
     `${capitalCase(type)} Storage Error`,
-    `There was an error ${type} app data into your phone storage.`,
+    `There was an error ${type} app data into your phone storage. Please close and open this app again.`,
   );
 
 export const AsyncStorageLayer: FC = ({ children }) => {
@@ -67,7 +67,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       // readStorage('makerConfig').then((state) => {
       //   if (typeof state !== 'undefined') {
       //     const stateWithConvertedTimestamps = convertObjectWithTimestampKeys(
-      //       state as ConvertibleState,
+      //       state as ConvertibleObject,
       //       ['updatedAt'],
       //     );
       //     dispatch(

@@ -1,6 +1,9 @@
-import { convertObjectWithTimestampKeys } from './convertObjectWithTimestampKeys';
+import {
+  ConvertibleObject,
+  convertObjectWithTimestampKeys,
+} from './convertObjectWithTimestampKeys';
 
-export type ConvertibleState = Record<string, Record<string, any>>;
+export type ConvertibleState = Record<string, ConvertibleObject>;
 
 export const convertStateWithTimestamps = (
   state: ConvertibleState,
