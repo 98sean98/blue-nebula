@@ -1,9 +1,13 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
+
+import { RootState } from '@reduxApp';
 
 import {
   AnimatedFlingContainer,
@@ -43,7 +47,15 @@ enum ViewType {
 }
 
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
-  const { setMode, chartingActions } = useAppMakerContext();
+  const { setMode, setCachedPages, chartingActions } = useAppMakerContext();
+
+  const {
+    makerConfig: { pages },
+  } = useSelector((state: RootState) => state.builder);
+
+  useFocusEffect(
+    useCallback(() => setCachedPages(pages), [pages, setCachedPages]),
+  );
 
   const [viewType, setViewType] = useState<ViewType>(ViewType.Layout);
 

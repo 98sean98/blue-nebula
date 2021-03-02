@@ -7,11 +7,8 @@ import {
   TopNavigationAction,
   useTheme,
 } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
-
-import { RootState } from '@reduxApp';
 
 import { renderIcon } from '@components/shared/interface';
 
@@ -30,17 +27,16 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
 
   const {
     mode,
+    cachedPages,
     focusedPageIndex,
     createNewPage,
     deletePage,
     toggleActionsCharting,
   } = useAppMakerContext();
 
-  const {
-    makerConfig: { pages },
-  } = useSelector((state: RootState) => state.builder);
-
-  const pageCount = useMemo(() => Object.keys(pages).length, [pages]);
+  const pageCount = useMemo(() => Object.keys(cachedPages).length, [
+    cachedPages,
+  ]);
 
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -62,13 +58,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
   );
 
   const onDeletePagePress = () => {
-    const goToPageIndex =
-      focusedPageIndex === 0 || focusedPageIndex < pageCount - 1
-        ? undefined
-        : pageCount - 2;
-    // undefined: no navigation, stay on currently focused page which is being deleted, so the next page is shown
-    // pageCount - 2: navigate to the new last page
-    deletePage(focusedPageIndex, goToPageIndex);
+    deletePage(focusedPageIndex);
     setShowMenu(false);
   };
 

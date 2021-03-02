@@ -2,15 +2,12 @@ import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
 import { KeyboardAvoidingView, ListRenderItem, StyleSheet } from 'react-native';
 import { useTheme } from '@ui-kitten/components';
 import Carousel, { CarouselProps } from 'react-native-snap-carousel';
-import { useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
 
 import { tailwind } from '@styles/tailwind';
 
 import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
 import { PageCarouselData } from '@models/ui';
-
-import { RootState } from '@reduxApp';
 
 import { LayoutDivider } from '@components/shared/interface';
 import { MakerBox } from './MakerBox';
@@ -41,18 +38,17 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
   });
 
   const {
-    makerConfig: { pages },
-  } = useSelector((state: RootState) => state.builder);
-
-  const {
     mode,
+    cachedPages,
     focusedPageIndex,
     setFocusedPageIndex,
     chartingActions,
     chartActionIntoTree,
   } = useAppMakerContext();
 
-  const data: PageCarouselData = useMemo(() => Object.entries(pages), [pages]);
+  const data: PageCarouselData = useMemo(() => Object.entries(cachedPages), [
+    cachedPages,
+  ]);
 
   const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
 
@@ -87,7 +83,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
 
     // create the action node
     const fullChildrenCount = isNotLastPage
-      ? pages[focusedPageIndex + 1].layout.boxCount
+      ? cachedPages[focusedPageIndex + 1].layout.boxCount
       : undefined;
     const actionNode: ActionNode = {
       boxKey,

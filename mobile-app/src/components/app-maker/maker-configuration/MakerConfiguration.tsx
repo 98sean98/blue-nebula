@@ -6,13 +6,10 @@ import {
   ViewProps,
 } from 'react-native';
 import { Button, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Page } from '@models/app-maker';
-
-import { RootState } from '@reduxApp';
 
 import { LayoutBoxControl } from './LayoutBoxControl';
 import { PageInfo } from './PageInfo';
@@ -26,24 +23,22 @@ interface MakerConfigurationProps extends ViewProps {}
 export const MakerConfiguration: FC<MakerConfigurationProps> = ({
   ...props
 }) => {
-  const { makerConfig } = useSelector((state: RootState) => state.builder);
-
   const {
     mode,
     setShouldExpandConfigView,
+    cachedPages,
     focusedPageIndex,
     createNewPage,
   } = useAppMakerContext();
 
   const focusedPage: Page | undefined = useMemo(
-    () => makerConfig.pages[focusedPageIndex],
-    [makerConfig.pages, focusedPageIndex],
+    () => cachedPages[focusedPageIndex],
+    [cachedPages, focusedPageIndex],
   );
 
-  const pageCount: number = useMemo(
-    () => Object.entries(makerConfig.pages).length,
-    [makerConfig.pages],
-  );
+  const pageCount: number = useMemo(() => Object.entries(cachedPages).length, [
+    cachedPages,
+  ]);
 
   const onFirstPageCreatePress = () => {
     setShouldExpandConfigView(true);
@@ -76,6 +71,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
             {/* layout box */}
             <LayoutBoxControl
               pageIndex={focusedPageIndex}
+              page={focusedPage}
               disabled={mode === AppMakerMode.ActionsCharting}
               style={tailwind('mt-2')}
             />
@@ -83,10 +79,9 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
             {/* page styles */}
             <PageStylesControl
               pageIndex={focusedPageIndex}
+              page={focusedPage}
               style={tailwind('mt-2')}
             />
-
-            {/* todo: figure out how to tie configurations to setups */}
           </ScrollView>
         </KeyboardAvoidingView>
       )}

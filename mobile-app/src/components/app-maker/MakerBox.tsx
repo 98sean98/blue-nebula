@@ -1,14 +1,10 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Box, Boxes, Page, Pages } from '@models/app-maker';
-
-import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import {
   PressableBox,
@@ -32,15 +28,9 @@ export const MakerBox: FC<MakerBoxProps> = ({
 }) => {
   const theme = useTheme();
 
-  const dispatch = useDispatch();
+  const { mode, cachedPages, setCachedPages } = useAppMakerContext();
 
-  const {
-    makerConfig: { pages },
-  } = useSelector((state: RootState) => state.builder);
-
-  const { mode } = useAppMakerContext();
-
-  const page = useMemo(() => pages[pageKey], [pages, pageKey]);
+  const page = useMemo(() => cachedPages[pageKey], [cachedPages, pageKey]);
 
   const [cachedTitle, setCachedTitle] = useState<string>(title);
 
@@ -52,9 +42,9 @@ export const MakerBox: FC<MakerBoxProps> = ({
         [boxKey]: { title: cachedTitle },
       },
     };
-    const updatedPages: Pages = { ...pages, [pageKey]: updatedPage };
-    dispatch(setMakerConfig({ pages: updatedPages }));
-  }, [pageKey, boxKey, cachedTitle, dispatch, pages, page]);
+    const updatedPages: Pages = { ...cachedPages, [pageKey]: updatedPage };
+    setCachedPages(updatedPages);
+  }, [pageKey, boxKey, cachedTitle, cachedPages, setCachedPages, page]);
 
   const editable = useMemo(() => mode === AppMakerMode.ContentBuilding, [mode]);
 

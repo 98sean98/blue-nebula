@@ -30,6 +30,8 @@ export const AppMakerLayer: FC = ({ children }) => {
     initialAppMakerContext.shouldExpandConfigView,
   );
 
+  const [cachedPages, setCachedPages] = useState<Pages>(pages);
+
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
   const [shouldGoToNextFocusedPage, setShouldGoToNextFocusedPage] = useState<
@@ -39,33 +41,31 @@ export const AppMakerLayer: FC = ({ children }) => {
 
   const createNewPage = useCallback(
     (pageIndex: number, goToLastPage?: boolean) => {
-      const newMakerConfig = {
-        pages: { ...pages, [pageIndex]: initialiseNewPage() },
-      };
-      dispatch(setMakerConfig(newMakerConfig));
+      const newPages = { ...cachedPages, [pageIndex]: initialiseNewPage() };
+      setCachedPages(newPages);
       if (goToLastPage) {
         setShouldGoToNextFocusedPage(true);
         setNextFocusedPageIndex(pageIndex);
       }
     },
-    [dispatch, pages],
+    [cachedPages],
   );
 
   const deletePage = useCallback(
     (pageIndex: number, goToPage?: number) => {
-      const lastPageIndex = Object.keys(pages).length - 1;
+      const lastPageIndex = Object.keys(cachedPages).length - 1;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [pageIndex]: d1, ...provisionalPages } = pages;
+      const { [pageIndex]: d1, ...provisionalPages } = cachedPages;
       for (let i = pageIndex; i < lastPageIndex; i++)
         provisionalPages[i] = provisionalPages[i + 1];
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { [lastPageIndex]: d2, ...newPages } = provisionalPages;
 
-      dispatch(setMakerConfig({ pages: newPages }));
+      setCachedPages(newPages);
 
       if (typeof goToPage !== 'undefined') setFocusedPageIndex(goToPage);
     },
-    [dispatch, pages],
+    [cachedPages],
   );
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export const AppMakerLayer: FC = ({ children }) => {
       console.log('start charting actions!');
       // get rid of unnecessary boxes based on box count in layout for each page
       const prunedPages: Pages = {};
-      Object.entries(pages).forEach(
+      Object.entries(cachedPages).forEach(
         ([key, page]) =>
           (prunedPages[key] = {
             ...page,
@@ -99,7 +99,7 @@ export const AppMakerLayer: FC = ({ children }) => {
 
       // begin charting
       const rootActionNode: RootActionNode = {
-        children: [], // todo: replace with redux store maker config actions so that update operations can be performed
+        children: [],
         fullChildrenCount: prunedPages[0].layout.boxCount,
       };
       // set context's charting actions state to the root action node
@@ -109,8 +109,14 @@ export const AppMakerLayer: FC = ({ children }) => {
         currentlyTrackedPath: [],
       }));
 
-      // set pruned pages state into redux
-      dispatch(setMakerConfig({ pages: prunedPages }));
+      // set pruned pages state, clear actions tree, and set updatedAt into redux maker config
+      dispatch(
+        setMakerConfig({
+          pages: prunedPages,
+          actions: { children: [] },
+          updatedAt: new Date(),
+        }),
+      );
 
       // set focused page to the first one
       setFocusedPageIndex(0);
@@ -127,7 +133,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         }),
       );
     }
-  }, [dispatch, mode, pages, chartingActions.chartedActionTree]);
+  }, [dispatch, mode, cachedPages, chartingActions.chartedActionTree]);
 
   const chartActionIntoTree = useCallback(
     (actionNode: ActionNode, options?: { chartIntoRootNode?: boolean }) => {
@@ -219,6 +225,8 @@ export const AppMakerLayer: FC = ({ children }) => {
         setMode,
         shouldExpandConfigView,
         setShouldExpandConfigView,
+        cachedPages,
+        setCachedPages,
         focusedPageIndex,
         setFocusedPageIndex,
         createNewPage,

@@ -1,11 +1,10 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useCallback } from 'react';
 import { View } from 'react-native';
 import {
   Layout as LayoutComponent,
   LayoutProps,
   Text,
 } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
 import deepmerge from 'deepmerge';
 import { sentenceCase } from 'change-case';
 
@@ -13,14 +12,14 @@ import { tailwind } from '@styles/tailwind';
 
 import { Boxes, Layout, Page } from '@models/app-maker';
 
-import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
-
 import { SliderInput } from '@components/shared/actionable';
+
+import { useAppMakerContext } from '@utilities/hooks';
 import { initialiseNewBox } from '@utilities/functions/initialiseNewBox';
 
 interface LayoutBoxControlProps extends LayoutProps {
   pageIndex: number;
+  page: Page;
   disabled?: boolean;
 }
 
@@ -32,16 +31,11 @@ const layoutTypes: Array<{ type: keyof Layout; min: number; max: number }> = [
 
 export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
   pageIndex,
+  page,
   disabled,
   ...props
 }) => {
-  const dispatch = useDispatch();
-
-  const {
-    makerConfig: { pages },
-  } = useSelector((state: RootState) => state.builder);
-
-  const page = useMemo(() => pages[pageIndex], [pages, pageIndex]);
+  const { setCachedPages } = useAppMakerContext();
 
   const onLayoutVariableChange = useCallback(
     (type: keyof Layout, value: number) => {
@@ -62,13 +56,12 @@ export const LayoutBoxControl: FC<LayoutBoxControlProps> = ({
         boxes: newBoxes,
       });
 
-      dispatch(
-        setMakerConfig({
-          pages: { ...pages, [pageIndex]: updatedPage },
-        }),
-      );
+      setCachedPages((cachedPages) => ({
+        ...cachedPages,
+        [pageIndex]: updatedPage,
+      }));
     },
-    [dispatch, pages, page, pageIndex],
+    [setCachedPages, page, pageIndex],
   );
 
   return (

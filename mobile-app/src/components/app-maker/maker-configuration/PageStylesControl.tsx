@@ -1,40 +1,33 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { TextStyle } from 'react-native';
 import { Layout, Text, LayoutProps } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
 import deepmerge from 'deepmerge';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Page, Pages } from '@models/app-maker';
 
-import { RootState } from '@reduxApp';
-import { setMakerConfig } from '@reduxApp/builder/actions';
-
 import { SliderInput } from '@components/shared/actionable';
+import { useAppMakerContext } from '@utilities/hooks';
 
 interface PageStylesControlProps extends LayoutProps {
   pageIndex: number;
+  page: Page;
 }
 
 export const PageStylesControl: FC<PageStylesControlProps> = ({
   pageIndex,
+  page,
   ...props
 }) => {
-  const dispatch = useDispatch();
-
-  const {
-    makerConfig: { pages },
-  } = useSelector((state: RootState) => state.builder);
-
-  const page = useMemo(() => pages[pageIndex], [pages, pageIndex]);
+  const { cachedPages, setCachedPages } = useAppMakerContext();
 
   const onBoxTextStyleChange = (styleKey: keyof TextStyle, value: unknown) => {
     const updatedPage: Page = deepmerge(page, {
       styles: { box: { text: { [styleKey]: value } } },
     });
-    const updatedPages: Pages = { ...pages, [pageIndex]: updatedPage };
-    dispatch(setMakerConfig({ pages: updatedPages }));
+    const updatedPages: Pages = { ...cachedPages, [pageIndex]: updatedPage };
+    setCachedPages(updatedPages);
   };
 
   return (

@@ -1,6 +1,11 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
-import { ActionNode, ActionTreePath, RootActionNode } from '@models/app-maker';
+import {
+  ActionNode,
+  ActionTreePath,
+  Pages,
+  RootActionNode,
+} from '@models/app-maker';
 import { Setups } from '@models/setup';
 
 export enum AppMakerMode {
@@ -19,6 +24,8 @@ type AppMakerContext = {
   setMode: Dispatch<SetStateAction<AppMakerMode>>;
   shouldExpandConfigView: boolean;
   setShouldExpandConfigView: Dispatch<SetStateAction<boolean>>;
+  cachedPages: Pages;
+  setCachedPages: Dispatch<SetStateAction<Pages>>;
   focusedPageIndex: number;
   setFocusedPageIndex: Dispatch<SetStateAction<number>>;
   createNewPage: (pageIndex: number, goToLastPage?: boolean) => void;
@@ -38,6 +45,8 @@ export const initialAppMakerContext: AppMakerContext = {
   setMode: () => {},
   shouldExpandConfigView: false,
   setShouldExpandConfigView: () => {},
+  cachedPages: {},
+  setCachedPages: () => {},
   focusedPageIndex: 0,
   setFocusedPageIndex: () => {},
   createNewPage: () => {},

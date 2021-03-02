@@ -14,7 +14,6 @@ interface PageInfoProps extends LayoutProps {
 
 export const PageInfo: FC<PageInfoProps> = ({
   pageIndex,
-  // page,
   pageCount,
   ...props
 }) => {
