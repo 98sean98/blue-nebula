@@ -63,7 +63,16 @@ export const AppMakerLayer: FC = ({ children }) => {
 
       setCachedPages(newPages);
 
-      if (typeof goToPage !== 'undefined') setFocusedPageIndex(goToPage);
+      if (
+        typeof goToPage !== 'undefined' &&
+        pageIndex >= 0 &&
+        pageIndex < lastPageIndex
+      )
+        setFocusedPageIndex(goToPage);
+      else if (pageIndex === lastPageIndex) {
+        const newPageIndex = Math.max(pageIndex - 1, 0);
+        setFocusedPageIndex(newPageIndex);
+      }
     },
     [cachedPages],
   );
