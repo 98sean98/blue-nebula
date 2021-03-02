@@ -20,10 +20,7 @@ export const SliderInput: FC<SliderInputProps> = ({
     sliderProps?.value,
   );
 
-  useEffect(() => {
-    if (typeof sliderProps?.value !== 'undefined')
-      setCachedValue(sliderProps.value);
-  }, [sliderProps]);
+  useEffect(() => setCachedValue(sliderProps?.value), [sliderProps]);
 
   return (
     <View
