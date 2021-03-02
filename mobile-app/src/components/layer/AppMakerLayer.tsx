@@ -32,6 +32,8 @@ export const AppMakerLayer: FC = ({ children }) => {
 
   const [cachedPages, setCachedPages] = useState<Pages>(pages);
 
+  useEffect(() => setCachedPages(pages), [pages]);
+
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
   const [shouldGoToNextFocusedPage, setShouldGoToNextFocusedPage] = useState<
