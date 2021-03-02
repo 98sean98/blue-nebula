@@ -31,6 +31,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     focusedPageIndex,
     createNewPage,
     deletePage,
+    savePagesWithoutUpdatingActions,
     toggleActionsCharting,
   } = useAppMakerContext();
 
@@ -66,6 +67,11 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     () => mode === AppMakerMode.ContentBuilding && pageCount > 0,
     [mode, pageCount],
   );
+
+  const onSavePagesWithoutUpdatingActionsPress = () => {
+    savePagesWithoutUpdatingActions();
+    setShowMenu(false);
+  };
 
   const onActionsChartingPress = () => {
     toggleActionsCharting();
@@ -110,6 +116,18 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
             })}
             title={'Delete this page'}
             onPress={onDeletePagePress}
+          />
+        ) : (
+          <></>
+        )}
+        {mode === AppMakerMode.ContentBuilding ? (
+          <MenuItem
+            accessoryLeft={renderIcon('save-outline', {
+              fill: theme['color-warning-default'],
+              ...iconProps,
+            })}
+            title={'Save pages without updating actions'}
+            onPress={onSavePagesWithoutUpdatingActionsPress}
           />
         ) : (
           <></>

@@ -30,6 +30,7 @@ type AppMakerContext = {
   setFocusedPageIndex: Dispatch<SetStateAction<number>>;
   createNewPage: (pageIndex: number, goToLastPage?: boolean) => void;
   deletePage: (pageIndex: number, goToPage?: number) => void;
+  savePagesWithoutUpdatingActions: () => void;
   toggleActionsCharting: () => void;
   chartingActions: ChartingActions;
   setChartingActions: Dispatch<SetStateAction<ChartingActions>>;
@@ -51,6 +52,7 @@ export const initialAppMakerContext: AppMakerContext = {
   setFocusedPageIndex: () => {},
   createNewPage: () => {},
   deletePage: () => {},
+  savePagesWithoutUpdatingActions: () => {},
   toggleActionsCharting: () => {},
   chartingActions: {
     isCompleted: false,

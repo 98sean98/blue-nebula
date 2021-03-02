@@ -77,6 +77,23 @@ export const AppMakerLayer: FC = ({ children }) => {
     [cachedPages],
   );
 
+  const getPrunedPages = useCallback((): Pages => {
+    const prunedPages: Pages = {};
+    Object.entries(cachedPages).forEach(
+      ([key, page]) =>
+        (prunedPages[key] = {
+          ...page,
+          boxes: getBoxesBasedOnLayout(page.boxes, page.layout),
+        }),
+    );
+    return prunedPages;
+  }, [cachedPages]);
+
+  const savePagesWithoutUpdatingActions = useCallback(() => {
+    const prunedPages = getPrunedPages();
+    dispatch(setMakerConfig({ pages: prunedPages, updatedAt: new Date() }));
+  }, [dispatch, getPrunedPages]);
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       if (shouldGoToNextFocusedPage) {
@@ -97,14 +114,7 @@ export const AppMakerLayer: FC = ({ children }) => {
     if (mode !== AppMakerMode.ActionsCharting) {
       console.log('start charting actions!');
       // get rid of unnecessary boxes based on box count in layout for each page
-      const prunedPages: Pages = {};
-      Object.entries(cachedPages).forEach(
-        ([key, page]) =>
-          (prunedPages[key] = {
-            ...page,
-            boxes: getBoxesBasedOnLayout(page.boxes, page.layout),
-          }),
-      );
+      const prunedPages = getPrunedPages();
 
       // begin charting
       const rootActionNode: RootActionNode = {
@@ -142,7 +152,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         }),
       );
     }
-  }, [dispatch, mode, cachedPages, chartingActions.chartedActionTree]);
+  }, [dispatch, getPrunedPages, mode, chartingActions.chartedActionTree]);
 
   const chartActionIntoTree = useCallback(
     (actionNode: ActionNode, options?: { chartIntoRootNode?: boolean }) => {
@@ -240,6 +250,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         setFocusedPageIndex,
         createNewPage,
         deletePage,
+        savePagesWithoutUpdatingActions,
         toggleActionsCharting,
         chartingActions,
         setChartingActions,
