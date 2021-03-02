@@ -8,12 +8,11 @@ export const traverseActionTree = (
 ): RootActionNode | ActionNode | undefined => {
   const { children } = actionTree;
 
-  if (
-    path.length === 0 ||
-    typeof children === 'undefined' ||
-    children.length === 0
-  )
-    return actionTree;
+  // the path has been fully traversed, return the action tree
+  if (path.length === 0) return actionTree;
+  // the path has not been fully traversed but the action tree has no children, return undefined
+  else if (typeof children === 'undefined' || children.length === 0)
+    return undefined;
 
   // get the next node of this tree based on the path
   const key = path[0];
