@@ -211,7 +211,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
-    <RenderBleComponent overrideShouldShow>
+    <RenderBleComponent>
       <View style={{ flex: 1 }}>
         {showController ? (
           <>

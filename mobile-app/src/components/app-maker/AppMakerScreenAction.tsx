@@ -95,7 +95,8 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
         anchor={renderMenuAction}
         visible={showMenu}
         onBackdropPress={toggleMenu}
-        backdropStyle={getBackdropStyle()}>
+        backdropStyle={getBackdropStyle()}
+        style={tailwind('w-56')}>
         {showNewPageAction ? (
           <MenuItem
             accessoryLeft={renderIcon('plus-square-outline', {
