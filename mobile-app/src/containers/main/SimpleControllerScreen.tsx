@@ -1,13 +1,21 @@
 import React, {
   FC,
   ReactNode,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
-import { Text } from '@ui-kitten/components';
+import {
+  Alert,
+  Dimensions,
+  ListRenderItem,
+  StyleSheet,
+  View,
+} from 'react-native';
+import { Text, useTheme } from '@ui-kitten/components';
+import { useFocusEffect } from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
@@ -39,22 +47,34 @@ import { LayoutDivider } from '@components/shared/interface';
 
 import { traverseActionTree } from '@utilities/functions/traverseActionTree';
 import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/checkIfActionTreeLeadsToSetup';
+import moment from 'moment';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
   item: Dimensions.get('window').width,
 };
 
+const renderAlert = () =>
+  Alert.alert(
+    'Setup Not Found Error',
+    'There was an error while looking for the setup according to the boxes you have pressed. Please contact the app developer about this issue.',
+  );
+
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
+  const theme = useTheme();
+
   const dispatch = useDispatch();
 
   const {
     setups,
-    makerConfig: { pages, actions },
+    makerConfig: { pages, actions, updatedAt },
   } = useSelector((state: RootState) => state.builder);
 
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
   const [actionTreePath, setActionTreePath] = useState<ActionTreePath>([]);
+  const [makerConfigUpdatedAt, setMakerConfigUpdatedAt] = useState<Date>(
+    updatedAt,
+  );
 
   const focusedPage: Page | undefined = useMemo(() => pages[focusedPageIndex], [
     pages,
@@ -67,6 +87,10 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
 
   const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
 
+  const [carouselScrollEnabled, setCarouselScrollEnabled] = useState<boolean>(
+    false,
+  );
+
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
     item: [key, { layout, boxes }],
   }) => (
@@ -78,10 +102,8 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     />
   );
 
-  const onBoxPress = (boxKey: keyof Boxes): void => {
-    let newPath = actionTreePath;
-    if (focusedPageIndex === 0) newPath = [boxKey];
-    else newPath.push(boxKey);
+  const onBoxPress = (pageIndex: number, boxKey: keyof Boxes): void => {
+    const newPath = actionTreePath.slice(0, pageIndex).concat([boxKey]);
 
     if (focusedPageIndex === pageCount - 1) {
       const lastActionNode = traverseActionTree(actions, newPath);
@@ -91,13 +113,16 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
       const setupKey = (lastActionNode as ActionNode).setupKey;
       if (typeof setupKey !== 'undefined') {
         const setup: Setup | undefined = setups[setupKey];
-        if (typeof setup !== 'undefined')
+        if (typeof setup !== 'undefined') {
           dispatch(setControlEntities(setup.controlEntitiesState));
-      }
-      setFocusedPageIndex(0);
-      newPath = [];
+          // enable carousel scrolling on the last page as a setup is found
+          setCarouselScrollEnabled(true);
+        } else renderAlert();
+      } else renderAlert();
     } else {
       setFocusedPageIndex(focusedPageIndex + 1);
+      // disable carousel scrolling when a new path is being tracked as boxes are being pressed
+      setCarouselScrollEnabled(false);
     }
 
     setActionTreePath(newPath);
@@ -107,32 +132,54 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     text: { ...(focusedPage?.styles.box.text ?? {}) },
     pressableBox: {},
     unPressableBox: { opacity: 0.4 },
+    highlightedBox: { borderColor: theme['color-success-default'] },
   });
 
-  const checkIfBoxLeadsToSetup = (boxKey: keyof Boxes): boolean => {
-    const thisBoxPath = actionTreePath.concat([boxKey]);
+  const checkIfBoxIsPressable = (
+    pageIndex: number,
+    boxKey: keyof Boxes,
+  ): boolean => {
+    const thisBoxPath = actionTreePath.slice(0, pageIndex).concat([boxKey]);
     const subTree = traverseActionTree(actions, thisBoxPath);
     return (
       typeof subTree !== 'undefined' && checkIfActionTreeLeadsToSetup(subTree)
     );
   };
 
+  const checkIfBoxIsHighlighted = (
+    pageIndex: number,
+    boxKey: keyof Boxes,
+  ): boolean => actionTreePath[pageIndex] === boxKey;
+
   const renderLayoutDividerItem = (item: {
     pageKey: keyof Pages;
     boxKey: keyof Boxes;
     box: Box;
   }): ReactNode => {
-    const pressable = checkIfBoxLeadsToSetup(item.boxKey);
+    const pressable = checkIfBoxIsPressable(
+      parseFloat(item.pageKey),
+      item.boxKey,
+    );
+    const isHighlighted = checkIfBoxIsHighlighted(
+      parseFloat(item.pageKey),
+      item.boxKey,
+    );
     return (
       <PressableBoxWithText
         text={item.box.title}
         textProps={{ style: styles.text }}
         disabled={!pressable}
-        onPress={() => onBoxPress(item.boxKey)}
+        onPress={() => onBoxPress(parseFloat(item.pageKey), item.boxKey)}
         style={[
           { flex: 1 },
           tailwind('m-1'),
           pressable ? styles.pressableBox : styles.unPressableBox,
+          isHighlighted
+            ? [
+                tailwind('border-4 rounded-xl overflow-hidden'),
+                styles.highlightedBox,
+              ]
+            : {},
         ]}
       />
     );
@@ -149,10 +196,22 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     }
   }, [focusedPageIndex]);
 
+  // reset the screen state when pages / actions are updated
+  useFocusEffect(
+    useCallback(() => {
+      if (moment(makerConfigUpdatedAt).isBefore(moment(updatedAt))) {
+        setFocusedPageIndex(0);
+        setActionTreePath([]);
+        setMakerConfigUpdatedAt(updatedAt);
+        setCarouselScrollEnabled(false);
+      }
+    }, [makerConfigUpdatedAt, updatedAt]),
+  );
+
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
-    <RenderBleComponent>
+    <RenderBleComponent overrideShouldShow>
       <View style={{ flex: 1 }}>
         {showController ? (
           <>
@@ -163,7 +222,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
               onSnapToItem={setFocusedPageIndex}
               sliderWidth={carouselDimensions.slider}
               itemWidth={carouselDimensions.item}
-              scrollEnabled={false}
+              scrollEnabled={carouselScrollEnabled}
             />
             <BleRunIdleButton style={tailwind('m-4')} />
           </>
