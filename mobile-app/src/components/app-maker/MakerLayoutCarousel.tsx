@@ -40,7 +40,9 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
     unpopulatedMakerBox: { borderColor: theme['color-warning-default-border'] },
   });
 
-  const { makerConfig } = useSelector((state: RootState) => state.builder);
+  const {
+    makerConfig: { pages },
+  } = useSelector((state: RootState) => state.builder);
 
   const {
     mode,
@@ -50,10 +52,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
     chartActionIntoTree,
   } = useAppMakerContext();
 
-  const data: PageCarouselData = useMemo(
-    () => Object.entries(makerConfig.pages),
-    [makerConfig.pages],
-  );
+  const data: PageCarouselData = useMemo(() => Object.entries(pages), [pages]);
 
   const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
 
@@ -88,7 +87,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
 
     // create the action node
     const fullChildrenCount = isNotLastPage
-      ? makerConfig.pages[focusedPageIndex + 1].layout.boxCount
+      ? pages[focusedPageIndex + 1].layout.boxCount
       : undefined;
     const actionNode: ActionNode = {
       boxKey,
@@ -119,7 +118,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
       <MakerBox
         {...item}
         disabled={!pressable}
-        onPress={pressable ? () => onMakerBoxPress(item.boxKey) : undefined}
+        onPress={() => onMakerBoxPress(item.boxKey)}
         style={[
           { flex: 1 },
           tailwind('m-1'),

@@ -17,6 +17,7 @@ import { RootState } from '@reduxApp';
 import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
 import { ControlEntitySummary } from '@components/shared/interface';
 import { ConfirmationButtonGroup } from '@components/shared/actionable';
+
 import {
   useBleRpiDeviceCharacteristic,
   useControlEntities,
