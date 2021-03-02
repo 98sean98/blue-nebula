@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
 
@@ -33,6 +33,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
   const page = useMemo(() => cachedPages[pageKey], [cachedPages, pageKey]);
 
   const [cachedTitle, setCachedTitle] = useState<string>(title);
+
+  useEffect(() => setCachedTitle(title), [title]);
 
   const onBlur = useCallback(() => {
     const updatedPage: Page = {
