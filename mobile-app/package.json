@@ -9,7 +9,9 @@
     "test": "jest",
     "lint": "eslint . --ext .ts,.tsx",
     "lint-fix": "eslint . --fix --ext .ts,.tsx",
-    "postinstall": "npx pod-install ios"
+    "postinstall": "npx pod-install ios",
+    "build:android:bundleRelease": "cd android && ./gradlew bundleRelease",
+    "build:android:assembleRelease": "cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0",
