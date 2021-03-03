@@ -82,6 +82,18 @@ export const AppMakerLayer: FC = ({ children }) => {
     [cachedPages],
   );
 
+  const resetPages = useCallback(
+    (goToPage?: number) => {
+      setCachedPages(pages);
+
+      const reduxPageCount = Object.keys(pages).length;
+      if (typeof goToPage !== 'undefined') setFocusedPageIndex(goToPage);
+      else if (focusedPageIndex >= reduxPageCount)
+        setFocusedPageIndex(reduxPageCount - 1);
+    },
+    [pages, focusedPageIndex],
+  );
+
   const getPrunedPages = useCallback((): Pages => {
     const prunedPages: Pages = {};
     Object.entries(cachedPages).forEach(
@@ -255,6 +267,7 @@ export const AppMakerLayer: FC = ({ children }) => {
         setFocusedPageIndex,
         createNewPage,
         deletePage,
+        resetPages,
         savePagesWithoutUpdatingActions,
         toggleActionsCharting,
         chartingActions,

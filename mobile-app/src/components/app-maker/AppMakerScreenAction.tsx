@@ -31,6 +31,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     focusedPageIndex,
     createNewPage,
     deletePage,
+    resetPages,
     savePagesWithoutUpdatingActions,
     toggleActionsCharting,
   } = useAppMakerContext();
@@ -65,6 +66,11 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
     () => mode === AppMakerMode.ContentBuilding && pageCount > 0,
     [mode, pageCount],
   );
+
+  const onRewindPagesChangesPress = () => {
+    resetPages(0);
+    setShowMenu(false);
+  };
 
   const onSavePagesWithoutUpdatingActionsPress = () => {
     savePagesWithoutUpdatingActions();
@@ -120,14 +126,24 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
           <></>
         )}
         {mode === AppMakerMode.ContentBuilding ? (
-          <MenuItem
-            accessoryLeft={renderIcon('save-outline', {
-              fill: theme['color-warning-default'],
-              ...iconProps,
-            })}
-            title={'Save pages without updating actions'}
-            onPress={onSavePagesWithoutUpdatingActionsPress}
-          />
+          <>
+            <MenuItem
+              accessoryLeft={renderIcon('rewind-left-outline', {
+                fill: theme['color-warning-default'],
+                ...iconProps,
+              })}
+              title={'Rewind changes to pages'}
+              onPress={onRewindPagesChangesPress}
+            />
+            <MenuItem
+              accessoryLeft={renderIcon('save-outline', {
+                fill: theme['color-warning-default'],
+                ...iconProps,
+              })}
+              title={'Save pages without updating actions'}
+              onPress={onSavePagesWithoutUpdatingActionsPress}
+            />
+          </>
         ) : (
           <></>
         )}
