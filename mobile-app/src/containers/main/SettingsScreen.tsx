@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, Toggle } from '@ui-kitten/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -24,6 +25,8 @@ const styles = StyleSheet.create({
 });
 
 export const SettingsScreen: FC<SettingsScreenProps> = () => {
+  const insets = useSafeAreaInsets();
+
   const dispatch = useDispatch();
 
   const settings = useSelector((state: RootState) => state.settings);
@@ -83,7 +86,8 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
   };
 
   return (
-    <ScrollView style={[{ flex: 1 }, tailwind('my-5 px-4')]}>
+    <ScrollView
+      style={[{ flex: 1, marginBottom: insets.bottom }, tailwind('my-5 px-4')]}>
       {/* monitor device bluetooth connection */}
       <View style={tailwind('w-full flex-row justify-between items-center')}>
         <Text style={styles.text}>

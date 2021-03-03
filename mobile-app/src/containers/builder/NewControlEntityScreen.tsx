@@ -1,6 +1,7 @@
 import React, { FC, useMemo, useState, Fragment } from 'react';
 import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
 import { Select, IndexPath, SelectItem, Button } from '@ui-kitten/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { capitalCase } from 'change-case';
 import deepmerge from 'deepmerge';
@@ -49,6 +50,8 @@ controlEntityTypes.forEach((controlEntityType) => {
 export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   navigation,
 }) => {
+  const insets = useSafeAreaInsets();
+
   const dispatch = useDispatch();
 
   const { controlEntities } = useSelector((state: RootState) => state.control);
@@ -140,7 +143,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, marginBottom: insets.bottom }}
       behavior={'padding'}
       keyboardVerticalOffset={90}>
       <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>

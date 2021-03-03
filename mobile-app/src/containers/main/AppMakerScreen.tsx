@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
@@ -26,12 +27,6 @@ export type ConfigurationViewHeight = {
   fling: number;
 };
 
-const configurationViewHeight: ConfigurationViewHeight = {
-  collapsed: 80,
-  expanded: Dimensions.get('window').height * 0.75,
-  fling: 28,
-};
-
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
   item: Dimensions.get('window').width,
@@ -43,6 +38,14 @@ enum ViewType {
 }
 
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
+  const insets = useSafeAreaInsets();
+
+  const configurationViewHeight: ConfigurationViewHeight = {
+    collapsed: 80 + insets.bottom,
+    expanded: Dimensions.get('window').height * 0.75,
+    fling: 28,
+  };
+
   const { setMode, chartingActions } = useAppMakerContext();
 
   const [viewType, setViewType] = useState<ViewType>(ViewType.Layout);

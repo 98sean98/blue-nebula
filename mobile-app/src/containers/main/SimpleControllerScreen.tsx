@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
@@ -46,8 +47,10 @@ import {
 } from '@components/shared/bluetooth';
 import { LayoutDivider } from '@components/shared/interface';
 
-import { traverseActionTree } from '@utilities/functions/app-maker/traverseActionTree';
-import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/app-maker/checkIfActionTreeLeadsToSetup';
+import {
+  checkIfActionTreeLeadsToSetup,
+  traverseActionTree,
+} from '@utilities/functions/app-maker';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
@@ -62,6 +65,7 @@ const renderAlert = () =>
 
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const theme = useTheme();
+  const insets = useSafeAreaInsets();
 
   const dispatch = useDispatch();
 
@@ -218,8 +222,8 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
-    <RenderBleComponent overrideShouldShow>
-      <View style={{ flex: 1 }}>
+    <RenderBleComponent>
+      <View style={{ flex: 1, marginBottom: insets.bottom }}>
         {showController ? (
           <>
             <Carousel

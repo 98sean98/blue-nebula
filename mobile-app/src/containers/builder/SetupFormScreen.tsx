@@ -7,6 +7,7 @@ import {
   ViewProps,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@ui-kitten/components';
 import { EvaStatus } from '@ui-kitten/components/devsupport';
 
@@ -25,12 +26,15 @@ import {
 
 import { ResponsiveInput } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
+
 import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker';
 
 export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   route,
   navigation,
 }) => {
+  const insets = useSafeAreaInsets();
+
   const { keyOfSetupToBeEdited } =
     typeof route.params !== 'undefined'
       ? route.params
@@ -198,7 +202,7 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={{ flex: 1, marginBottom: insets.bottom }}
       behavior={'padding'}
       keyboardVerticalOffset={80}>
       <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>
