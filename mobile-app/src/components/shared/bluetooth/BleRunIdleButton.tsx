@@ -97,8 +97,8 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   return (
     <>
       <Button
-        {...props}
         status={isRunning ? 'danger' : 'primary'}
+        {...props}
         onPress={onButtonPress}>
         {isRunning ? 'Stop' : 'Start'}
       </Button>

@@ -75,6 +75,8 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const [makerConfigUpdatedAt, setMakerConfigUpdatedAt] = useState<Date>(
     updatedAt,
   );
+  const [isRunIdleDisabled, setIsRunIdleDisabled] = useState<boolean>(true);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
 
   const focusedPage: Page | undefined = useMemo(() => pages[focusedPageIndex], [
     pages,
@@ -117,12 +119,17 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
           dispatch(setControlEntities(setup.controlEntitiesState));
           // enable carousel scrolling on the last page as a setup is found
           setCarouselScrollEnabled(true);
+          // enable run idle button
+          setIsRunIdleDisabled(false);
         } else renderAlert();
       } else renderAlert();
     } else {
+      // a new path is being tracked as boxes are being pressed
       setFocusedPageIndex(focusedPageIndex + 1);
-      // disable carousel scrolling when a new path is being tracked as boxes are being pressed
+      // disable carousel scrolling
       setCarouselScrollEnabled(false);
+      // disable run idle button
+      setIsRunIdleDisabled(true);
     }
 
     setActionTreePath(newPath);
@@ -156,10 +163,10 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     boxKey: keyof Boxes;
     box: Box;
   }): ReactNode => {
-    const pressable = checkIfBoxIsPressable(
-      parseFloat(item.pageKey),
-      item.boxKey,
-    );
+    // boxes are not pressable while is running is true
+    const pressable =
+      !isRunning &&
+      checkIfBoxIsPressable(parseFloat(item.pageKey), item.boxKey);
     const isHighlighted = checkIfBoxIsHighlighted(
       parseFloat(item.pageKey),
       item.boxKey,
@@ -211,7 +218,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
-    <RenderBleComponent>
+    <RenderBleComponent overrideShouldShow>
       <View style={{ flex: 1 }}>
         {showController ? (
           <>
@@ -224,7 +231,11 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
               itemWidth={carouselDimensions.item}
               scrollEnabled={carouselScrollEnabled}
             />
-            <BleRunIdleButton style={tailwind('m-4')} />
+            <BleRunIdleButton
+              disabled={isRunIdleDisabled}
+              style={[tailwind('m-4')]}
+              onStateChange={setIsRunning}
+            />
           </>
         ) : (
           <View
