@@ -1,7 +1,4 @@
-import {
-  MainDrawerParamList,
-  SetupsMode,
-} from '@navigation/main/navigationTypes';
+import { MainDrawerParamList } from '@navigation/main/navigationTypes';
 
 export const navigationItems: Array<{
   routeName: keyof MainDrawerParamList;
@@ -23,7 +20,6 @@ export const navigationItems: Array<{
     routeName: 'Setups',
     text: 'Setups',
     iconName: 'file-text-outline',
-    screenParams: { mode: SetupsMode.Normal },
   },
   {
     routeName: 'AppMaker',

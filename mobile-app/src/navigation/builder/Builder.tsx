@@ -5,7 +5,11 @@ import { BuilderStackParamList } from './navigationTypes';
 
 import { CustomHeader } from './CustomHeader';
 
-import { NewControlEntityScreen, SetupFormScreen } from '@containers/builder';
+import {
+  NewControlEntityScreen,
+  SetupFormScreen,
+  SetupsReplacementScreen,
+} from '@containers/builder';
 
 const { Navigator, Screen } = createStackNavigator<BuilderStackParamList>();
 
@@ -20,6 +24,11 @@ export const Builder: FC = () => (
       name={'SetupForm'}
       component={SetupFormScreen}
       options={{ headerTitle: 'Setup Form' }}
+    />
+    <Screen
+      name={'SetupsReplacement'}
+      component={SetupsReplacementScreen}
+      options={{ headerTitle: 'Setups Replacement' }}
     />
   </Navigator>
 );

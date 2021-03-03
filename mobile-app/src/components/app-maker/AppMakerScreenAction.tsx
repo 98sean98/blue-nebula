@@ -41,9 +41,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
 
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
-  const toggleMenu = () => {
-    setShowMenu(!showMenu);
-  };
+  const toggleMenu = () => setShowMenu(!showMenu);
 
   // todo: build help modal
   const onHelpPress = () => {};

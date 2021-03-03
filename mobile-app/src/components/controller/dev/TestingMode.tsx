@@ -10,8 +10,6 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { SetupsMode } from '@navigation/main';
-
 import { ControlEntityEnum, StepperMotor } from '@models/control-entity';
 import { DevControlInterface } from '@models/ui';
 
@@ -22,12 +20,7 @@ import {
   BleReadDeviceButton,
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
-import {
-  NavigateToNewControlEntityButton,
-  NavigateToSetupsButton,
-  Timer,
-} from '@components/shared/actionable';
-import { renderIcon } from '@components/shared/interface';
+import { Timer } from '@components/shared/actionable';
 
 interface TestingModeProps {
   isFocused: boolean;
@@ -65,25 +58,6 @@ export const TestingMode: FC<TestingModeProps> = () => {
 
   const keyExtractor = (item: typeof data[0]) => item.entity;
 
-  const listFooterComponent = useMemo(
-    () => (
-      <View style={tailwind('w-full flex-row justify-between')}>
-        <NavigateToNewControlEntityButton
-          style={{ width: '49%' }}
-          status={'info'}
-        />
-        <NavigateToSetupsButton
-          mode={SetupsMode.SavingNew}
-          accessoryLeft={renderIcon('save-outline')}
-          status={'info'}
-          style={{ width: '49%' }}>
-          Save Setup
-        </NavigateToSetupsButton>
-      </View>
-    ),
-    [],
-  );
-
   const [isRunningTimer, setIsRunningTimer] = useState<boolean>(false);
   const onRunningStateChange = (newState: boolean) =>
     setIsRunningTimer(newState);
@@ -98,7 +72,6 @@ export const TestingMode: FC<TestingModeProps> = () => {
           data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          ListFooterComponent={listFooterComponent}
           ListFooterComponentStyle={tailwind('px-4 pb-3')}
         />
       </KeyboardAvoidingView>

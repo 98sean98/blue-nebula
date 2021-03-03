@@ -5,6 +5,8 @@ import { tailwind } from '@styles/tailwind';
 
 import { ConfirmationButtonGroup } from '@components/shared/actionable/button/ConfirmationButtonGroup';
 
+import { getBackdropStyle } from '@utilities/functions/ui';
+
 interface ConfirmationModalProps extends ModalProps {
   onBackdropPress: () => void;
   action: string;
@@ -21,7 +23,7 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
   const onNoPress = props.onBackdropPress;
 
   return (
-    <Modal backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }} {...props}>
+    <Modal backdropStyle={getBackdropStyle()} {...props}>
       <Card disabled style={tailwind('m-4')}>
         <Text category={'h6'} style={tailwind('text-center')}>
           {`Are you sure you want to ${action} `}

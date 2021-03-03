@@ -25,13 +25,16 @@ import {
 
 import { ResponsiveInput } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
-import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker/replaceSetupKeyInActionTree';
+import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker';
 
 export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   route,
   navigation,
 }) => {
-  const { keyOfSetupToBeEdited } = route.params;
+  const { keyOfSetupToBeEdited } =
+    typeof route.params !== 'undefined'
+      ? route.params
+      : { keyOfSetupToBeEdited: undefined };
 
   const dispatch = useDispatch();
 

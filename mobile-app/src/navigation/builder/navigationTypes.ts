@@ -12,7 +12,8 @@ import { Setups } from '@models/setup';
 
 export type BuilderStackParamList = {
   NewControlEntity: undefined;
-  SetupForm: { keyOfSetupToBeEdited?: keyof Setups };
+  SetupForm: { keyOfSetupToBeEdited?: keyof Setups } | undefined;
+  SetupsReplacement: undefined;
 };
 
 type ParentNavigationProp = RootNavigationProp;
@@ -30,3 +31,7 @@ export type NewControlEntityScreenProps = BuilderScreenProps<
 >;
 
 export type SetupFormScreenProps = BuilderScreenProps<'SetupForm'>;
+
+export type SetupsReplacementScreenProps = BuilderScreenProps<
+  'SetupsReplacement'
+>;

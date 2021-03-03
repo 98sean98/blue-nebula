@@ -16,11 +16,13 @@ import { tailwind } from '@styles/tailwind';
 import { navigationItems } from './navigationItems';
 
 import { BleConnectIcon } from '@components/shared/bluetooth';
+import { DevControllerScreenAction } from '@components/controller/dev';
 import { AppMakerScreenAction } from '@components/app-maker';
 import { renderIcon } from '@components/shared/interface';
 
 export const CustomHeader: FC<StackHeaderProps> = ({
   scene: { route, descriptor },
+  navigation,
   insets: { top },
 }) => {
   const focusedRouteName = getFocusedRouteNameFromRoute(route);
@@ -45,6 +47,13 @@ export const CustomHeader: FC<StackHeaderProps> = ({
 
   const renderRightAction = () => {
     switch (foundNavigationItem?.routeName) {
+      case 'DevController':
+        return (
+          <DevControllerScreenAction
+            navigation={navigation}
+            iconProps={iconProps}
+          />
+        );
       case 'Setups':
         return <></>;
       case 'AppMaker':

@@ -19,6 +19,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Carousel from 'react-native-snap-carousel';
 import { useDispatch, useSelector } from 'react-redux';
 import { IterableElement } from 'type-fest';
+import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -47,7 +48,6 @@ import { LayoutDivider } from '@components/shared/interface';
 
 import { traverseActionTree } from '@utilities/functions/app-maker/traverseActionTree';
 import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/app-maker/checkIfActionTreeLeadsToSetup';
-import moment from 'moment';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,

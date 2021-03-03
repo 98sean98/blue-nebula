@@ -8,15 +8,10 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 
 import { RootNavigationProp } from '@navigation/navigationTypes';
 
-export enum SetupsMode {
-  Normal = '@@SetupsMode/Normal',
-  SavingNew = '@@SetupsMode/SavingNew',
-}
-
 export type MainDrawerParamList = {
   SimpleController: undefined;
   DevController: undefined;
-  Setups: { mode: SetupsMode };
+  Setups: undefined;
   AppMaker: undefined;
   Settings: undefined;
 };
