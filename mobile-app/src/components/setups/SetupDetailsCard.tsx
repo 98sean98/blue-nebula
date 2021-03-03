@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
-import { Card, CardProps, Text } from '@ui-kitten/components';
+import { Text, Layout, LayoutProps } from '@ui-kitten/components';
 import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
@@ -11,7 +11,7 @@ import { ControlEntitySummary } from '@components/shared/interface';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
 
-interface SetupDetailsCardProps extends CardProps {
+interface SetupDetailsCardProps extends LayoutProps {
   setup: Setup;
   renderButton?: () => ReactNode;
 }
@@ -30,34 +30,32 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
 }) => {
   const fieldsArray = Object.entries(fields);
 
-  const showLoadButton = typeof renderButton !== 'undefined';
-
   return (
-    <Card
-      disabled
+    <Layout
       {...props}
-      style={[tailwind('justify-between'), props?.style ?? {}]}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ height: showLoadButton ? '85%' : '100%' }}>
-        {/*main pieces of information*/}
-        <View>
-          <Text category={'h5'}>{name}</Text>
-          {description ? (
-            <Text category={'label'} appearance={'hint'}>
-              {description}
-            </Text>
-          ) : null}
-          <Text category={'c2'} style={tailwind('mt-1')}>{`Created ${moment(
-            createdAt,
-          ).fromNow()}`}</Text>
-          <Text category={'c2'}>{`Last updated ${moment(
-            updatedAt,
-          ).fromNow()}`}</Text>
-        </View>
+      style={[
+        tailwind('rounded overflow-hidden justify-between px-6 py-5'),
+        props?.style ?? {},
+      ]}>
+      {/*main pieces of information*/}
+      <View>
+        <Text category={'h5'}>{name}</Text>
+        {description ? (
+          <Text category={'label'} appearance={'hint'}>
+            {description}
+          </Text>
+        ) : null}
+        <Text category={'c2'} style={tailwind('mt-1')}>{`Created ${moment(
+          createdAt,
+        ).fromNow()}`}</Text>
+        <Text category={'c2'}>{`Last updated ${moment(
+          updatedAt,
+        ).fromNow()}`}</Text>
+      </View>
 
+      <ScrollView showsVerticalScrollIndicator={false} style={tailwind('mt-2')}>
         {/* fields */}
-        <View style={tailwind('mt-2')}>
+        <View>
           {fieldsArray.map(([key, value]) => (
             <View
               key={key}
@@ -77,6 +75,6 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
       {typeof renderButton !== 'undefined' ? (
         <View style={tailwind('mt-4')}>{renderButton()}</View>
       ) : null}
-    </Card>
+    </Layout>
   );
 };
