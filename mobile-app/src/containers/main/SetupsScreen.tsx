@@ -24,7 +24,7 @@ import { SetupDetailsCard } from '@components/setups';
 import { renderIcon } from '@components/shared/interface';
 import { ConfirmationModal } from '@components/shared/actionable';
 
-import { replaceSetupKeyInActionTree } from '@utilities/functions/replaceSetupKeyInActionTree';
+import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker/replaceSetupKeyInActionTree';
 
 export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   const { mode } = route.params;

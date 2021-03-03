@@ -15,7 +15,7 @@ import { Boxes, Layout, Page } from '@models/app-maker';
 import { SliderInput } from '@components/shared/actionable';
 
 import { useAppMakerContext } from '@utilities/hooks';
-import { initialiseNewBox } from '@utilities/functions/initialiseNewBox';
+import { initialiseNewBox } from '@utilities/functions/app-maker';
 
 interface LayoutBoxControlProps extends LayoutProps {
   pageIndex: number;

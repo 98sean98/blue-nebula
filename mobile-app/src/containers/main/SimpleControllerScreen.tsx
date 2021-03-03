@@ -45,8 +45,8 @@ import {
 } from '@components/shared/bluetooth';
 import { LayoutDivider } from '@components/shared/interface';
 
-import { traverseActionTree } from '@utilities/functions/traverseActionTree';
-import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/checkIfActionTreeLeadsToSetup';
+import { traverseActionTree } from '@utilities/functions/app-maker/traverseActionTree';
+import { checkIfActionTreeLeadsToSetup } from '@utilities/functions/app-maker/checkIfActionTreeLeadsToSetup';
 import moment from 'moment';
 
 const carouselDimensions = {

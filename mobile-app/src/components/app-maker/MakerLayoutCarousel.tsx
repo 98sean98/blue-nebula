@@ -14,9 +14,11 @@ import { MakerBox } from './MakerBox';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { AppMakerMode } from '@utilities/context';
-import { traverseActionTree } from '@utilities/functions/traverseActionTree';
-import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
-import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
+import {
+  checkIfActionTreeIsPopulated,
+  getBoxesBasedOnLayout,
+  traverseActionTree,
+} from '@utilities/functions/app-maker';
 
 interface MakerLayoutCarouselProps
   extends Omit<

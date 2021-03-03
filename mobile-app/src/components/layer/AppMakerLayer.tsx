@@ -1,6 +1,9 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Setups } from '@models/setup';
+import { ActionNode, Pages, RootActionNode } from '@models/app-maker';
+
 import { RootState } from '@reduxApp';
 import { setMakerConfig } from '@reduxApp/builder/actions';
 
@@ -10,12 +13,12 @@ import {
   ChartingActions,
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
-import { initialiseNewPage } from '@utilities/functions/initialiseNewPage';
-import { ActionNode, Pages, RootActionNode } from '@models/app-maker';
-import { traverseActionTree } from '@src/utilities/functions/traverseActionTree';
-import { checkIfActionTreeIsPopulated } from '@utilities/functions/checkIfActionTreeIsPopulated';
-import { getBoxesBasedOnLayout } from '@utilities/functions/getBoxesBasedOnLayout';
-import { Setups } from '@models/setup';
+import {
+  checkIfActionTreeIsPopulated,
+  getBoxesBasedOnLayout,
+  initialiseNewPage,
+  traverseActionTree,
+} from '@utilities/functions/app-maker';
 
 export const AppMakerLayer: FC = ({ children }) => {
   const dispatch = useDispatch();

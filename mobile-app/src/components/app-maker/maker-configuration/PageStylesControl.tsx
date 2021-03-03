@@ -8,6 +8,7 @@ import { tailwind } from '@styles/tailwind';
 import { Page, Pages } from '@models/app-maker';
 
 import { SliderInput } from '@components/shared/actionable';
+
 import { useAppMakerContext } from '@utilities/hooks';
 
 interface PageStylesControlProps extends LayoutProps {

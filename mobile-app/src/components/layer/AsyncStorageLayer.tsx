@@ -13,11 +13,11 @@ import { SetMakerConfig, SetSetups } from '@reduxApp/builder/types';
 import {
   ConvertibleState,
   convertStateWithTimestamps,
-} from '@utilities/functions/convertStateWithTimestamps';
+} from '@utilities/functions/object-convert/convertStateWithTimestamps';
 import {
   ConvertibleObject,
   convertObjectWithTimestampKeys,
-} from '@utilities/functions/convertObjectWithTimestampKeys';
+} from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
 
 const renderAlert = (type: 'reading' | 'writing') =>
   Alert.alert(

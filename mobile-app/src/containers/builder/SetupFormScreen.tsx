@@ -25,7 +25,7 @@ import {
 
 import { ResponsiveInput } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
-import { replaceSetupKeyInActionTree } from '@utilities/functions/replaceSetupKeyInActionTree';
+import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker/replaceSetupKeyInActionTree';
 
 export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   route,

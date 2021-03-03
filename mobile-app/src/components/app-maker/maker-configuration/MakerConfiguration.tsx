@@ -11,11 +11,11 @@ import { tailwind } from '@styles/tailwind';
 
 import { Page } from '@models/app-maker';
 
-import { LayoutBoxControl } from './LayoutBoxControl';
 import { PageInfo } from './PageInfo';
+import { LayoutBoxControl } from './LayoutBoxControl';
+import { PageStylesControl } from './PageStylesControl';
 
 import { useAppMakerContext } from '@utilities/hooks';
-import { PageStylesControl } from '@components/app-maker/maker-configuration/PageStylesControl';
 import { AppMakerMode } from '@utilities/context';
 
 interface MakerConfigurationProps extends ViewProps {}
