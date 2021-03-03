@@ -196,14 +196,12 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ route, navigation }) => {
   return (
     <>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
-        <View style={[{ flex: 1 }, tailwind('px-4')]}>
-          <FlatList
-            data={data}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            ItemSeparatorComponent={Divider}
-          />
-        </View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          ItemSeparatorComponent={Divider}
+        />
 
         {/* save new setup */}
         <Button

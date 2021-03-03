@@ -23,7 +23,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
     <Button
       appearance={'ghost'}
       style={tailwind('p-1')}
-      onPress={() => navigation.goBack()}>
+      onPress={navigation.goBack}>
       Cancel
     </Button>
   );
