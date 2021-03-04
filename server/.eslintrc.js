@@ -37,7 +37,7 @@ module.exports = {
       },
     ],
     eqeqeq: ['error', 'always'],
-    'jest/expect-expect': [0],
+    'jest/no-export': 'warn',
     'require-jsdoc': 'warn',
   },
   settings: {

@@ -1,10 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-cd mobile-app
-npm run pre-commit
-
-cd ..
-
-cd server
-npm run pre-commit
+npm run precommit

@@ -3,3 +3,5 @@ describe('basic test', () => {
     expect('hello world').toEqual('hello world');
   });
 });
+
+export {}
