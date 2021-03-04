@@ -1,11 +1,13 @@
 import { PrismaClient } from '@prisma/client'
 
+import {sum} from '@utilities/sum'
+
 const prisma = new PrismaClient();
 
 async function main() {
-    // ... you will write your Prisma Client queries here
     const users = await prisma.user.findMany();
     console.log({users});
+    console.log('sum', sum(10,5))
 }
 
 main()
@@ -14,4 +16,4 @@ main()
     })
     .finally(async () => {
         await prisma.$disconnect()
-    })
+    });
