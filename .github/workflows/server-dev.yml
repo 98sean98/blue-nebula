@@ -33,7 +33,10 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up -d
           npm install
-          npx prisma migrate dev --name migration --preview-feature
+          npm run prisma:migrate
 
       - name: Test
         run: npm run test
+
+      - name: Build
+        run: npm run build
