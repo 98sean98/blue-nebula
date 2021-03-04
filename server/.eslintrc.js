@@ -1,32 +1,30 @@
 module.exports = {
-  'env': {
-    'es2021': true,
-    'node': true,
+  env: {
+    es2021: true,
+    node: true,
   },
-  'extends': [
+  extends: [
     'google',
-  ],
-  'parser': '@typescript-eslint/parser',
-  'parserOptions': {
-    'ecmaVersion': 12,
-    'sourceType': 'module',
-  },
-  'plugins': [
-    '@typescript-eslint',
-    'import/errors',
-    'import/warnings',
-    'import/typescript',
-    'jest/recommended',
-    'module-resolver',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
+    'plugin:jest/recommended',
     'prettier',
     'prettier/@typescript-eslint',
+    'plugin:jsdoc/recommended',
   ],
-  'rules': {
-    'import/no-unresolved': [2, { commonjs: true, amd: true }],
-    'import/namespace': [0],
-    'import/export': [0],
-    'prettier/prettier': [1],
-    'module-resolver/use-alias': 2,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint', 'jest', 'prettier', 'module-resolver'],
+  rules: {
+    'import/no-unresolved': ['error', { commonjs: true, amd: true }],
+    'import/namespace': 'off',
+    'import/export': 'off',
+    'prettier/prettier': 'warn',
+    'module-resolver/use-alias': 'error',
     'max-len': [
       'error',
       {
@@ -40,5 +38,11 @@ module.exports = {
     ],
     eqeqeq: ['error', 'always'],
     'jest/expect-expect': [0],
+    'require-jsdoc': 'warn',
+  },
+  settings: {
+    'import/resolver': {
+      'babel-module': {},
+    },
   },
 };

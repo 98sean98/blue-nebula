@@ -1,6 +1,4 @@
-export const sum = (a: number, b: number): number => {
-    let unused;
+export const sum = (a: number, b: number): number =>
 
 
-    return a + b;
-}
+    a + b
