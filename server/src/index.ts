@@ -10,7 +10,7 @@ const prisma = new PrismaClient();
 async function main() {
   const users = await prisma.user.findMany();
   console.log({ users });
-  console.log('sum', sum(1, 2));
+  console.log('sum', sum(1, 3));
 }
 
 main()

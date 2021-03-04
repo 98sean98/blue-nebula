@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "server to support the mobile app",
   "scripts": {
+    "start": "ts-node -r tsconfig-paths/register src",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --watch package.json src",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --fix --ext .ts",
@@ -38,6 +40,7 @@
     "ts-jest": "^26.5.2",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.2"
   },
   "dependencies": {
