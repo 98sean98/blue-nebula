@@ -1,0 +1,39 @@
+name: Run tests for server
+
+on:
+  push:
+    branches-ignore:
+      - master
+  pull_request:
+
+env:
+  POSTGRES_USER: prisma
+  POSTGRES_PASSWORD: scraper-test-secret
+  POSTGRES_DB: scraper-test
+  DATABASE_URL: postgresql://prisma:scraper-test-secret@localhost:5432/scraper-test?schema=public
+  HUSKY: 0
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use NodeJS stable
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          npm install
+          npx prisma migrate dev --name migration --preview-feature
+
+      - name: Test
+        run: npm run test
