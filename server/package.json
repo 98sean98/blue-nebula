@@ -4,8 +4,10 @@
   "description": "server to support the mobile app",
   "scripts": {
     "test": "jest",
-    "lint": "eslint --ext .ts",
-    "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature"
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --fix --ext .ts",
+    "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
+    "pre-commit": "lint-staged"
   },
   "author": "",
   "license": "ISC",
@@ -44,7 +46,7 @@
       "prettier --write"
     ],
     "*.{ts}": [
-      "npm run lint",
+      "npm run lint-fix",
       "prettier --write"
     ]
   }

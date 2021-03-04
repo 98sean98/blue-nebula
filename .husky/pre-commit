@@ -3,3 +3,8 @@
 
 cd mobile-app
 npm run pre-commit
+
+cd ..
+
+cd server
+npm run pre-commit
