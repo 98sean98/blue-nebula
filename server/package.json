@@ -5,6 +5,7 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --watch package.json src",
+    "build": "tsc && tsc-alias",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --fix --ext .ts",
