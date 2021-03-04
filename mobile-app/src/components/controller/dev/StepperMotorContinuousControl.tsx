@@ -1,25 +1,21 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
 import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Direction, Enable } from '@models/control-entity';
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
-
-import { RootState } from '@reduxApp';
+import { Direction, Enable, StepperMotor } from '@models/control-entity';
 
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
-import { mapStepperMotorToString } from '@utilities/functions/stepper-motor/mapStepperMotorToString';
+import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
 
 interface StepperMotorContinuousControlProps extends ViewProps {
-  entity: keyof DeclaredControlEntities;
+  controlEntity: StepperMotor;
 }
 
 const GhostButton = (props: ButtonProps) => (
@@ -35,12 +31,9 @@ const generateMethodToDecipherMonitorValue = (entityName: string) => (
 };
 
 export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProps> = ({
-  entity,
+  controlEntity,
   ...props
 }) => {
-  const { controlEntities } = useSelector((state: RootState) => state.control);
-  const controlEntityObject = controlEntities[entity];
-
   const {
     write: writeStepperMotor,
     monitor: monitorStepperMotor,
@@ -58,15 +51,15 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
   ) => {
     try {
       if (isRunning) {
-        const stringValue = mapStepperMotorToString({
-          ...controlEntityObject,
+        const stringValue = mapControlEntityToString({
+          ...controlEntity,
           revolution: 2000, // arbitrarily large revolution number
           direction,
           enable: Enable.High,
         });
         await writeStepperMotor(stringValue);
         monitorStepperMotor.start(
-          generateMethodToDecipherMonitorValue(controlEntityObject.name),
+          generateMethodToDecipherMonitorValue(controlEntity.name),
         );
         await WriteRunIdle(true);
       } else {
@@ -74,8 +67,8 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         setIsControlDisabled(true);
         await WriteRunIdle(false);
         monitorStepperMotor.stop();
-        const stringValue = mapStepperMotorToString({
-          ...controlEntityObject,
+        const stringValue = mapControlEntityToString({
+          ...controlEntity,
           enable: Enable.Low,
         });
         await writeStepperMotor(stringValue);
@@ -108,7 +101,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
 
   useEffect(() => {
     if (monitorStepperMotor.isMonitoring) {
-      const timeout = setTimeout(() => setShouldStreamMonitor(true), 800);
+      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1500);
       return () => clearTimeout(timeout);
     } else setShouldStreamMonitor(false);
   }, [monitorStepperMotor.isMonitoring]);
@@ -146,13 +139,13 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
-          style={tailwind('ml-1 w-20')}
+          style={tailwind('w-1/3')}
           disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
           CCW
         </GhostButton>
-        <View style={tailwind('items-center mx-2')}>
+        <View style={tailwind('w-1/4 items-center')}>
           <View style={tailwind('flex-row items-end')}>
             <Text category={'h6'}>{revolution.current}</Text>
             <Text category={'s1'} style={tailwind('ml-1')}>
@@ -170,7 +163,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         <GhostButton
           status={'info'}
           size={'large'}
-          style={tailwind('w-20')}
+          style={tailwind('w-1/3')}
           disabled={isControlDisabled}
           onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
           onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>

@@ -1,41 +1,44 @@
-import React, { ComponentProps, FC, useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { View } from 'react-native';
-import { Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { CardProps, Text } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { DeclaredControlEntities } from '@config/declaredControlEntities';
-
 import { DeclarableValueType } from '@models/ValueType';
-import { ControlInterface } from '@models/ControlInterface';
-import { Direction, Enable } from '@models/control-entity';
-
-import { RootState } from '@reduxApp';
+import { DevControlInterface } from '@models/ui';
+import {
+  ControlEntities,
+  Direction,
+  Enable,
+  StepperMotor,
+} from '@models/control-entity';
 
 import { ControlEntityCard } from '@components/shared/interface';
 import {
-  ControlEntityParameterButton,
-  ControlEntityParameterInput,
+  ResponsiveButton,
+  ResponsiveInput,
   ControlEntityParameterToggle,
 } from '@components/shared/actionable';
 import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
 
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
+import { removeControlEntity } from '@reduxApp/control/actions';
 
-interface StepperMotorCardProps
-  extends ComponentProps<typeof ControlEntityCard> {
-  entity: keyof DeclaredControlEntities;
-  controlInterface: ControlInterface;
+interface StepperMotorCardProps extends Omit<CardProps, 'header'> {
+  entity: keyof ControlEntities;
+  controlEntity: StepperMotor;
+  controlInterface: DevControlInterface;
 }
 
 export const StepperMotorCard: FC<StepperMotorCardProps> = ({
   entity,
+  controlEntity,
   controlInterface,
   ...props
 }) => {
-  const { controlEntities } = useSelector((state: RootState) => state.control);
+  const dispatch = useDispatch();
 
   const { setControlEntityByParameter } = useControlEntities();
 
@@ -45,47 +48,54 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
     [entity, setControlEntityByParameter],
   );
 
+  const headerParams = { title: controlEntity.name };
+
+  const onConfirmDelete = () => dispatch(removeControlEntity(entity));
+
   return (
-    <ControlEntityCard {...props}>
-      <ControlEntityParameterInput
+    <ControlEntityCard
+      {...props}
+      headerParams={headerParams}
+      onConfirmDelete={onConfirmDelete}>
+      <ResponsiveInput
         keyboardType={'number-pad'}
         label={'Pulse Interval'}
         placeholder={
-          'step pulse (the lower this value, the faster the motor runs)'
+          'time delay between pulses in microseconds (the lower this value, the faster the motor runs)'
         }
-        reduxValue={controlEntities[entity].pulseInterval}
+        storedValue={controlEntity.pulseInterval}
         onInputBlur={(value) =>
           onParameterChange('pulseInterval', value || '0', 'number')
         }
       />
 
-      {controlInterface === ControlInterface.Testing ? (
-        <ControlEntityParameterInput
+      {controlInterface === DevControlInterface.Testing ? (
+        <ResponsiveInput
           keyboardType={'decimal-pad'}
           label={'Revolution'}
           placeholder={'rotational distance traversed by the motor'}
-          reduxValue={controlEntities[entity].revolution}
+          storedValue={controlEntity.revolution}
           onInputBlur={(value) =>
             onParameterChange('revolution', value || '0', 'number')
           }
         />
       ) : null}
 
-      <ControlEntityParameterInput
+      <ResponsiveInput
         keyboardType={'number-pad'}
-        label={'Pulse per Revolution'}
+        label={'Pulse Per Revolution'}
         placeholder={'number of pulses per revolution'}
-        reduxValue={controlEntities[entity].pulsePerRevolution}
+        storedValue={controlEntity.pulsePerRevolution}
         onInputBlur={(value) =>
           onParameterChange('pulsePerRevolution', value || '0', 'number')
         }
       />
 
-      {controlInterface === ControlInterface.Testing ? (
+      {controlInterface === DevControlInterface.Testing ? (
         <View style={tailwind('mt-3 flex-row justify-between items-center')}>
           <View style={tailwind('flex-row items-center')}>
-            <ControlEntityParameterButton
-              isSelected={controlEntities[entity].direction === Direction.CCW}
+            <ResponsiveButton
+              isSelected={controlEntity.direction === Direction.CCW}
               onSelected={() =>
                 onParameterChange(
                   'direction',
@@ -94,9 +104,9 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
                 )
               }>
               CCW
-            </ControlEntityParameterButton>
-            <ControlEntityParameterButton
-              isSelected={controlEntities[entity].direction === Direction.CW}
+            </ResponsiveButton>
+            <ResponsiveButton
+              isSelected={controlEntity.direction === Direction.CW}
               onSelected={() =>
                 onParameterChange(
                   'direction',
@@ -105,11 +115,11 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
                 )
               }>
               CW
-            </ControlEntityParameterButton>
+            </ResponsiveButton>
           </View>
           <View style={tailwind('ml-4 items-center')}>
             <ControlEntityParameterToggle
-              checked={controlEntities[entity].enable === Enable.High}
+              checked={controlEntity.enable === Enable.High}
               onChange={(checked) =>
                 onParameterChange(
                   'enable',
@@ -128,9 +138,9 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
         </View>
       ) : null}
 
-      {controlInterface === ControlInterface.RealTimeControl ? (
+      {controlInterface === DevControlInterface.RealTimeControl ? (
         <StepperMotorContinuousControl
-          entity={entity}
+          controlEntity={controlEntity}
           style={tailwind('mt-4 w-full')}
         />
       ) : null}

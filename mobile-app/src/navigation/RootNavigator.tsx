@@ -3,29 +3,18 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { RootStackParamList } from './navigationTypes';
 
-import { CustomHeader } from '@navigation/CustomHeader';
-import {
-  DevControllerScreen,
-  SettingsScreen,
-  SimpleControllerScreen,
-} from '@containers/generic';
+import { Main } from './main';
+import { Builder } from './builder';
 
-const Stack = createStackNavigator<RootStackParamList>();
+const { Navigator, Screen } = createStackNavigator<RootStackParamList>();
 
 export const RootNavigator: FC = () => (
-  <Stack.Navigator
-    screenOptions={{ header: (props) => <CustomHeader {...props} /> }}
-    initialRouteName={'SimpleController'}>
-    <Stack.Screen
-      name={'DevController'}
-      component={DevControllerScreen}
-      options={{ headerTitle: 'Developer Controller' }}
+  <Navigator mode={'modal'} initialRouteName={'Main'}>
+    <Screen name={'Main'} component={Main} />
+    <Screen
+      name={'Builder'}
+      component={Builder}
+      options={{ headerShown: false }}
     />
-    <Stack.Screen
-      name={'SimpleController'}
-      component={SimpleControllerScreen}
-      options={{ headerTitle: 'Simple Controller' }}
-    />
-    <Stack.Screen name={'Settings'} component={SettingsScreen} />
-  </Stack.Navigator>
+  </Navigator>
 );

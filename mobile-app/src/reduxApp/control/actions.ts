@@ -1,6 +1,6 @@
 import { ControlConstants } from './constants';
 
-import { SetControlEntities } from './types';
+import { RemoveControlEntity, SetControlEntities } from './types';
 
 export const setControlEntities = (
   payload: SetControlEntities, // required action arg
@@ -10,6 +10,19 @@ export const setControlEntities = (
     payload,
   } as const);
 
+export const removeControlEntity = (
+  payload: RemoveControlEntity, // required action arg
+) =>
+  ({
+    type: ControlConstants.REMOVE_CONTROL_ENTITY,
+    payload,
+  } as const);
+
+export const clearAllControlEntity = () =>
+  ({
+    type: ControlConstants.CLEAR_ALL_CONTROL_ENTITIES,
+  } as const);
+
 /**
  * @description union of all the actions by using ReturnType to get the return type of each function
  * @guide https://www.carlrippon.com/managing-app-state-with-redux-and-typescript-p1/
@@ -17,5 +30,14 @@ export const setControlEntities = (
 export type SetControlEntitiesControlAction = ReturnType<
   typeof setControlEntities
 >;
+export type RemoveControlEntityControlAction = ReturnType<
+  typeof removeControlEntity
+>;
+export type ClearAllControlEntityControlAction = ReturnType<
+  typeof clearAllControlEntity
+>;
 
-export type ControlActionTypes = SetControlEntitiesControlAction;
+export type ControlActionTypes =
+  | SetControlEntitiesControlAction
+  | RemoveControlEntityControlAction
+  | ClearAllControlEntityControlAction;

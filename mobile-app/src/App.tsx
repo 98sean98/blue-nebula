@@ -5,7 +5,7 @@ import React, { FC, useMemo } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { enableScreens } from 'react-native-screens';
-import { StatusBar, useColorScheme } from 'react-native';
+import { useColorScheme } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -13,8 +13,14 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { store } from '@reduxApp/store';
 import { RootNavigator } from '@navigation';
 
-import { BleLayer } from '@components/shared/bluetooth';
-import { TimerLayer, SettingsLayer } from '@components/shared/layer';
+import {
+  BleLayer,
+  AsyncStorageLayer,
+  SettingsLayer,
+  TimerLayer,
+  AppMakerLayer,
+  PermissionsLayer,
+} from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
 
@@ -33,19 +39,24 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      <BleLayer>
-        <SettingsLayer>
-          <TimerLayer>
-            <IconRegistry icons={EvaIconsPack} />
-            <ApplicationProvider {...eva} theme={themes.eva}>
-              <NavigationContainer theme={themes.navigation}>
-                <StatusBar hidden />
-                <RootNavigator />
-              </NavigationContainer>
-            </ApplicationProvider>
-          </TimerLayer>
-        </SettingsLayer>
-      </BleLayer>
+      <PermissionsLayer>
+        <BleLayer>
+          <SettingsLayer>
+            <AsyncStorageLayer>
+              <TimerLayer>
+                <AppMakerLayer>
+                  <IconRegistry icons={EvaIconsPack} />
+                  <ApplicationProvider {...eva} theme={themes.eva}>
+                    <NavigationContainer theme={themes.navigation}>
+                      <RootNavigator />
+                    </NavigationContainer>
+                  </ApplicationProvider>
+                </AppMakerLayer>
+              </TimerLayer>
+            </AsyncStorageLayer>
+          </SettingsLayer>
+        </BleLayer>
+      </PermissionsLayer>
     </ReduxProvider>
   );
 };

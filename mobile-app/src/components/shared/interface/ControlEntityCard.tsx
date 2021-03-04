@@ -1,24 +1,66 @@
-import React, { FC } from 'react';
-import { Card, CardProps, Text } from '@ui-kitten/components';
+import React, { FC, useState } from 'react';
+import { Card, CardProps, Text, Button } from '@ui-kitten/components';
 import { RenderProp } from '@ui-kitten/components/devsupport';
 import { View, ViewProps } from 'react-native';
 
-interface ControlEntityCardProps extends CardProps {
+import { tailwind } from '@styles/tailwind';
+
+import { renderIcon } from '@components/shared/interface/renderIcon';
+import { ConfirmationModal } from '@components/shared/actionable/ConfirmationModal';
+
+interface ControlEntityCardProps extends Omit<CardProps, 'header'> {
   headerParams: { title: string; subtitle?: string };
+  onConfirmDelete: () => void;
 }
 
 export const ControlEntityCard: FC<ControlEntityCardProps> = ({
   headerParams: { title, subtitle },
+  onConfirmDelete,
   ...props
 }) => {
+  const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
+
+  const onDeletePress = () => setShouldShowModal(!shouldShowModal);
+
+  const onYesPress = () => {
+    setShouldShowModal(false);
+    onConfirmDelete();
+  };
+
   const renderHeader: RenderProp<ViewProps> = (headerViewProps) => (
-    <View {...headerViewProps}>
-      <Text category={'h4'}>{title}</Text>
-      <Text category={'label'} appearance={'hint'}>
-        {subtitle ?? 'Control entity'}
-      </Text>
+    <View
+      {...headerViewProps}
+      style={[
+        tailwind('w-full flex-row justify-between'),
+        headerViewProps?.style,
+      ]}>
+      <View>
+        <Text category={'h4'}>{title}</Text>
+        <Text category={'label'} appearance={'hint'}>
+          {subtitle ?? 'Control entity'}
+        </Text>
+      </View>
+      <Button
+        accessoryLeft={renderIcon('trash-outline')}
+        appearance={'ghost'}
+        status={'basic'}
+        size={'small'}
+        onPress={onDeletePress}
+      />
     </View>
   );
 
-  return <Card disabled header={renderHeader} {...props} />;
+  return (
+    <>
+      <Card disabled {...props} header={renderHeader} />
+
+      <ConfirmationModal
+        visible={shouldShowModal}
+        onBackdropPress={() => setShouldShowModal(false)}
+        action={'delete'}
+        itemName={title}
+        onYesPress={onYesPress}
+      />
+    </>
+  );
 };

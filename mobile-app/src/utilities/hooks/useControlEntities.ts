@@ -7,15 +7,17 @@ import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
 import { SetControlEntities } from '@reduxApp/control/types';
 
+import { ControlEntityEnum } from '@models/control-entity';
 import { DeclarableValueType } from '@models/ValueType';
 
 import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
 import {
-  mapStepperMotorToString,
-  mapStringArrayToStepperMotor,
-} from '@utilities/functions/stepper-motor';
+  mapControlEntityToString,
+  mapStringArrayToControlEntity,
+} from '@utilities/functions/map';
 
 import { parseStringToType } from '@utilities/functions/parse';
+import { getObjectKeys } from '@utilities/functions/objectKeys';
 
 type UseControlEntities = {
   readAll: () => Promise<void>;
@@ -39,33 +41,44 @@ export const useControlEntities = (): UseControlEntities => {
   } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
 
   const readAll: UseControlEntities['readAll'] = useCallback(async () => {
-    const stepMotorString = (await readStepperMotors()) as string;
-    // decipher string into control entity object
-    const stepMotorStringArray = stepMotorString.split(', ');
+    // decipher string into control entity objects
+    const stepperMotorString = (await readStepperMotors()) as string;
+    const stepperMotorStringArray = stepperMotorString.split(', ');
 
-    const newControlEntities: SetControlEntities = {
-      wheelMotor: mapStringArrayToStepperMotor(
-        stepMotorStringArray.slice(0, 6),
-      ),
-      screwMotor: mapStringArrayToStepperMotor(
-        stepMotorStringArray.slice(6, 12),
-      ),
-    };
+    const objectKeysCount = getObjectKeys(ControlEntityEnum.StepperMotor)
+      .length;
+
+    const newControlEntities: SetControlEntities = {};
+
+    for (let i = 0; i < stepperMotorStringArray.length / objectKeysCount; i++) {
+      const stringArray = stepperMotorStringArray.slice(
+        i * objectKeysCount,
+        (i + 1) * objectKeysCount,
+      );
+      const entity = stringArray[0];
+      newControlEntities[entity] = {
+        ...mapStringArrayToControlEntity(
+          stringArray,
+          ControlEntityEnum.StepperMotor,
+        ),
+        type: ControlEntityEnum.StepperMotor,
+      };
+    }
 
     dispatch(setControlEntities(newControlEntities));
   }, [dispatch, readStepperMotors]);
 
   const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
-    const strings = [
-      checkIfObjectValuesAreDefined(controlEntities.wheelMotor)
-        ? mapStepperMotorToString(controlEntities.wheelMotor)
+    const stepperMotorStrings: Array<string> = Object.values(
+      controlEntities,
+    ).map((controlEntity) =>
+      controlEntity.type === ControlEntityEnum.StepperMotor &&
+      checkIfObjectValuesAreDefined(controlEntity)
+        ? mapControlEntityToString(controlEntity)
         : '',
-      checkIfObjectValuesAreDefined(controlEntities.screwMotor)
-        ? mapStepperMotorToString(controlEntities.screwMotor)
-        : '',
-    ];
+    );
 
-    for (const string of strings) {
+    for (const string of stepperMotorStrings) {
       if (string.length > 0) await writeStepperMotor(string);
     }
   }, [controlEntities, writeStepperMotor]);

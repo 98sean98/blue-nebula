@@ -3,22 +3,18 @@
  * @documentation please see https://reactnavigation.org/docs/typescript/ for expanding the type definition
  */
 
-import { RouteProp } from '@react-navigation/native';
+import { NavigatorScreenParams } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
+import { MainDrawerParamList } from '@navigation/main';
+import { BuilderStackParamList } from '@navigation/builder';
+import { StackScreenProps } from '@react-navigation/stack/lib/typescript/src/types';
+
 export type RootStackParamList = {
-  DevController: undefined;
-  SimpleController: undefined;
-  Settings: undefined;
+  Main: NavigatorScreenParams<MainDrawerParamList>;
+  Builder: NavigatorScreenParams<BuilderStackParamList>;
 };
 
-type RootScreenProps<T extends keyof RootStackParamList> = {
-  route: RouteProp<RootStackParamList, T>;
-  navigation: StackNavigationProp<RootStackParamList, T>;
-}; // generic type for both the route and navigation props for a screen
+export type RootNavigationProp = StackNavigationProp<RootStackParamList>;
 
-export type DevControllerScreenProps = RootScreenProps<'DevController'>;
-
-export type SimpleControllerScreenProps = RootScreenProps<'SimpleController'>;
-
-export type SettingsScreenProps = RootScreenProps<'Settings'>;
+export type MainScreenProps = StackScreenProps<RootStackParamList, 'Main'>;

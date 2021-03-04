@@ -28,8 +28,14 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
       {shouldShow ? (
         children
       ) : shouldShowHelperText ? (
-        <View style={[{ flex: 1 }, tailwind('justify-center items-center')]}>
-          <Text>Bluetooth is not connected!</Text>
+        <View
+          style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
+          <Text style={tailwind('text-center')}>
+            Bluetooth is not connected!
+          </Text>
+          <Text style={tailwind('mt-2 text-center')}>
+            Make sure to enable bluetooth before connecting!
+          </Text>
         </View>
       ) : null}
     </>

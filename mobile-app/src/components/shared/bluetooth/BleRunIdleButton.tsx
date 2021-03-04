@@ -8,17 +8,20 @@ import React, {
 import { Dimensions, ScrollView } from 'react-native';
 import { Button, ButtonProps, Card, Modal, Text } from '@ui-kitten/components';
 import { useIsFocused } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
+
+import { RootState } from '@reduxApp';
+
+import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
+import { ControlEntitySummary } from '@components/shared/interface';
+import { ConfirmationButtonGroup } from '@components/shared/actionable';
 
 import {
   useBleRpiDeviceCharacteristic,
   useControlEntities,
 } from '@utilities/hooks';
-
-import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
-import { ControlEntitySummary } from '@components/shared/interface';
-import { ConfirmationButtonGroup } from '@components/shared/actionable';
 
 interface BleRunIdleButtonProps extends Omit<ButtonProps, 'onPress'> {
   showVerbose?: boolean;
@@ -30,6 +33,8 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   onStateChange,
   ...props
 }) => {
+  const { controlEntities } = useSelector((state: RootState) => state.control);
+
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
 
@@ -92,8 +97,8 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   return (
     <>
       <Button
-        {...props}
         status={isRunning ? 'danger' : 'primary'}
+        {...props}
         onPress={onButtonPress}>
         {isRunning ? 'Stop' : 'Start'}
       </Button>
@@ -101,15 +106,20 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
       <Modal
         visible={shouldShowModal}
         backdropStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-        onBackdropPress={() => setShouldShowModal(false)}>
+        onBackdropPress={() => setShouldShowModal(false)}
+        style={[tailwind('w-4/5')]}>
         <Card disabled style={tailwind('m-4')}>
           <Text category={'h5'} style={tailwind('text-center')}>
             Are you ready to start?
           </Text>
           {showVerbose ? (
             <ScrollView
-              style={{ maxHeight: Dimensions.get('window').height * 0.6 }}>
-              <ControlEntitySummary style={tailwind('mt-2')} />
+              style={{ maxHeight: Dimensions.get('window').height * 0.6 }}
+              showsVerticalScrollIndicator={false}>
+              <ControlEntitySummary
+                style={tailwind('mt-2')}
+                controlEntities={controlEntities}
+              />
             </ScrollView>
           ) : null}
 

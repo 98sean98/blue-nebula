@@ -1,14 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
-import { FlatList, ListRenderItem, View } from 'react-native';
+import React, { FC, useEffect, useMemo, useState } from 'react';
+import { FlatList, KeyboardAvoidingView, ListRenderItem } from 'react-native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControlInterface } from '@models/ControlInterface';
-import { Enable } from '@models/control-entity';
-
-import { MotorCard } from '@containers/generic/DevControllerScreen';
+import { DevControlInterface } from '@models/ui';
+import {
+  ControlEntityEnum,
+  Enable,
+  StepperMotor,
+} from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
 
@@ -16,33 +18,48 @@ import { StepperMotorCard } from './StepperMotorCard';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
-import { mapStepperMotorToString } from '@utilities/functions/stepper-motor';
+import { mapControlEntityToString } from '@utilities/functions/map';
+import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
 
 interface RealTimeControlModeProps {
   isFocused: boolean;
-  motors: Array<MotorCard>;
 }
 
 export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   isFocused,
-  motors,
 }) => {
-  const renderItem: ListRenderItem<typeof motors[0]> = ({
-    item: { entity, title },
-  }) => (
-    <StepperMotorCard
-      entity={entity}
-      controlInterface={ControlInterface.RealTimeControl}
-      headerParams={{ title }}
-      style={[tailwind('my-2 mx-4')]}
-    />
+  const { controlEntities } = useSelector((state: RootState) => state.control);
+
+  const data = useMemo(
+    () =>
+      Object.entries(controlEntities).map(([entity, controlEntity]) => ({
+        entity,
+        controlEntity,
+      })),
+    [controlEntities],
   );
 
-  const keyExtractor = (item: MotorCard) => item.entity;
+  const renderItem: ListRenderItem<typeof data[0]> = ({
+    item: { entity, controlEntity },
+  }) => {
+    switch (controlEntity.type) {
+      case ControlEntityEnum.StepperMotor:
+        return (
+          <StepperMotorCard
+            entity={entity}
+            controlEntity={controlEntity as StepperMotor}
+            controlInterface={DevControlInterface.RealTimeControl}
+            style={[tailwind('my-2 mx-4')]}
+          />
+        );
+      case ControlEntityEnum.DCMotor:
+        return <></>;
+    }
+  };
+
+  const keyExtractor = (item: typeof data[0]) => item.entity;
 
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
-
-  const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const { write: writeStepMotor } = useBleRpiDeviceCharacteristic(
     'stepperMotors',
@@ -60,16 +77,12 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   const onEnablePinOff = async () => {
     try {
-      const strings = [
-        mapStepperMotorToString({
-          ...controlEntities.wheelMotor,
-          enable: Enable.Low,
-        }),
-        mapStepperMotorToString({
-          ...controlEntities.screwMotor,
-          enable: Enable.Low,
-        }),
-      ];
+      const strings = Object.values(controlEntities).map((controlEntity) =>
+        controlEntity.type === ControlEntityEnum.StepperMotor &&
+        checkIfObjectValuesAreDefined(controlEntity)
+          ? mapControlEntityToString(controlEntity)
+          : '',
+      );
 
       for (const string of strings) {
         if (string.length > 0) await writeStepMotor(string);
@@ -88,13 +101,16 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   return (
     <>
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={'padding'}
+        keyboardVerticalOffset={150}>
         <FlatList
-          data={motors}
+          data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
         />
-      </View>
+      </KeyboardAvoidingView>
 
       <Modal
         visible={shouldShowModal}
