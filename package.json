@@ -1,0 +1,22 @@
+{
+  "name": "scraper",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/98sean98/scraper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/98sean98/scraper/issues"
+  },
+  "homepage": "https://github.com/98sean98/scraper#readme",
+  "devDependencies": {
+    "husky": "^5.1.3"
+  }
+}
