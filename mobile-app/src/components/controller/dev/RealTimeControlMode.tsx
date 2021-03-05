@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useState } from 'react';
-import { FlatList, KeyboardAvoidingView, ListRenderItem } from 'react-native';
+import { FlatList, ListRenderItem } from 'react-native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -16,6 +16,7 @@ import { RootState } from '@reduxApp';
 
 import { StepperMotorCard } from './StepperMotorCard';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
+import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';
@@ -101,16 +102,15 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   return (
     <>
-      <KeyboardAvoidingView
+      <PlatformKeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={'padding'}
         keyboardVerticalOffset={150}>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
         />
-      </KeyboardAvoidingView>
+      </PlatformKeyboardAvoidingView>
 
       <Modal
         visible={shouldShowModal}

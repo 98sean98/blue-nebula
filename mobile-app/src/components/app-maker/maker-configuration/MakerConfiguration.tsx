@@ -1,6 +1,5 @@
 import React, { FC, useMemo } from 'react';
 import {
-  KeyboardAvoidingView,
   ScrollView,
   View,
   ViewProps,
@@ -14,6 +13,7 @@ import { Page } from '@models/app-maker';
 import { PageInfo } from './PageInfo';
 import { LayoutBoxControl } from './LayoutBoxControl';
 import { PageStylesControl } from './PageStylesControl';
+import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { AppMakerMode } from '@utilities/context';
@@ -57,9 +57,8 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
           </Button>
         </View>
       ) : (
-        <KeyboardAvoidingView
+        <PlatformKeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={'padding'}
           keyboardVerticalOffset={150}>
           <ScrollView contentContainerStyle={tailwind('px-4 pt-1 pb-2')}>
             <PageInfo
@@ -83,7 +82,7 @@ export const MakerConfiguration: FC<MakerConfigurationProps> = ({
               style={tailwind('mt-2')}
             />
           </ScrollView>
-        </KeyboardAvoidingView>
+        </PlatformKeyboardAvoidingView>
       )}
     </View>
   );

@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState, Fragment } from 'react';
-import { Alert, KeyboardAvoidingView, ScrollView, View } from 'react-native';
+import { Alert, ScrollView, View } from 'react-native';
 import { Select, IndexPath, SelectItem, Button } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,10 +19,12 @@ import {
   Enable,
 } from '@models/control-entity';
 
-import { ResponsiveInput } from '@components/shared/actionable';
-
 import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
+
+import { ResponsiveInput } from '@components/shared/actionable';
+import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
+
 
 import { getObjectKeys } from '@utilities/functions/objectKeys';
 import { mapStringArrayToObject } from '@utilities/functions/map';
@@ -142,9 +144,8 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
   };
 
   return (
-    <KeyboardAvoidingView
+    <PlatformKeyboardAvoidingView
       style={{ flex: 1, marginBottom: insets.bottom }}
-      behavior={'padding'}
       keyboardVerticalOffset={90}>
       <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>
         {/* select a control entity type */}
@@ -246,6 +247,6 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
           </Button>
         ) : null}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </PlatformKeyboardAvoidingView>
   );
 };

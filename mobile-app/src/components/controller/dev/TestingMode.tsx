@@ -1,7 +1,6 @@
 import React, { FC, useMemo, useState } from 'react';
 import {
   FlatList,
-  KeyboardAvoidingView,
   ListRenderItem,
   View,
 } from 'react-native';
@@ -21,6 +20,7 @@ import {
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
 import { Timer } from '@components/shared/actionable';
+import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
 
 interface TestingModeProps {
   isFocused: boolean;
@@ -64,9 +64,8 @@ export const TestingMode: FC<TestingModeProps> = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <KeyboardAvoidingView
+      <PlatformKeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={'padding'}
         keyboardVerticalOffset={150}>
         <FlatList
           data={data}
@@ -74,7 +73,7 @@ export const TestingMode: FC<TestingModeProps> = () => {
           keyExtractor={keyExtractor}
           ListFooterComponentStyle={tailwind('px-4 pb-3')}
         />
-      </KeyboardAvoidingView>
+      </PlatformKeyboardAvoidingView>
 
       <Divider />
 
