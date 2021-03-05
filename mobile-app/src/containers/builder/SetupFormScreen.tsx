@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useMemo, useState, Fragment } from 'react';
 import {
   Alert,
-  KeyboardAvoidingView,
   ScrollView,
   View,
   ViewProps,
@@ -25,7 +24,7 @@ import {
 } from '@reduxApp/builder/actions';
 
 import { ResponsiveInput } from '@components/shared/actionable';
-import { renderIcon } from '@components/shared/interface';
+import {PlatformKeyboardAvoidingView, renderIcon} from '@components/shared/interface';
 
 import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker';
 
@@ -201,9 +200,8 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
   );
 
   return (
-    <KeyboardAvoidingView
+    <PlatformKeyboardAvoidingView
       style={{ flex: 1, marginBottom: insets.bottom }}
-      behavior={'padding'}
       keyboardVerticalOffset={80}>
       <ScrollView contentContainerStyle={tailwind('py-5 px-4')}>
         {/* name */}
@@ -267,6 +265,6 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
           </Button>
         ) : null}
       </ScrollView>
-    </KeyboardAvoidingView>
+    </PlatformKeyboardAvoidingView>
   );
 };

@@ -1,5 +1,5 @@
 import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { KeyboardAvoidingView, ListRenderItem, StyleSheet } from 'react-native';
+import { ListRenderItem, StyleSheet } from 'react-native';
 import { useTheme } from '@ui-kitten/components';
 import Carousel, { CarouselProps } from 'react-native-snap-carousel';
 import { IterableElement } from 'type-fest';
@@ -9,7 +9,7 @@ import { tailwind } from '@styles/tailwind';
 import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
 import { PageCarouselData } from '@models/ui';
 
-import { LayoutDivider } from '@components/shared/interface';
+import { LayoutDivider, PlatformKeyboardAvoidingView } from '@components/shared/interface';
 import { MakerBox } from './MakerBox';
 
 import { useAppMakerContext } from '@utilities/hooks';
@@ -57,10 +57,8 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
     item: [key, { layout, boxes }],
   }) => (
-    <KeyboardAvoidingView
-      key={key}
+    <PlatformKeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={'padding'}
       keyboardVerticalOffset={90}>
       <LayoutDivider
         pageKey={key}
@@ -68,7 +66,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
         boxes={getBoxesBasedOnLayout(boxes, layout)}
         renderItem={renderLayoutDividerItem}
       />
-    </KeyboardAvoidingView>
+    </PlatformKeyboardAvoidingView>
   );
 
   const checkIfMakerBoxIsPopulated = (boxKey: keyof Boxes): boolean => {
