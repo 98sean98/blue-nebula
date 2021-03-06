@@ -69,10 +69,8 @@ class StepperMotor(Motor):
             if i % 100 is 0:
                 tracked_parameters['revolution'] = round(i / self.parameters['pulse_per_revolution'], 2)
 
-        # finish running the required total pulse
-        GPIO.output(self.enable_pin, GPIO.LOW)
-
-        sleep(0.5) # pause for possible change direction
+        # stop the motor as it finished running the required total pulse
+        self.stop_running()
 
         # call parent method to finish running
         super().run(is_running, tracked_parameters)
