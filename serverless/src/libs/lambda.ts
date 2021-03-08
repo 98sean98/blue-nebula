@@ -1,6 +1,8 @@
 import middy from '@middy/core';
 import middyJsonBodyParser from '@middy/http-json-body-parser';
 
-export const middyfy = (handler: any) => {
+import { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
+
+export const middyfy = (handler: ValidatedEventAPIGatewayProxyEvent<any>) => {
   return middy(handler).use(middyJsonBodyParser());
 };
