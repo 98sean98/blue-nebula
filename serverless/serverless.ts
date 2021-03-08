@@ -1,6 +1,7 @@
 import { AWS } from '@serverless/typescript';
 
 import { hello } from '@functions/hello';
+import { graphql } from '@functions/graphql';
 
 const serverlessConfiguration: AWS = {
   service: 'serverless',
@@ -29,7 +30,7 @@ const serverlessConfiguration: AWS = {
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { hello },
+  functions: { hello, graphql },
 };
 
 module.exports = serverlessConfiguration;

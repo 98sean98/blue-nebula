@@ -12,6 +12,7 @@ module.exports = {
         alias: {
           '@functions': './src/functions',
           '@libs': './src/libs',
+          '@schema': './src/schema',
           '@utilities': './src/utilities',
         },
       },

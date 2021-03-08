@@ -6,6 +6,8 @@
       "@functions/*": ["src/functions/*"],
       "@libs": ["src/libs"],
       "@libs/*": ["src/libs/*"],
+      "@schema": ["src/schema"],
+      "@schema/*": ["src/schema/*"],
       "@utilities": ["src/utilities"],
       "@utilities/*": ["src/utilities/*"]
     }
