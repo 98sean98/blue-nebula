@@ -1,4 +1,4 @@
-name: Run tests for server
+name: Run tests for serverless
 
 on:
   push:
@@ -7,10 +7,10 @@ on:
   pull_request:
 
 env:
+  DATABASE_URL: postgresql://prisma:scraper-test-secret@localhost:5432/scraper-test?schema=public
   POSTGRES_USER: prisma
   POSTGRES_PASSWORD: scraper-test-secret
   POSTGRES_DB: scraper-test
-  DATABASE_URL: postgresql://prisma:scraper-test-secret@localhost:5432/scraper-test?schema=public
   HUSKY: 0
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: serverless
 
     steps:
       - name: Checkout
@@ -37,6 +37,3 @@ jobs:
 
       - name: Test
         run: npm run test
-
-      - name: Build
-        run: npm run build
