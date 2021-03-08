@@ -1,4 +1,4 @@
-import type { AWS } from '@serverless/typescript';
+import { AWS } from '@serverless/typescript';
 
 import hello from '@functions/hello';
 
