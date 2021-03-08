@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { handlerPath } from '@libs/handlerResolver';
+import { handlerPath } from '@utilities/handlerResolver';
 
 export const graphql = {
   handler: `${handlerPath(__dirname)}/handler.main`,

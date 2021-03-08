@@ -1,5 +1,5 @@
 import schema from './schema';
-import { handlerPath } from '@libs/handlerResolver';
+import { handlerPath } from '@utilities/handlerResolver';
 
 export const hello = {
   handler: `${handlerPath(__dirname)}/handler.main`,

@@ -3,8 +3,8 @@ import 'source-map-support/register';
 import {
   ValidatedEventAPIGatewayProxyEvent,
   formatJSONResponse,
-} from '@libs/apiGateway';
-import { middyfy } from '@libs/lambda';
+} from '@utilities/apiGateway';
+import { jsonMiddify } from '@utilities/jsonMiddify';
 
 import schema from './schema';
 
@@ -17,4 +17,4 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   });
 };
 
-export const main = middyfy(hello);
+export const main = jsonMiddify(hello);

@@ -11,7 +11,6 @@ module.exports = {
         extensions: ['.ts', '.js', '.json'],
         alias: {
           '@functions': './src/functions',
-          '@libs': './src/libs',
           '@schema': './src/schema',
           '@utilities': './src/utilities',
         },

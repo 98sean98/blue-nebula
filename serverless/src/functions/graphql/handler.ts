@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 
 import { graphqlSchema } from '@schema/graphqlSchema';
 
+import { databaseMiddify } from '@utilities/databaseMiddify';
+
 const prisma = new PrismaClient();
 
 const server = new ApolloServer({
@@ -21,4 +23,6 @@ const server = new ApolloServer({
   debug: process.env.NODE_ENV === 'development',
 });
 
-export const main: APIGatewayProxyHandler = server.createHandler();
+export const main: APIGatewayProxyHandler = databaseMiddify(
+  server.createHandler(),
+);
