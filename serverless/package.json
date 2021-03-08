@@ -1,7 +1,7 @@
 {
   "name": "serverless",
-  "version": "1.0.0",
-  "description": "Serverless aws-nodejs-typescript template",
+  "version": "0.0.1",
+  "description": "Serverless aws-nodejs-typescript infrastructure as backend",
   "main": "serverless.ts",
   "scripts": {
     "dev": "serverless offline start",
