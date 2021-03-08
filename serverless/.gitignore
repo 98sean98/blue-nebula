@@ -1,6 +1,10 @@
 node_modules/
 
-.serverless
+.env
+
+.serverless/
 .webpack/
+
+.eslintcache
 
 .idea/

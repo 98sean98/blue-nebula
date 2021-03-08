@@ -1,6 +1,6 @@
 import { AWS } from '@serverless/typescript';
 
-import hello from '@functions/hello';
+import { hello } from '@functions/hello';
 
 const serverlessConfiguration: AWS = {
   service: 'serverless',
@@ -10,11 +10,15 @@ const serverlessConfiguration: AWS = {
       webpackConfig: './webpack.config.js',
       includeModules: true,
     },
+    'serverless-offline': {
+      httpPort: 4000,
+    },
   },
-  plugins: ['serverless-webpack'],
+  useDotenv: true,
+  plugins: ['serverless-webpack', 'serverless-offline'],
   provider: {
     name: 'aws',
-    runtime: 'nodejs14.x',
+    runtime: 'nodejs12.x',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,

@@ -1,7 +1,7 @@
 import schema from './schema';
 import { handlerPath } from '@libs/handlerResolver';
 
-export default {
+export const hello = {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
