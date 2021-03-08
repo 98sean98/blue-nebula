@@ -5,6 +5,7 @@
   "main": "serverless.ts",
   "scripts": {
     "dev": "serverless offline start",
+    "build": "serverless package",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --fix --ext .ts",
@@ -76,6 +77,6 @@
     "webpack": "^5.20.2",
     "webpack-node-externals": "^2.5.2"
   },
-  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "author": "98sean98",
   "license": "MIT"
 }
