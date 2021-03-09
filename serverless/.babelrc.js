@@ -10,6 +10,7 @@ module.exports = {
         root: ['./src'],
         extensions: ['.ts', '.js', '.json'],
         alias: {
+          '@artifacts': './src/artifacts',
           '@functions': './src/functions',
           '@schema': './src/schema',
           '@utilities': './src/utilities',
