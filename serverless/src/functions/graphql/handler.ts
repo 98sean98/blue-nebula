@@ -9,6 +9,8 @@ import { databaseMiddify } from '@utilities/databaseMiddify';
 
 const prisma = new PrismaClient();
 
+const endpoint = `/${process.env.STAGE}/graphql`;
+
 const server = new ApolloServer({
   schema: applyMiddleware(graphqlSchema),
   context: ({ event, context }) => ({
@@ -18,9 +20,9 @@ const server = new ApolloServer({
     prisma,
   }),
   playground: {
-    endpoint: '/dev/graphql',
+    endpoint,
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: process.env.STAGE !== 'production',
 });
 
 export const main: APIGatewayProxyHandler = databaseMiddify(

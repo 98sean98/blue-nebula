@@ -14,12 +14,21 @@ const serverlessConfiguration: AWS = {
     'serverless-offline': {
       httpPort: 4000,
     },
+    prune: {
+      automatic: true,
+      number: 3,
+    },
   },
-  useDotenv: true,
-  plugins: ['serverless-webpack', 'serverless-offline'],
+  plugins: [
+    'serverless-webpack',
+    'serverless-offline',
+    'serverless-prune-plugin',
+  ],
   provider: {
     name: 'aws',
     runtime: 'nodejs12.x',
+    stage: "${opt:stage, 'dev'}",
+    region: 'us-east-1',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
