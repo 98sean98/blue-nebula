@@ -26,7 +26,7 @@ class StepperMotorsCharacteristic(Characteristic):
         self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method, dictionary_keys):
-        # encode the motor info for each step motor in the service
+        # encode the motor info for each stepper motor in the service
         all_stepper_motors = self.service.get_all_motors()['stepper_motors']
         list_of_motors = list(all_stepper_motors.items())
         encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]

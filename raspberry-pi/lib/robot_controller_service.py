@@ -4,11 +4,13 @@ from .config import Config
 
 from .control_entities.stepper_motor import StepperMotor
 from .control_entities.dc_motor import DCMotor
+from .control_entities.bldc_motor import BLDCMotor
 
 from .characteristics.ip_address import IPAddressCharacteristic
 from .characteristics.run_idle import RunIdleCharacteristic
 from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
+from .characteristics.bldc_motor import BLDCMotorsCharacteristic
 
 SERVICE_UUID = Config.UUID['robot_controller_service']
 
@@ -20,6 +22,9 @@ class RobotControllerService(Service):
         }
         self.dc_motors = {
         }
+        self.bldc_motors = {
+            'bldc_motor': BLDCMotor('bldc_motor', 13, 6, 5, 0, multiprocessing_manager)
+        }
         self.is_running = False
 
         Service.__init__(self, index, SERVICE_UUID, True)
@@ -27,6 +32,7 @@ class RobotControllerService(Service):
         self.add_characteristic(RunIdleCharacteristic(self))
         self.add_characteristic(StepperMotorsCharacteristic(self))
         self.add_characteristic(DCMotorsCharacteristic(self))
+        self.add_characteristic(BLDCMotorsCharacteristic(self))
 
     def get_is_running(self):
         is_running = False
@@ -49,12 +55,17 @@ class RobotControllerService(Service):
                 motor.set_is_running(is_running)
 
     def get_all_motors(self):
-        return {'stepper_motors': self.stepper_motors, 'dc_motors': self.dc_motors}
+        return {
+            'stepper_motors': self.stepper_motors,
+            'dc_motors': self.dc_motors,
+            'bldc_motors': self.bldc_motors
+        }
 
     def get_motor(self, motor_type, motor_name):
         motors_of_type = None
         if motor_type == 'stepper_motor': motors_of_type = self.stepper_motors
         if motor_type == 'dc_motor': motors_of_type = self.dc_motors
+        if motor_type == 'bldc_motor': motors_of_type = self.bldc_motors
 
         if motors_of_type is None:
             print(f"{motor_type} is not a valid motor type")

@@ -1,7 +1,8 @@
 from time import sleep
 import RPi.GPIO as GPIO
+from multiprocessing import Process
 
-PWM = 16
+PWM = 13
 DIR = 6
 EN = 5
 BRK = 0
@@ -20,7 +21,7 @@ GPIO.output(BRK, GPIO.LOW)
 
 sudden_brake = 0
 
-def forward(pwm_duty_cycle, duration):
+def forward(motor_pwm, pwm_duty_cycle, duration):
     GPIO.output(DIR, GPIO.LOW)
     GPIO.output(EN, GPIO.LOW)
     GPIO.output(BRK, GPIO.LOW)
@@ -38,9 +39,9 @@ def forward(pwm_duty_cycle, duration):
 
     sleep(duration)
 
-    stop(duty_cycle)
+    stop(motor_pwm, duty_cycle)
 
-def backward(pwm_duty_cycle, duration):
+def backward(motor_pwm, pwm_duty_cycle, duration):
     GPIO.output(DIR, GPIO.HIGH)
     GPIO.output(EN, GPIO.LOW)
     GPIO.output(BRK, GPIO.LOW)
@@ -58,24 +59,30 @@ def backward(pwm_duty_cycle, duration):
 
     sleep(duration)
 
-    stop(duty_cycle)
+    stop(motor_pwm, duty_cycle)
 
-def stop(current_pwm_duty_cycle):
+def stop(motor_pwm, current_pwm_duty_cycle):
     motor_pwm.ChangeDutyCycle(0)
     if sudden_brake: GPIO.output(BRK, GPIO.HIGH)
     else: GPIO.output(EN, GPIO.HIGH)
 
-def run_cycle(cycles):
+def run_cycle(cycles, motor_pwm):
     print("started running all cycles")
     for i in range(cycles):
         print(f"started running the {i}-th cycle")
-        forward(120, 5)
+        forward(motor_pwm, 120, 5)
         sleep(0.5)
-        backward(50, 5)
+        backward(motor_pwm, 50, 5)
         sleep(1)
         print(f"finished running the {i}-th cycle")
 
     print("finished running all cycles, yay!")
 
 if __name__ == '__main__':
-    run_cycle(10)
+    p = Process(target=run_cycle, args=(10, motor_pwm))
+    p.start()
+    while p.is_alive():
+        print('still running')
+        sleep(2)
+    p.join()
+    print('exit')

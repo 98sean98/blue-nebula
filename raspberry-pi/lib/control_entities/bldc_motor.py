@@ -38,11 +38,13 @@ class BLDCMotor(Motor):
         GPIO.output(enable_pin, GPIO.LOW)
         GPIO.output(brake_pin, GPIO.LOW)
 
-        # create motor pwm object
-        self.motor_pwm = GPIO.PWM(self.pwm_pin, pwm_frequency_value)
-        self.motor_pwm.start(0)
+        # create motor pwm object as an argument for the running process
+        motor_pwm = GPIO.PWM(self.pwm_pin, self.parameters['pwm_frequency'])
+        motor_pwm.start(0)
 
-        super().__init__(motor_name, multiprocessing_manager)
+        run_arguments = {'motor_pwm': motor_pwm}
+
+        super().__init__(motor_name, run_arguments, multiprocessing_manager)
 
     def get_pins(self):
         pins = {'pwm_pin': self.pwm_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin, 'brake_pin': self.brake_pin}
@@ -54,7 +56,7 @@ class BLDCMotor(Motor):
     def get_parameters(self):
         return self.parameters
 
-    def run(self, is_running, tracked_parameters):
+    def run(self, is_running, run_arguments, tracked_parameters):
         sleep(0.1) # pause due to a possible change in direction
 
         # determine pwm duty cycle, pwm frequency, direction, enable, brake, duration
@@ -74,37 +76,40 @@ class BLDCMotor(Motor):
         print(f"{self.motor_name}.enable = {enable_value}")
 
         duration_value = self.parameters['duration']
-        print(f"{self.motor_name}.duration = {duration}")
-
-        # update motor pwm object based on a possibly new pwm frequency value
-        self.motor_pwm = GPIO.PWM(self.pwm_pin, pwm_frequency_value)
-        self.motor_pwm.start(0)
+        print(f"{self.motor_name}.duration = {duration_value}")
 
         # set the enable output
         GPIO.output(self.enable_pin, enable_value)
         # set the brake output to LOW
         GPIO.output(self.brake_pin, GPIO.LOW)
 
+        motor_pwm = run_arguments['motor_pwm']
+
+        # change the frequency
+        motor_pwm.ChangeFrequency(pwm_frequency_value)
+
         # actual running by gradually increasing pwm duty cycle from 0
-        for i in range(pwm_duty_cycle + 1):
-            self.motor_pwm.ChangeDutyCycle(i)
-            sleep(0.005)
+        # for i in range(pwm_duty_cycle_value + 1):
+        #     self.motor_pwm.ChangeDutyCycle(i)
+        #     sleep(0.005)
+        motor_pwm.ChangeDutyCycle(pwm_duty_cycle_value)
 
         # run duration
-        for i in range(duration_value * 100):
-            sleep(0.01)
+        sleep(duration_value)
 
         # stop the motor as it finished running the required duration
-        self.stop_running()
+        self.stop_running(run_arguments)
 
         # call parent method to finish running
-        super().run(is_running, tracked_parameters)
+        super().run(is_running, run_arguments, tracked_parameters)
 
-    def stop_running(self):
+    def stop_running(self, run_arguments):
         # stop the motor based on whether sudden braking is required
         sudden_brake = 0 if self.parameters['brake'] == 0 else 1
 
-        self.motor_pwm.ChangeDutyCycle(0)
+        motor_pwm = run_arguments['motor_pwm']
+
+        motor_pwm.ChangeDutyCycle(0)
         if sudden_brake:
             GPIO.output(self.brake_pin, GPIO.HIGH)
         else:
