@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { ApolloServer } from 'apollo-server-lambda';
 import { applyMiddleware } from 'graphql-middleware';

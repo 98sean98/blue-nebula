@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { handlerPath } from '@utilities/handlerResolver';
 
 export const graphql = {
