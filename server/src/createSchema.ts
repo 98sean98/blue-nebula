@@ -5,6 +5,11 @@ import {
   FindUniqueUserResolver,
   UpdateUserResolver,
   DeleteUserResolver,
+  CreateAppDataResolver,
+  FindManyAppDataResolver,
+  FindUniqueAppDataResolver,
+  UpdateAppDataResolver,
+  DeleteAppDataResolver,
 } from '@artifacts/type-graphql';
 
 const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
@@ -13,6 +18,11 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   FindUniqueUserResolver,
   UpdateUserResolver,
   DeleteUserResolver,
+  CreateAppDataResolver,
+  FindManyAppDataResolver,
+  FindUniqueAppDataResolver,
+  UpdateAppDataResolver,
+  DeleteAppDataResolver,
 ];
 
 export const createSchema = async () =>
