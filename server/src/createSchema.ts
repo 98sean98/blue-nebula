@@ -1,8 +1,8 @@
 import { buildSchema } from 'type-graphql';
-import { resolvers } from '@generated/type-graphql';
+import { UserCrudResolver } from '@artifacts/type-graphql';
 
 export const createSchema = async () =>
   await buildSchema({
-    resolvers,
+    resolvers: [UserCrudResolver],
     validate: false,
   });

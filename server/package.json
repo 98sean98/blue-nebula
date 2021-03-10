@@ -3,14 +3,14 @@
   "version": "0.0.1",
   "description": "server to support the mobile app",
   "scripts": {
-    "prestart": "npm run build",
     "start": "node dist",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --watch package.json src",
-    "build": "tsc && tsc-alias",
+    "build": "npm run prisma:generate && tsc && tsc-alias",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --fix --ext .ts",
     "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
+    "prisma:generate": "npx prisma generate",
     "precommit": "tsc --noEmit && lint-staged"
   },
   "author": "",
