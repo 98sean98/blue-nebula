@@ -11,7 +11,7 @@
     "lint-fix": "eslint . --fix --ext .ts",
     "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
     "prisma:generate": "npx prisma generate",
-    "precommit": "tsc --noEmit && lint-staged"
+    "precommit": "tsc --noEmit && lint-staged && npx prisma format"
   },
   "author": "",
   "license": "ISC",
