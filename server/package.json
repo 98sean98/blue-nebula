@@ -68,6 +68,7 @@
     "graphql-fields": "^2.0.3",
     "graphql-middleware": "^6.0.4",
     "graphql-scalars": "^1.8.0",
+    "graphql-shield": "^7.5.0",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1"

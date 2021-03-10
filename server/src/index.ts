@@ -6,7 +6,7 @@ import * as bodyParser from 'body-parser';
 import 'reflect-metadata';
 
 import { createServer } from './createServer';
-import { database } from './middleware';
+import { database } from '@middleware';
 
 env.config();
 
