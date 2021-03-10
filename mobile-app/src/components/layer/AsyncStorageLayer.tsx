@@ -19,6 +19,9 @@ import {
   convertObjectWithTimestampKeys,
 } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
 
+import { useQuery } from '@apollo/client';
+import { GET_USERS } from '@api/graphql/user';
+
 const renderAlert = (type: 'reading' | 'writing') =>
   Alert.alert(
     `${capitalCase(type)} Storage Error`,
@@ -131,6 +134,14 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       renderAlert('writing');
     }
   }, [writeStorage, makerConfig]);
+
+  const { data, loading, error } = useQuery(GET_USERS);
+
+  useEffect(() => {
+    if (!loading && typeof error !== 'undefined') console.log(error);
+    if (typeof data !== 'undefined' && typeof data.users !== 'undefined')
+      console.log(data.users);
+  }, [data, loading, error]);
 
   return <>{children}</>;
 };

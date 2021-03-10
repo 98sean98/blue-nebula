@@ -1,10 +1,5 @@
 import React, { FC, useCallback, useMemo, useState, Fragment } from 'react';
-import {
-  Alert,
-  ScrollView,
-  View,
-  ViewProps,
-} from 'react-native';
+import { Alert, ScrollView, View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '@ui-kitten/components';
@@ -24,7 +19,10 @@ import {
 } from '@reduxApp/builder/actions';
 
 import { ResponsiveInput } from '@components/shared/actionable';
-import {PlatformKeyboardAvoidingView, renderIcon} from '@components/shared/interface';
+import {
+  PlatformKeyboardAvoidingView,
+  renderIcon,
+} from '@components/shared/interface';
 
 import { replaceSetupKeyInActionTree } from '@utilities/functions/app-maker';
 

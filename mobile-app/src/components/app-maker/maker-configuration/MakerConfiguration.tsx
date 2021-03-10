@@ -1,9 +1,5 @@
 import React, { FC, useMemo } from 'react';
-import {
-  ScrollView,
-  View,
-  ViewProps,
-} from 'react-native';
+import { ScrollView, View, ViewProps } from 'react-native';
 import { Button, Text } from '@ui-kitten/components';
 
 import { tailwind } from '@styles/tailwind';
@@ -13,7 +9,7 @@ import { Page } from '@models/app-maker';
 import { PageInfo } from './PageInfo';
 import { LayoutBoxControl } from './LayoutBoxControl';
 import { PageStylesControl } from './PageStylesControl';
-import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
+import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { AppMakerMode } from '@utilities/context';

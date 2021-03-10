@@ -16,7 +16,7 @@ import { RootState } from '@reduxApp';
 
 import { StepperMotorCard } from './StepperMotorCard';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
-import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
+import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';

@@ -23,8 +23,7 @@ import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
 
 import { ResponsiveInput } from '@components/shared/actionable';
-import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
-
+import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 import { getObjectKeys } from '@utilities/functions/objectKeys';
 import { mapStringArrayToObject } from '@utilities/functions/map';
