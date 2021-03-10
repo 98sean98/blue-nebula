@@ -6,4 +6,6 @@ dist
 .env.staging
 .env.production
 
+src/artifacts
+
 .idea
