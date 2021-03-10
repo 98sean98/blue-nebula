@@ -11,7 +11,7 @@
     "lint-fix": "eslint . --fix --ext .ts",
     "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
     "prisma:generate": "npx prisma generate",
-    "precommit": "tsc --noEmit && lint-staged"
+    "precommit": "tsc --noEmit && lint-staged && npx prisma format"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-typescript": "^7.13.0",
     "@types/jest": "^26.0.20",
+    "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.14.31",
     "@types/pg": "^7.14.10",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
@@ -68,8 +69,11 @@
     "graphql-fields": "^2.0.3",
     "graphql-middleware": "^6.0.4",
     "graphql-scalars": "^1.8.0",
+    "graphql-shield": "^7.5.0",
+    "jsonwebtoken": "^8.5.1",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.1.1"
+    "type-graphql": "^1.1.1",
+    "universal-cookie": "^4.0.4"
   }
 }

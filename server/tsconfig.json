@@ -49,10 +49,16 @@
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     "paths": {
       /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+      "@src": ["src"],
+      "@src/*": ["src/*"],
       "@artifacts": ["src/artifacts"],
       "@artifacts/*": ["src/artifacts/*"],
+      "@auth": ["src/auth"],
+      "@auth/*": ["src/auth/*"],
       "@middleware": ["src/middleware"],
       "@middleware/*": ["src/middleware/*"],
+      "@shield": ["src/shield"],
+      "@shield/*": ["src/shield/*"],
       "@utilities": ["src/utilities"],
       "@utilities/*": ["src/utilities/*"]
     },

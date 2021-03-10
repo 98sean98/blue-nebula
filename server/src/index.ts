@@ -5,8 +5,10 @@ import * as bodyParser from 'body-parser';
 
 import 'reflect-metadata';
 
+import { auth } from '@auth';
+import { database } from '@middleware';
+
 import { createServer } from './createServer';
-import { database } from './middleware';
 
 env.config();
 
@@ -50,7 +52,7 @@ const main = async () => {
   app.use(bodyParser.json({ type: 'application/json' }));
 
   // auth REST api
-  // app.use('/auth', auth);
+  app.use('/auth', auth);
 
   // listener
   app.listen(port, () => {

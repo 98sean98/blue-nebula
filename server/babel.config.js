@@ -10,8 +10,11 @@ module.exports = {
         root: ['./src'],
         extensions: ['.ts', '.js', '.json'],
         alias: {
+          '@src': './src',
           '@artifacts': './src/artifacts',
+          '@auth': './src/auth',
           '@middleware': './src/middleware',
+          '@shield': './src/shield',
           '@utilities': './src/utilities',
         },
       },
