@@ -17,7 +17,7 @@ router.get('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log({ username, password });
+    console.log(`User with ${username} is attempting to login...`);
 
     if (typeof username === 'undefined' || username === '')
       throw new Error('Username is not provided.');
@@ -43,6 +43,8 @@ router.get('/login', async (req, res) => {
       data: { user: { connect: { id: user.id } } },
     });
     const token = generateToken(session);
+
+    console.log(`User with ${username} has successfully logged in...`);
 
     res.status(200).send(token);
   } catch (error) {
