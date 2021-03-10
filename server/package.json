@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "server to support the mobile app",
   "scripts": {
+    "prestart": "npm run build",
     "start": "node dist",
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --watch package.json src",
     "build": "tsc && tsc-alias",
