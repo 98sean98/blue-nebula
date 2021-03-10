@@ -1,0 +1,40 @@
+name: Deploy to staging environment for serverless
+
+on:
+  push:
+    branches-ignore:
+      - master
+
+env:
+  STAGE: staging
+  DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+  POSTGRES_USER: ${{ secrets.STAGING_POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.STAGING_POSTGRES_PASSWORD }}
+  POSTGRES_DB: ${{ secrets.STAGING_POSTGRES_DB }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  HUSKY: 0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: serverless
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use NodeJS stable
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install
+        run: |
+          npm install
+          npx prisma generate
+
+      - name: Deploy to AWS
+        run: npx serverless deploy --stage staging

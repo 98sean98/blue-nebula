@@ -1,0 +1,14 @@
+node_modules/
+
+.env
+.env.staging
+.env.production
+
+src/artifacts/
+
+.serverless/
+.webpack/
+
+.eslintcache
+
+.idea/
