@@ -6,7 +6,7 @@
   "scripts": {
     "prepare": "husky install",
     "precommit:mobile-app": "cd mobile-app && npm run precommit",
-    "precommit:serverless": "cd serverless && npm run precommit",
+    "precommit:server": "cd server && npm run precommit",
     "precommit": "npm-run-all precommit:*"
   },
   "repository": {
