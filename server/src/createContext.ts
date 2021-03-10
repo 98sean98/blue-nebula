@@ -1,35 +1,29 @@
 import { Request } from 'express';
-// import Cookies from "universal-cookie";
-// import { resolveUserUsingJWT } from "./utils/resolveUser";
+import { PrismaClient, User } from '@prisma/client';
 
-import { PrismaClient } from '@prisma/client';
+import { getTokenFromRequest, verifyUserToken } from '@utilities/auth/token';
 
 const prisma = new PrismaClient();
 
 export type Context = {
   prisma: PrismaClient;
-  // token: string;
   auth: {
-    // user: User;
+    user: User | undefined;
     isAuthenticated: boolean;
   };
 };
 
 export const createContext = async (req: Request): Promise<Context> => {
-  // const cookies = new Cookies(req && req.headers && req.headers.cookie);
-  // const cookieToken: string = cookies.get("RCTC_USER");
-  // const fallbackToken = req && req.headers && req.headers.authorization;
-  // const token: string = cookieToken || fallbackToken;
-  // const user = await resolveUserUsingJWT(prisma, token);
+  const token = getTokenFromRequest(req);
 
-  console.log({ req });
+  let user: User | undefined;
+  if (typeof token !== 'undefined') user = await verifyUserToken(token);
 
   return {
     prisma,
-    // token,
     auth: {
-      // user: user,
-      isAuthenticated: false,
+      user: user,
+      isAuthenticated: typeof user !== 'undefined',
     },
   };
 };

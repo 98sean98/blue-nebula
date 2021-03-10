@@ -12,6 +12,7 @@ module.exports = {
         alias: {
           '@src': './src',
           '@artifacts': './src/artifacts',
+          '@auth': './src/auth',
           '@middleware': './src/middleware',
           '@shield': './src/shield',
           '@utilities': './src/utilities',

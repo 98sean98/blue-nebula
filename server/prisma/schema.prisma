@@ -8,14 +8,25 @@ generator client {
 }
 
 generator typegraphql {
-  provider = "typegraphql-prisma"
-  output = "../src/artifacts/type-graphql"
+  provider           = "typegraphql-prisma"
+  output             = "../src/artifacts/type-graphql"
   emitTranspiledCode = true
 }
 
 model User {
-  id    	    String  	@id @default(uuid())
-  createdAt	    DateTime	@default(now())
-  firstName	    String
-  lastName	    String
+  id        String    @id @default(uuid())
+  createdAt DateTime  @default(now())
+  username  String
+  firstName String
+  lastName  String
+  Session   Session[]
+
+  @@unique([username])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id])
 }

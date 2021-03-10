@@ -53,6 +53,8 @@
       "@src/*": ["src/*"],
       "@artifacts": ["src/artifacts"],
       "@artifacts/*": ["src/artifacts/*"],
+      "@auth": ["src/auth"],
+      "@auth/*": ["src/auth/*"],
       "@middleware": ["src/middleware"],
       "@middleware/*": ["src/middleware/*"],
       "@shield": ["src/shield"],
