@@ -43,32 +43,32 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      <ApplicationLayer>
-        <ApolloLayer>
-          <PermissionsLayer>
-            <BleLayer>
-              <SettingsLayer>
-                <AsyncStorageLayer>
-                  <AuthLayer>
-                    <MicroAppsLayer>
-                      <TimerLayer>
-                        <AppMakerLayer>
-                          <IconRegistry icons={EvaIconsPack} />
-                          <ApplicationProvider {...eva} theme={themes.eva}>
+      <IconRegistry icons={EvaIconsPack} />
+      <ApplicationProvider {...eva} theme={themes.eva}>
+        <ApplicationLayer>
+          <ApolloLayer>
+            <PermissionsLayer>
+              <BleLayer>
+                <SettingsLayer>
+                  <AsyncStorageLayer>
+                    <AuthLayer>
+                      <MicroAppsLayer>
+                        <TimerLayer>
+                          <AppMakerLayer>
                             <NavigationContainer theme={themes.navigation}>
                               <RootNavigator />
                             </NavigationContainer>
-                          </ApplicationProvider>
-                        </AppMakerLayer>
-                      </TimerLayer>
-                    </MicroAppsLayer>
-                  </AuthLayer>
-                </AsyncStorageLayer>
-              </SettingsLayer>
-            </BleLayer>
-          </PermissionsLayer>
-        </ApolloLayer>
-      </ApplicationLayer>
+                          </AppMakerLayer>
+                        </TimerLayer>
+                      </MicroAppsLayer>
+                    </AuthLayer>
+                  </AsyncStorageLayer>
+                </SettingsLayer>
+              </BleLayer>
+            </PermissionsLayer>
+          </ApolloLayer>
+        </ApplicationLayer>
+      </ApplicationProvider>
     </ReduxProvider>
   );
 };
