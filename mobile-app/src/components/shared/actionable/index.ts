@@ -5,6 +5,8 @@ export { Timer } from './Timer';
 
 export { ConfirmationModal } from './ConfirmationModal';
 
+export { AppDownloadPrompt } from './AppDownloadPrompt';
+
 export * from './box';
 export * from './button';
 export * from './slider';
