@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log(`User with ${username} is attempting to login...`);
+    console.log(`User ${username} is attempting to login...`);
 
     if (typeof username === 'undefined' || username === '')
       throw new Error('Username is not provided.');
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
     });
     const token = generateToken(session);
 
-    console.log(`User with ${username} has successfully logged in...`);
+    console.log(`User ${username} has successfully logged in!`);
 
     res.status(200).send(token);
   } catch (error) {
@@ -67,6 +67,7 @@ router.post('/logout', async (_req: Request, res: Response) => {
     const invalidation = await invalidateUserTokens(user.id);
     if (!invalidation) throw new Error('Tokens invalidation failed.');
 
+    console.log(`User ${user.username} has successfully logged out!`);
     res.status(200).send('Logout successful.');
   } catch (error) {
     console.log(`Error logging user out:`, error);
