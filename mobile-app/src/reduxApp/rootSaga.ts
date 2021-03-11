@@ -1,9 +1,11 @@
 import { all, fork } from 'redux-saga/effects';
 
-import { exampleCounterSagas } from './exampleCounter';
+import { authSagas } from './auth';
 import { bluetoothSagas } from './bluetooth';
+import { exampleCounterSagas } from './exampleCounter';
 
 export function* rootSaga() {
-  yield all([fork(exampleCounterSagas)]);
+  yield all([fork(authSagas)]);
   yield all([fork(bluetoothSagas)]);
+  yield all([fork(exampleCounterSagas)]);
 }

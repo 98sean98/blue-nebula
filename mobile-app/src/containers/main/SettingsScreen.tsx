@@ -16,6 +16,7 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
+import { UserAuth } from '@components/settings';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
@@ -121,6 +122,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
           </Button>
         </View>
       </RenderBleComponent>
+
+      {/* user authentication */}
+      <UserAuth style={tailwind('mt-4')} />
     </ScrollView>
   );
 };

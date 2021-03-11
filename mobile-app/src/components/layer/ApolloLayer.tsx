@@ -6,7 +6,9 @@ import {
   ApolloProvider,
   DefaultOptions,
 } from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
+
+import { RootState } from '@reduxApp';
 
 import { serverUrl } from '@config/environment';
 
@@ -27,19 +29,10 @@ const defaultOptions: DefaultOptions = {
 };
 
 export const ApolloLayer: FC = ({ children }) => {
-  const [authorizationToken, setAuthorizationToken] = useState<string>();
+  const authorizationToken = useSelector(
+    (state: RootState) => state.auth.authorizationToken,
+  );
   const [client, setClient] = useState<ApolloClient<unknown>>();
-
-  // get token from async storage if any
-  useEffect(() => {
-    try {
-      AsyncStorage.getItem('authorizationToken').then((token) => {
-        if (token !== null) setAuthorizationToken(token);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   useEffect(() => {
     // setup apollo client

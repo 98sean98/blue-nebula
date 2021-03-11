@@ -10,7 +10,7 @@ import { getBackdropStyle } from '@utilities/functions/ui';
 interface ConfirmationModalProps extends ModalProps {
   onBackdropPress: () => void;
   action: string;
-  itemName: string;
+  itemName?: string;
   onYesPress: () => void;
 }
 
