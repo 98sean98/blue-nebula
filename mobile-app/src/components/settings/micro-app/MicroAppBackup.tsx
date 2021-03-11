@@ -7,16 +7,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { UPDATE_MICRO_APP_DATA } from '@api/graphql/microApp';
 
 import { RootState } from '@reduxApp';
-
-import { ConfirmationModal } from '@components/shared/actionable';
 import {
   setApplicationError,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
-interface MicroAppUpdateProps extends ViewProps {}
+import { ConfirmationModal } from '@components/shared/actionable';
+import { renderIcon } from '@components/shared/interface';
 
-export const MicroAppUpdate: FC<MicroAppUpdateProps> = ({ ...props }) => {
+interface MicroAppBackupProps extends ViewProps {}
+
+export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
   const dispatch = useDispatch();
 
   const {
@@ -57,8 +58,8 @@ export const MicroAppUpdate: FC<MicroAppUpdateProps> = ({ ...props }) => {
         .then((response) => {
           if (response.data?.updateMicroApp !== null)
             Alert.alert(
-              `${itemName} Update Success`,
-              `This micro app's data has been updated successfully!`,
+              `${itemName} Backup Success`,
+              `This micro app's data has been backed up successfully!`,
             );
         })
         .catch((e) => console.log(e));
@@ -73,12 +74,12 @@ export const MicroAppUpdate: FC<MicroAppUpdateProps> = ({ ...props }) => {
 
   // error effect
   useEffect(() => {
-    console.log({ error });
     if (typeof error !== 'undefined')
       dispatch(
         setApplicationError({
-          title: `${itemName} Update Error`,
-          message: 'There was an error updating this micro app in the server.',
+          title: `${itemName} Backup Error`,
+          message:
+            'There was an error backing this micro app up to the server.',
         }),
       );
   }, [dispatch, error, itemName]);
@@ -86,8 +87,11 @@ export const MicroAppUpdate: FC<MicroAppUpdateProps> = ({ ...props }) => {
   return (
     <>
       <View {...props}>
-        <Button appearance={'outline'} onPress={onButtonPress}>
-          {`Update ${itemName} Data in the Server`}
+        <Button
+          appearance={'outline'}
+          accessoryLeft={renderIcon('cloud-upload-outline')}
+          onPress={onButtonPress}>
+          {`Backup ${itemName} data to the server`}
         </Button>
       </View>
 

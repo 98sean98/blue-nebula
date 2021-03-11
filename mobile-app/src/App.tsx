@@ -23,6 +23,7 @@ import {
   ApolloLayer,
   ApplicationLayer,
   MicroAppsLayer,
+  AuthLayer,
 } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
@@ -48,18 +49,20 @@ export const App: FC = () => {
             <BleLayer>
               <SettingsLayer>
                 <AsyncStorageLayer>
-                  <MicroAppsLayer>
-                    <TimerLayer>
-                      <AppMakerLayer>
-                        <IconRegistry icons={EvaIconsPack} />
-                        <ApplicationProvider {...eva} theme={themes.eva}>
-                          <NavigationContainer theme={themes.navigation}>
-                            <RootNavigator />
-                          </NavigationContainer>
-                        </ApplicationProvider>
-                      </AppMakerLayer>
-                    </TimerLayer>
-                  </MicroAppsLayer>
+                  <AuthLayer>
+                    <MicroAppsLayer>
+                      <TimerLayer>
+                        <AppMakerLayer>
+                          <IconRegistry icons={EvaIconsPack} />
+                          <ApplicationProvider {...eva} theme={themes.eva}>
+                            <NavigationContainer theme={themes.navigation}>
+                              <RootNavigator />
+                            </NavigationContainer>
+                          </ApplicationProvider>
+                        </AppMakerLayer>
+                      </TimerLayer>
+                    </MicroAppsLayer>
+                  </AuthLayer>
                 </AsyncStorageLayer>
               </SettingsLayer>
             </BleLayer>

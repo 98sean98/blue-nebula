@@ -1,3 +1,2 @@
 export * from './user';
-
-export { MicroAppUpdate } from './MicroAppUpdate';
+export * from './micro-app';

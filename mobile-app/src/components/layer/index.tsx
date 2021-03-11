@@ -7,3 +7,4 @@ export { TimerLayer } from './TimerLayer';
 export { AppMakerLayer } from './AppMakerLayer';
 export { PermissionsLayer } from './PermissionsLayer';
 export { MicroAppsLayer } from './MicroAppsLayer';
+export { AuthLayer } from './AuthLayer';

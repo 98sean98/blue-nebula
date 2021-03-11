@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,6 +14,7 @@ import { RootState } from '@reduxApp';
 import {
   setApplicationError,
   setIsLoading,
+  setShouldFetchMicroApps,
 } from '@reduxApp/application/actions';
 
 import {
@@ -39,9 +40,16 @@ import { ConvertibleObject } from '@utilities/functions/object-convert/convertOb
 export const MicroAppsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
-  const focusedMicroAppHeaders = useSelector(
-    (state: RootState) => state.application.focusedMicroAppHeaders,
+  const authorizationToken = useSelector(
+    (state: RootState) => state.auth.authorizationToken,
   );
+  const { focusedMicroAppHeaders, shouldFetchMicroApps } = useSelector(
+    (state: RootState) => state.application,
+  );
+
+  const isLoggedIn = useMemo(() => typeof authorizationToken !== 'undefined', [
+    authorizationToken,
+  ]);
 
   const {
     data: microAppsHeaders,
@@ -54,8 +62,9 @@ export const MicroAppsLayer: FC = ({ children }) => {
       data: microAppData,
       loading: microAppDataLoading,
       error: microAppDataError,
+      called: microAppDataCalled,
     },
-  ] = useLazyQuery(GET_MICRO_APP_DATA);
+  ] = useLazyQuery(GET_MICRO_APP_DATA, { fetchPolicy: 'network-only' });
 
   // loading effect
   useEffect(() => {
@@ -94,9 +103,27 @@ export const MicroAppsLayer: FC = ({ children }) => {
   // query the micro app data lazily based on the headers
   useEffect(() => {
     // todo: check micro app version before querying
-    if (typeof focusedMicroAppHeaders !== 'undefined')
-      loadAppData({ variables: { name: focusedMicroAppHeaders.name } });
-  }, [loadAppData, focusedMicroAppHeaders]);
+    if (typeof focusedMicroAppHeaders !== 'undefined') {
+      const variables = { name: focusedMicroAppHeaders.name };
+      // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
+      if (microAppDataCalled || shouldFetchMicroApps) {
+        loadAppData({ variables: { name: focusedMicroAppHeaders.name } });
+        if (shouldFetchMicroApps) dispatch(setShouldFetchMicroApps(false));
+      } else {
+        const timeout = setTimeout(() => {
+          if (!isLoggedIn) loadAppData({ variables });
+        }, 1000);
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [
+    dispatch,
+    loadAppData,
+    focusedMicroAppHeaders,
+    microAppDataCalled,
+    isLoggedIn,
+    shouldFetchMicroApps,
+  ]);
 
   // write micro apps headers into async storage
   useEffect(() => {
@@ -154,6 +181,8 @@ export const MicroAppsLayer: FC = ({ children }) => {
           setMakerConfig(makerConfigWithConvertedTimestamps as SetMakerConfig),
         );
       }
+
+      console.log(`finished loading the micro app's data into redux!`);
     }
   }, [dispatch, microAppData]);
 

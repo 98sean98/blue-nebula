@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalCase } from 'change-case';
 
 import { RootState } from '@reduxApp';
+import { setAuthorizationToken } from '@reduxApp/auth/actions';
 import { setControlEntities } from '@reduxApp/control/actions';
 import { SetControlEntities } from '@reduxApp/control/types';
 import { setMakerConfig, setSetups } from '@reduxApp/builder/actions';
@@ -28,6 +29,7 @@ const renderAlert = (type: 'reading' | 'writing') =>
 export const AsyncStorageLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
+  const { authorizationToken } = useSelector((state: RootState) => state.auth);
   const { controlEntities } = useSelector((state: RootState) => state.control);
   const { setups, makerConfig } = useSelector(
     (state: RootState) => state.builder,
@@ -47,6 +49,14 @@ export const AsyncStorageLayer: FC = ({ children }) => {
   // --- read storage on first render ---
   useEffect(() => {
     try {
+      readStorage('authorizationToken').then((state) => {
+        if (typeof state !== 'undefined')
+          dispatch(
+            setAuthorizationToken(
+              (state as { authorizationToken: string }).authorizationToken,
+            ),
+          );
+      });
       readStorage('controlEntities').then((state) => {
         if (typeof state !== 'undefined')
           dispatch(setControlEntities(state as SetControlEntities));
@@ -84,6 +94,24 @@ export const AsyncStorageLayer: FC = ({ children }) => {
     },
     [],
   );
+
+  // --- write authorization token when it is updated ---
+  useEffect(() => {
+    try {
+      // artificially delay updates to async storage by 500ms to avoid writing empty state on initial load
+      const timeout = setTimeout(() => {
+        const state = { authorizationToken };
+        writeStorage('authorizationToken', state).then();
+        console.log(
+          'successfully wrote app authorization token data into storage!',
+        );
+      }, 500);
+      return () => clearTimeout(timeout);
+    } catch (error) {
+      console.log(error);
+      renderAlert('writing');
+    }
+  }, [writeStorage, authorizationToken]);
 
   // --- write control entities data when it is updated ---
   useEffect(() => {

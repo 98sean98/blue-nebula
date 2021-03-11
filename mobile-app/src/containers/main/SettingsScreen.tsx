@@ -16,7 +16,11 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
-import { UserAuth, MicroAppUpdate } from '@components/settings';
+import {
+  UserAuth,
+  MicroAppBackup,
+  MicroAppDownload,
+} from '@components/settings';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
@@ -134,7 +138,9 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
       <UserAuth style={tailwind('mt-4')} />
 
       {/* micro app update */}
-      {isLoggedIn ? <MicroAppUpdate style={tailwind('mt-4')} /> : null}
+      {isLoggedIn ? <MicroAppBackup style={tailwind('mt-4')} /> : null}
+
+      <MicroAppDownload style={tailwind('mt-4')} />
     </ScrollView>
   );
 };

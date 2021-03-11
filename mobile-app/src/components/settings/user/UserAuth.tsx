@@ -12,6 +12,7 @@ import { ConfirmationModal } from '@components/shared/actionable';
 
 import { getBackdropStyle } from '@utilities/functions/ui';
 import { logoutAsync } from '@reduxApp/auth/actions';
+import { renderIcon } from '@components/shared/interface';
 
 interface UserAuthProps extends ViewProps {}
 
@@ -40,7 +41,10 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
   return (
     <>
       <View {...props}>
-        <Button appearance={'outline'} onPress={onButtonPress}>
+        <Button
+          appearance={'outline'}
+          accessoryLeft={renderIcon('person-outline')}
+          onPress={onButtonPress}>
           {isLoggedIn ? `Dev Logout` : `Dev Login`}
         </Button>
       </View>

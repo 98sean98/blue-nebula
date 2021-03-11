@@ -16,11 +16,8 @@ import { login, logout } from '@api/auth';
 import { RootState } from '@reduxApp';
 import {
   setApplicationError,
-  setApplicationMode,
   setIsLoading,
 } from '@reduxApp/application/actions';
-
-import { ApplicationMode } from '@models/application';
 
 function* loginAsync({
   payload,
@@ -32,9 +29,6 @@ function* loginAsync({
     // call login api to obtain a token
     const token = yield call(login, payload);
     yield put(setAuthorizationToken(token as string));
-
-    // set application mode
-    yield put(setApplicationMode(ApplicationMode.GAME_MASTER));
 
     // set application loading state
     yield put(setIsLoading(false));
@@ -70,9 +64,6 @@ function* logoutAsync(): Generator<StrictEffect, void> {
 
     // remove authentication token
     yield put(setAuthorizationToken(undefined));
-
-    // set application mode
-    yield put(setApplicationMode(ApplicationMode.NORMAL));
 
     // set application loading state
     yield put(setIsLoading(false));

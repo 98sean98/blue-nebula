@@ -5,6 +5,7 @@ import {
   SetApplicationMode,
   SetFocusedMicroAppHeaders,
   SetIsLoading,
+  SetShouldFetchMicroApps,
 } from './types';
 
 export const setIsLoading = (
@@ -39,6 +40,14 @@ export const setFocusedMicroAppHeaders = (
     payload,
   } as const);
 
+export const setShouldFetchMicroApps = (
+  payload: SetShouldFetchMicroApps, // required action arg
+) =>
+  ({
+    type: ApplicationConstants.SET_SHOULD_FETCH_MICRO_APPS,
+    payload,
+  } as const);
+
 /**
  * @description union of all the actions by using ReturnType to get the return type of each function
  * @guide https://www.carlrippon.com/managing-app-state-with-redux-and-typescript-p1/
@@ -53,9 +62,13 @@ export type SetApplicationModeApplicationAction = ReturnType<
 export type SetFocusedMicroAppHeadersApplicationAction = ReturnType<
   typeof setFocusedMicroAppHeaders
 >;
+export type SetShouldFetchMicroAppsApplicationAction = ReturnType<
+  typeof setShouldFetchMicroApps
+>;
 
 export type ApplicationActionTypes =
   | SetIsLoadingApplicationAction
   | SetApplicationErrorApplicationAction
   | SetApplicationModeApplicationAction
-  | SetFocusedMicroAppHeadersApplicationAction;
+  | SetFocusedMicroAppHeadersApplicationAction
+  | SetShouldFetchMicroAppsApplicationAction;
