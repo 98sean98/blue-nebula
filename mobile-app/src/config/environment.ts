@@ -1,4 +1,4 @@
-const main = 'http://localhost:4000';
+const main = 'https://scraper-staging.herokuapp.com';
 
 export const serverUrl = {
   main,
