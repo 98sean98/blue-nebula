@@ -1,6 +1,11 @@
 import { ApplicationConstants } from './constants';
 
-import { SetApplicationError, SetApplicationMode, SetIsLoading } from './types';
+import {
+  SetApplicationError,
+  SetApplicationMode,
+  SetFocusedMicroAppHeaders,
+  SetIsLoading,
+} from './types';
 
 export const setIsLoading = (
   payload: SetIsLoading, // required action arg
@@ -26,6 +31,14 @@ export const setApplicationMode = (
     payload,
   } as const);
 
+export const setFocusedMicroAppHeaders = (
+  payload: SetFocusedMicroAppHeaders, // required action arg
+) =>
+  ({
+    type: ApplicationConstants.SET_FOCUSED_MICRO_APP_HEADERS,
+    payload,
+  } as const);
+
 /**
  * @description union of all the actions by using ReturnType to get the return type of each function
  * @guide https://www.carlrippon.com/managing-app-state-with-redux-and-typescript-p1/
@@ -37,8 +50,12 @@ export type SetApplicationErrorApplicationAction = ReturnType<
 export type SetApplicationModeApplicationAction = ReturnType<
   typeof setApplicationMode
 >;
+export type SetFocusedMicroAppHeadersApplicationAction = ReturnType<
+  typeof setFocusedMicroAppHeaders
+>;
 
 export type ApplicationActionTypes =
   | SetIsLoadingApplicationAction
   | SetApplicationErrorApplicationAction
-  | SetApplicationModeApplicationAction;
+  | SetApplicationModeApplicationAction
+  | SetFocusedMicroAppHeadersApplicationAction;

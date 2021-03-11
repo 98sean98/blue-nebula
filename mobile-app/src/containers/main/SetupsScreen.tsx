@@ -12,7 +12,7 @@ import { Setup, Setups } from '@models/setup';
 import { RootState } from '@reduxApp';
 import { removeSetup, setMakerConfig } from '@reduxApp/builder/actions';
 import {
-  clearAllControlEntity,
+  clearAllControlEntities,
   setControlEntities,
 } from '@reduxApp/control/actions';
 
@@ -130,7 +130,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ navigation }) => {
 
   const onLoadSetupPress = () => {
     if (typeof selectedSetupKey !== 'undefined') {
-      dispatch(clearAllControlEntity());
+      dispatch(clearAllControlEntities());
       dispatch(
         setControlEntities(setups[selectedSetupKey].controlEntitiesState),
       );

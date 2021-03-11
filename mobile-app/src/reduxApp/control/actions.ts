@@ -18,7 +18,7 @@ export const removeControlEntity = (
     payload,
   } as const);
 
-export const clearAllControlEntity = () =>
+export const clearAllControlEntities = () =>
   ({
     type: ControlConstants.CLEAR_ALL_CONTROL_ENTITIES,
   } as const);
@@ -33,11 +33,11 @@ export type SetControlEntitiesControlAction = ReturnType<
 export type RemoveControlEntityControlAction = ReturnType<
   typeof removeControlEntity
 >;
-export type ClearAllControlEntityControlAction = ReturnType<
-  typeof clearAllControlEntity
+export type ClearAllControlEntitiesControlAction = ReturnType<
+  typeof clearAllControlEntities
 >;
 
 export type ControlActionTypes =
   | SetControlEntitiesControlAction
   | RemoveControlEntityControlAction
-  | ClearAllControlEntityControlAction;
+  | ClearAllControlEntitiesControlAction;
