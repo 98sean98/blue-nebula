@@ -140,7 +140,6 @@ export const MicroAppsLayer: FC = ({ children }) => {
           ['createdAt', 'updatedAt'],
         );
         dispatch(clearAllSetups());
-        console.log({ setups });
         dispatch(setSetups(setupsWithConvertedTimestamps as SetSetups));
       }
 

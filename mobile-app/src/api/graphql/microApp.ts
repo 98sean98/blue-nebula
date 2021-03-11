@@ -34,3 +34,24 @@ export const GET_MICRO_APP_DATA = gql`
     }
   }
 `;
+
+export const UPDATE_MICRO_APP_DATA = gql`
+  mutation updateMicroApp(
+    $name: String!
+    $data: JSON
+    $updaterUsername: String!
+  ) {
+    updateMicroApp(
+      data: {
+        data: $data
+        version: { increment: 1 }
+        updater: { connect: { username: $updaterUsername } }
+      }
+      where: { name: $name }
+    ) {
+      id
+      name
+      version
+    }
+  }
+`;
