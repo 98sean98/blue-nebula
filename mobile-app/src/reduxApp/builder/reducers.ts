@@ -42,6 +42,16 @@ export const builderReducer = (
           ...action.payload,
         } as MakerConfig,
       };
+    case BuilderConstants.CLEAR_ALL_SETUPS:
+      return {
+        ...state,
+        setups: initialState.setups,
+      };
+    case BuilderConstants.CLEAR_MAKER_CONFIG:
+      return {
+        ...state,
+        makerConfig: initialState.makerConfig,
+      };
     default:
       // saga actions would just return the state
       return state;

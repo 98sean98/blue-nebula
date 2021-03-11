@@ -7,8 +7,8 @@ export const permissions = shield({
     createUser: isAuthenticated,
     updateUser: isAuthenticated,
     deleteUser: isAuthenticated,
-    createAppData: isAuthenticated,
-    updateAppData: isAuthenticated,
-    deleteAppData: isAuthenticated,
+    createMicroApp: isAuthenticated,
+    updateMicroApp: isAuthenticated,
+    deleteMicroApp: isAuthenticated,
   },
 });

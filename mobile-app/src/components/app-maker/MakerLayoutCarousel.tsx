@@ -9,7 +9,10 @@ import { tailwind } from '@styles/tailwind';
 import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
 import { PageCarouselData } from '@models/ui';
 
-import { LayoutDivider, PlatformKeyboardAvoidingView } from '@components/shared/interface';
+import {
+  LayoutDivider,
+  PlatformKeyboardAvoidingView,
+} from '@components/shared/interface';
 import { MakerBox } from './MakerBox';
 
 import { useAppMakerContext } from '@utilities/hooks';

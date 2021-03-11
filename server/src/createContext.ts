@@ -19,6 +19,10 @@ export const createContext = async (req: Request): Promise<Context> => {
   let user: User | undefined;
   if (typeof token !== 'undefined') user = await verifyUserToken(token);
 
+  if (typeof user !== 'undefined')
+    console.log(`User ${user.username} is calling the graphql endpoint.`);
+  else console.log(`An unknown user is calling the graphql endpoint.`);
+
   return {
     prisma,
     auth: {

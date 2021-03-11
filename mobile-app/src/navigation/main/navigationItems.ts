@@ -1,4 +1,5 @@
 import { MainDrawerParamList } from '@navigation/main/navigationTypes';
+import { ApplicationMode } from '@models/application';
 
 export const navigationItems: Array<{
   routeName: keyof MainDrawerParamList;
@@ -28,3 +29,17 @@ export const navigationItems: Array<{
   },
   { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
 ];
+
+export const getNavigationItems = (
+  applicationMode: ApplicationMode,
+): typeof navigationItems => {
+  const normalModeScreens: Array<keyof MainDrawerParamList> = [
+    'SimpleController',
+    'Settings',
+  ];
+  if (applicationMode !== ApplicationMode.GAME_MASTER)
+    return navigationItems.filter(({ routeName }) =>
+      normalModeScreens.includes(routeName),
+    );
+  return navigationItems;
+};

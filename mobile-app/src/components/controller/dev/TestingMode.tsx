@@ -1,9 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  View,
-} from 'react-native';
+import { FlatList, ListRenderItem, View } from 'react-native';
 import { Divider } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -20,7 +16,7 @@ import {
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
 import { Timer } from '@components/shared/actionable';
-import {PlatformKeyboardAvoidingView} from "@components/shared/interface";
+import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 interface TestingModeProps {
   isFocused: boolean;

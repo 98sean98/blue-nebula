@@ -20,6 +20,10 @@ import {
   TimerLayer,
   AppMakerLayer,
   PermissionsLayer,
+  ApolloLayer,
+  ApplicationLayer,
+  MicroAppsLayer,
+  AuthLayer,
 } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
@@ -39,24 +43,32 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      <PermissionsLayer>
-        <BleLayer>
-          <SettingsLayer>
-            <AsyncStorageLayer>
-              <TimerLayer>
-                <AppMakerLayer>
-                  <IconRegistry icons={EvaIconsPack} />
-                  <ApplicationProvider {...eva} theme={themes.eva}>
-                    <NavigationContainer theme={themes.navigation}>
-                      <RootNavigator />
-                    </NavigationContainer>
-                  </ApplicationProvider>
-                </AppMakerLayer>
-              </TimerLayer>
-            </AsyncStorageLayer>
-          </SettingsLayer>
-        </BleLayer>
-      </PermissionsLayer>
+      <ApplicationLayer>
+        <ApolloLayer>
+          <PermissionsLayer>
+            <BleLayer>
+              <SettingsLayer>
+                <AsyncStorageLayer>
+                  <AuthLayer>
+                    <MicroAppsLayer>
+                      <TimerLayer>
+                        <AppMakerLayer>
+                          <IconRegistry icons={EvaIconsPack} />
+                          <ApplicationProvider {...eva} theme={themes.eva}>
+                            <NavigationContainer theme={themes.navigation}>
+                              <RootNavigator />
+                            </NavigationContainer>
+                          </ApplicationProvider>
+                        </AppMakerLayer>
+                      </TimerLayer>
+                    </MicroAppsLayer>
+                  </AuthLayer>
+                </AsyncStorageLayer>
+              </SettingsLayer>
+            </BleLayer>
+          </PermissionsLayer>
+        </ApolloLayer>
+      </ApplicationLayer>
     </ReduxProvider>
   );
 };

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, Toggle } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,6 +16,11 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
+import {
+  UserAuth,
+  MicroAppBackup,
+  MicroAppDownload,
+} from '@components/settings';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
@@ -30,6 +35,13 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
   const dispatch = useDispatch();
 
   const settings = useSelector((state: RootState) => state.settings);
+  const authorizationToken = useSelector(
+    (state: RootState) => state.auth.authorizationToken,
+  );
+
+  const isLoggedIn = useMemo(() => typeof authorizationToken !== 'undefined', [
+    authorizationToken,
+  ]);
 
   useEffect(() => {
     const writeStorage = async () => {
@@ -121,6 +133,14 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
           </Button>
         </View>
       </RenderBleComponent>
+
+      {/* user authentication */}
+      <UserAuth style={tailwind('mt-4')} />
+
+      {/* micro app update */}
+      {isLoggedIn ? <MicroAppBackup style={tailwind('mt-4')} /> : null}
+
+      <MicroAppDownload style={tailwind('mt-4')} />
     </ScrollView>
   );
 };

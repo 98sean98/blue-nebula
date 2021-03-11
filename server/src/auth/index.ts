@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import express, { Request, Router } from 'express';
 import { PrismaClient, User } from '@prisma/client';
 
 import {
@@ -13,11 +13,11 @@ const prisma = new PrismaClient();
 // eslint-disable-next-line new-cap
 const router: Router = express.Router();
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    console.log(`User with ${username} is attempting to login...`);
+    console.log(`User ${username} is attempting to login...`);
 
     if (typeof username === 'undefined' || username === '')
       throw new Error('Username is not provided.');
@@ -44,8 +44,8 @@ router.get('/login', async (req, res) => {
     });
     const token = generateToken(session);
 
-    console.log(`User with ${username} has successfully logged in...`);
-
+    // resolve request by sending the token
+    console.log(`User ${username} has successfully logged in!`);
     res.status(200).send(token);
   } catch (error) {
     console.log('Error logging user in:', error);
@@ -53,25 +53,48 @@ router.get('/login', async (req, res) => {
   }
 });
 
-router.post('/logout', async (_req: Request, res: Response) => {
+router.post('/logout', async (req, res) => {
   try {
-    // find the session, and resolve for the user from the request token
-    const token = getTokenFromRequest(_req);
-
-    if (typeof token === 'undefined') throw new Error('Missing token.');
-
-    const user = await verifyUserToken(token);
-
-    if (typeof user === 'undefined') throw new Error('User cannot be found.');
+    // get user from the request object
+    const user = await getUserFromRequest(req);
 
     const invalidation = await invalidateUserTokens(user.id);
     if (!invalidation) throw new Error('Tokens invalidation failed.');
 
+    // resolve request
+    console.log(`User ${user.username} has successfully logged out!`);
     res.status(200).send('Logout successful.');
   } catch (error) {
     console.log(`Error logging user out:`, error);
     res.status(400).send('Authentication failed.');
   }
 });
+
+router.get('/isAuthenticated', async (req, res) => {
+  try {
+    // try to get user from the request object
+    const user = await getUserFromRequest(req);
+
+    // if no errors, resolve request
+    console.log(`User ${user.username} just checked his / her authentication.`);
+    res.status(200).send('User is authenticated.');
+  } catch (error) {
+    console.log('Error checking user authentication:', error);
+    res.status(400).send('Authentication failed.');
+  }
+});
+
+const getUserFromRequest = async (req: Request): Promise<User> => {
+  // find the session, and resolve for the user from the request token
+  const token = getTokenFromRequest(req);
+
+  if (typeof token === 'undefined') throw new Error('Missing token.');
+
+  const user = await verifyUserToken(token);
+
+  if (typeof user === 'undefined') throw new Error('User cannot be found.');
+
+  return user;
+};
 
 export { router as auth };
