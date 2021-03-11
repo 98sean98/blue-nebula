@@ -120,8 +120,8 @@ export const MicroAppsLayer: FC = ({ children }) => {
   useEffect(() => {
     if (typeof microAppData !== 'undefined') {
       const microApp = microAppData.microApp as MicroApp;
-      // if data is null, escape function execution
-      if (!microApp.data) return;
+      // if null, escape function execution
+      if (!microApp?.data) return;
 
       const { controlEntities, setups, makerConfig } = JSON.parse(
         microApp.data,
