@@ -21,7 +21,7 @@ import {
   AppMakerLayer,
   PermissionsLayer,
   ApolloLayer,
-  // ApplicationLayer,
+  ApplicationLayer,
   MicroAppsLayer,
 } from '@components/layer';
 
@@ -42,30 +42,30 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      {/*<ApplicationLayer>*/}
-      <ApolloLayer>
-        <PermissionsLayer>
-          <BleLayer>
-            <SettingsLayer>
-              <AsyncStorageLayer>
-                <MicroAppsLayer>
-                  <TimerLayer>
-                    <AppMakerLayer>
-                      <IconRegistry icons={EvaIconsPack} />
-                      <ApplicationProvider {...eva} theme={themes.eva}>
-                        <NavigationContainer theme={themes.navigation}>
-                          <RootNavigator />
-                        </NavigationContainer>
-                      </ApplicationProvider>
-                    </AppMakerLayer>
-                  </TimerLayer>
-                </MicroAppsLayer>
-              </AsyncStorageLayer>
-            </SettingsLayer>
-          </BleLayer>
-        </PermissionsLayer>
-      </ApolloLayer>
-      {/*</ApplicationLayer>*/}
+      <ApplicationLayer>
+        <ApolloLayer>
+          <PermissionsLayer>
+            <BleLayer>
+              <SettingsLayer>
+                <AsyncStorageLayer>
+                  <MicroAppsLayer>
+                    <TimerLayer>
+                      <AppMakerLayer>
+                        <IconRegistry icons={EvaIconsPack} />
+                        <ApplicationProvider {...eva} theme={themes.eva}>
+                          <NavigationContainer theme={themes.navigation}>
+                            <RootNavigator />
+                          </NavigationContainer>
+                        </ApplicationProvider>
+                      </AppMakerLayer>
+                    </TimerLayer>
+                  </MicroAppsLayer>
+                </AsyncStorageLayer>
+              </SettingsLayer>
+            </BleLayer>
+          </PermissionsLayer>
+        </ApolloLayer>
+      </ApplicationLayer>
     </ReduxProvider>
   );
 };
