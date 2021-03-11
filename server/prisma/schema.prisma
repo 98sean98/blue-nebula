@@ -14,14 +14,14 @@ generator typegraphql {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  createdAt  DateTime  @default(now())
-  username   String
-  firstName  String
-  lastName   String
-  Session    Session[]
-  AppCreator App[]     @relation(name: "CreatorOnApp")
-  AppUpdater App[]     @relation(name: "UpdaterOnApp")
+  id              String     @id @default(uuid())
+  createdAt       DateTime   @default(now())
+  username        String
+  firstName       String
+  lastName        String
+  Session         Session[]
+  MicroAppCreator MicroApp[] @relation(name: "CreatorOnMicroApp")
+  MicroAppUpdater MicroApp[] @relation(name: "UpdaterOnMicroApp")
 
   @@unique([username])
 }
@@ -33,7 +33,7 @@ model Session {
   user      User?    @relation(fields: [userId], references: [id])
 }
 
-model App {
+model MicroApp {
   id      String @id @default(uuid())
   name    String
   version Int    @default(1)
@@ -44,10 +44,10 @@ model App {
   updatedAt DateTime @updatedAt
 
   creatorId String?
-  creator   User?   @relation(name: "CreatorOnApp", fields: [creatorId], references: [id])
+  creator   User?   @relation(name: "CreatorOnMicroApp", fields: [creatorId], references: [id])
 
   updaterId String?
-  updater   User?   @relation(name: "UpdaterOnApp", fields: [updaterId], references: [id])
+  updater   User?   @relation(name: "UpdaterOnMicroApp", fields: [updaterId], references: [id])
 
   @@unique([name])
 }
