@@ -20,8 +20,13 @@ export const setUser = (
 
 export const loginAsync = (payload: LoginAsync) =>
   ({
-    type: AuthConstants.LOGIN,
+    type: AuthConstants.LOGIN_ASYNC,
     payload,
+  } as const);
+
+export const logoutAsync = () =>
+  ({
+    type: AuthConstants.LOGOUT_ASYNC,
   } as const);
 
 /**
@@ -36,7 +41,10 @@ export type SetUserAuthAction = ReturnType<typeof setUser>;
 
 export type LoginAsyncAuthAction = ReturnType<typeof loginAsync>;
 
+export type LogoutAsyncAuthAction = ReturnType<typeof logoutAsync>;
+
 export type AuthActionTypes =
   | SetAuthorizationTokenAuthAction
   | SetUserAuthAction
-  | LoginAsyncAuthAction;
+  | LoginAsyncAuthAction
+  | LogoutAsyncAuthAction;

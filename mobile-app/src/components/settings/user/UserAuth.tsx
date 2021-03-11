@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, Modal } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -11,10 +11,13 @@ import { LoginModalContent } from './LoginModalContent';
 import { ConfirmationModal } from '@components/shared/actionable';
 
 import { getBackdropStyle } from '@utilities/functions/ui';
+import { logoutAsync } from '@reduxApp/auth/actions';
 
 interface UserAuthProps extends ViewProps {}
 
 export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
+  const dispatch = useDispatch();
+
   const authorizationToken = useSelector(
     (state: RootState) => state.auth.authorizationToken,
   );
@@ -29,16 +32,16 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
 
   const closeModal = () => setShowModal(false);
 
-  // todo: use the dispatch logout action
   const doLogout = () => {
+    dispatch(logoutAsync());
     closeModal();
   };
 
   return (
     <>
       <View {...props}>
-        <Button appearance={'ghost'} onPress={onButtonPress}>
-          {isLoggedIn ? `Logout` : `Login`}
+        <Button appearance={'outline'} onPress={onButtonPress}>
+          {isLoggedIn ? `Dev Logout` : `Dev Login`}
         </Button>
       </View>
 
