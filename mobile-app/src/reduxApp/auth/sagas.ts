@@ -11,7 +11,7 @@ import {
 import { AuthConstants } from './constants';
 import { LoginAsyncAuthAction, setAuthorizationToken } from './actions';
 
-import { login, logout } from '@api/auth';
+import { isAuthenticated, login, logout } from '@api/auth';
 
 import { RootState } from '@reduxApp';
 import {
@@ -59,6 +59,9 @@ function* logoutAsync(): Generator<StrictEffect, void> {
       (state: RootState) => state.auth.authorizationToken,
     );
 
+    // if token does not exist, throw error
+    if (typeof token === 'undefined') throw new Error('token does not exist');
+
     // call logout api
     yield call(logout, token as string);
 
@@ -85,6 +88,24 @@ function* logoutAsync(): Generator<StrictEffect, void> {
   }
 }
 
+function* checkIsAuthenticatedAsync(): Generator<StrictEffect, void> {
+  try {
+    // get token from store
+    const token = yield select(
+      (state: RootState) => state.auth.authorizationToken,
+    );
+
+    // call is authenticated api if token exists
+    if (typeof token !== 'undefined')
+      yield call(isAuthenticated, token as string);
+  } catch (e) {
+    console.log('failed checking is authenticated:', e);
+
+    // remove authentication token
+    yield put(setAuthorizationToken(undefined));
+  }
+}
+
 function* watchLoginAsync() {
   yield takeEvery(AuthConstants.LOGIN_ASYNC, loginAsync);
 }
@@ -93,7 +114,15 @@ function* watchLogoutAsync() {
   yield takeEvery(AuthConstants.LOGOUT_ASYNC, logoutAsync);
 }
 
+function* watchCheckIsAuthenticatedAsync() {
+  yield takeEvery(
+    AuthConstants.CHECK_IS_AUTHENTICATED_ASYNC,
+    checkIsAuthenticatedAsync,
+  );
+}
+
 export function* authSagas() {
   yield all([fork(watchLoginAsync)]);
   yield all([fork(watchLogoutAsync)]);
+  yield all([fork(watchCheckIsAuthenticatedAsync)]);
 }

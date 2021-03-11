@@ -3,4 +3,5 @@ export enum AuthConstants {
   SET_USER = '@@Auth/SET_USER',
   LOGIN_ASYNC = '@@Auth/LOGIN_ASYNC',
   LOGOUT_ASYNC = '@@Auth/LOGOUT_ASYNC',
+  CHECK_IS_AUTHENTICATED_ASYNC = '@@Auth/CHECK_IS_AUTHENTICATED_ASYNC',
 }
