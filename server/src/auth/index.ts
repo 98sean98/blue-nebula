@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 // eslint-disable-next-line new-cap
 const router: Router = express.Router();
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
