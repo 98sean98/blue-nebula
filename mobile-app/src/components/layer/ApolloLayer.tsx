@@ -37,19 +37,20 @@ export const ApolloLayer: FC = ({ children }) => {
   useEffect(() => {
     // setup apollo client
 
-    const link = createHttpLink({
-      uri,
-      credentials: 'include',
-    });
-
-    const cache = new InMemoryCache();
-
     const headers =
       typeof authorizationToken !== 'undefined'
         ? {
             authorization: authorizationToken,
           }
         : undefined;
+
+    const link = createHttpLink({
+      uri,
+      credentials: 'include',
+      headers,
+    });
+
+    const cache = new InMemoryCache();
 
     const newClient = new ApolloClient({
       cache,
