@@ -1,4 +1,5 @@
 export { ApolloLayer } from './ApolloLayer';
+export { ApplicationLayer } from './ApplicationLayer';
 export { BleLayer } from './BleLayer';
 export { AsyncStorageLayer } from './AsyncStorageLayer';
 export { SettingsLayer } from './SettingsLayer';

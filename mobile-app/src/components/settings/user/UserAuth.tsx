@@ -10,6 +10,8 @@ import { RootState } from '@reduxApp';
 import { LoginModalContent } from './LoginModalContent';
 import { ConfirmationModal } from '@components/shared/actionable';
 
+import { getBackdropStyle } from '@utilities/functions/ui';
+
 interface UserAuthProps extends ViewProps {}
 
 export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
@@ -25,16 +27,18 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
 
   const onButtonPress = () => setShowModal(true);
 
-  // todo: use the dispatch logout action
-  const doLogout = () => {};
-
   const closeModal = () => setShowModal(false);
+
+  // todo: use the dispatch logout action
+  const doLogout = () => {
+    closeModal();
+  };
 
   return (
     <>
       <View {...props}>
         <Button appearance={'ghost'} onPress={onButtonPress}>
-          Login
+          {isLoggedIn ? `Logout` : `Login`}
         </Button>
       </View>
 
@@ -42,6 +46,7 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
       <Modal
         visible={!isLoggedIn && showModal}
         onBackdropPress={closeModal}
+        backdropStyle={getBackdropStyle()}
         style={tailwind('w-2/3')}>
         <LoginModalContent closeModal={closeModal} />
       </Modal>

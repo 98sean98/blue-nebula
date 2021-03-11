@@ -21,6 +21,7 @@ import {
   AppMakerLayer,
   PermissionsLayer,
   ApolloLayer,
+  ApplicationLayer,
 } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
@@ -40,26 +41,28 @@ export const App: FC = () => {
 
   return (
     <ReduxProvider store={store}>
-      <ApolloLayer>
-        <PermissionsLayer>
-          <BleLayer>
-            <SettingsLayer>
-              <AsyncStorageLayer>
-                <TimerLayer>
-                  <AppMakerLayer>
-                    <IconRegistry icons={EvaIconsPack} />
-                    <ApplicationProvider {...eva} theme={themes.eva}>
-                      <NavigationContainer theme={themes.navigation}>
-                        <RootNavigator />
-                      </NavigationContainer>
-                    </ApplicationProvider>
-                  </AppMakerLayer>
-                </TimerLayer>
-              </AsyncStorageLayer>
-            </SettingsLayer>
-          </BleLayer>
-        </PermissionsLayer>
-      </ApolloLayer>
+      <ApplicationLayer>
+        <ApolloLayer>
+          <PermissionsLayer>
+            <BleLayer>
+              <SettingsLayer>
+                <AsyncStorageLayer>
+                  <TimerLayer>
+                    <AppMakerLayer>
+                      <IconRegistry icons={EvaIconsPack} />
+                      <ApplicationProvider {...eva} theme={themes.eva}>
+                        <NavigationContainer theme={themes.navigation}>
+                          <RootNavigator />
+                        </NavigationContainer>
+                      </ApplicationProvider>
+                    </AppMakerLayer>
+                  </TimerLayer>
+                </AsyncStorageLayer>
+              </SettingsLayer>
+            </BleLayer>
+          </PermissionsLayer>
+        </ApolloLayer>
+      </ApplicationLayer>
     </ReduxProvider>
   );
 };
