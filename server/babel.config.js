@@ -12,8 +12,9 @@ module.exports = {
         alias: {
           '@src': './src',
           '@artifacts': './src/artifacts',
-          '@auth': './src/auth',
+          '@graphql-api': './src/graphql-api',
           '@middleware': './src/middleware',
+          '@rest-api': './src/rest-api',
           '@shield': './src/shield',
           '@utilities': './src/utilities',
         },

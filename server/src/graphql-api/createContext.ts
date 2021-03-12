@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { PrismaClient, User } from '@prisma/client';
 
-import { getTokenFromRequest, verifyUserToken } from '@utilities/auth/token';
+import { getTokenFromRequest, verifyUserToken } from '@utilities/auth';
 
 const prisma = new PrismaClient();
 
