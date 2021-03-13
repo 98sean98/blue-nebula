@@ -37,6 +37,7 @@ module.exports = {
       },
     ],
     eqeqeq: ['error', 'always'],
+    'new-cap': 'off',
     'jest/no-export': 'warn',
     'require-jsdoc': 'warn',
   },

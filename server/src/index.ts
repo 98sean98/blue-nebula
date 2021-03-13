@@ -5,10 +5,9 @@ import * as bodyParser from 'body-parser';
 
 import 'reflect-metadata';
 
-import { auth } from '@auth';
 import { database } from '@middleware';
-
-import { createServer } from './createServer';
+import { auth } from '@rest-api';
+import { createServer } from '@graphql-api';
 
 env.config();
 
@@ -17,12 +16,7 @@ const main = async () => {
 
   // cors
   const corsOptions: CorsOptions = {
-    origin: [
-      // todo: put server url
-      '',
-    ].concat(
-      process.env.NODE_ENV === 'development' ? ['http://localhost:3000'] : [],
-    ),
+    origin: [],
     credentials: true,
   };
   app.use(cors(corsOptions));
@@ -52,11 +46,14 @@ const main = async () => {
   app.use(bodyParser.json({ type: 'application/json' }));
 
   // auth REST api
-  app.use('/auth', auth);
+  const authRestRoute = '/auth';
+  app.use(authRestRoute, auth);
 
   // listener
   app.listen(port, () => {
-    console.log(`Graphql server is running on ${port}${server.graphqlPath}`);
+    console.log(
+      `Server is running on ${port}, with auth rest api at ${authRestRoute}, and graphql api at ${server.graphqlPath}`,
+    );
   });
 };
 

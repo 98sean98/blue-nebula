@@ -1,4 +1,4 @@
-import { buildSchema, NonEmptyArray } from 'type-graphql';
+import { buildSchema } from 'type-graphql';
 import {
   CreateUserResolver,
   FindManyUserResolver,
@@ -12,7 +12,9 @@ import {
   DeleteMicroAppResolver,
 } from '@artifacts/type-graphql';
 
-const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
+import { MeUserResolver } from '@graphql-api/user';
+
+const selectedResolvers = [
   CreateUserResolver,
   FindManyUserResolver,
   FindUniqueUserResolver,
@@ -23,10 +25,13 @@ const resolvers: NonEmptyArray<Function> | NonEmptyArray<string> = [
   FindUniqueMicroAppResolver,
   UpdateMicroAppResolver,
   DeleteMicroAppResolver,
-];
+] as const;
+
+const customResolvers = [MeUserResolver] as const;
 
 export const createSchema = async () =>
   await buildSchema({
-    resolvers,
+    // @ts-ignore
+    resolvers: [...selectedResolvers, ...customResolvers],
     validate: false,
   });
