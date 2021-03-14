@@ -1,11 +1,17 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLazyQuery } from '@apollo/client';
 
 import { RootState } from '@reduxApp';
-import { checkIsAuthenticatedAsync } from '@reduxApp/auth/actions';
-import { setApplicationMode } from '@reduxApp/application/actions';
+import { checkIsAuthenticatedAsync, setUser } from '@reduxApp/auth/actions';
+import {
+  setApplicationError,
+  setApplicationMode,
+} from '@reduxApp/application/actions';
 
 import { ApplicationMode } from '@models/application';
+
+import { GET_ME } from '@api/graphql/user';
 
 export const AuthLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -20,11 +26,32 @@ export const AuthLayer: FC = ({ children }) => {
       dispatch(checkIsAuthenticatedAsync());
   }, [dispatch, authorizationToken]);
 
+  // set application mode based on authorization token
   useEffect(() => {
     if (typeof authorizationToken !== 'undefined')
       dispatch(setApplicationMode(ApplicationMode.GAME_MASTER));
     else dispatch(setApplicationMode(ApplicationMode.NORMAL));
   }, [dispatch, authorizationToken]);
+
+  // lazily fetch user data based on authorization token
+  const [fetchMe, { data, error }] = useLazyQuery(GET_ME);
+  useEffect(() => {
+    if (typeof authorizationToken !== 'undefined') fetchMe();
+  }, [authorizationToken, fetchMe]);
+  useEffect(() => {
+    if (typeof data !== 'undefined' && data?.me) {
+      dispatch(setUser({ ...data.me }));
+    }
+  }, [dispatch, data]);
+  useEffect(() => {
+    if (typeof error !== 'undefined')
+      dispatch(
+        setApplicationError({
+          title: 'Fetch User Error',
+          message: 'There was an error fetching your user data.',
+        }),
+      );
+  }, [dispatch, error]);
 
   return <>{children}</>;
 };

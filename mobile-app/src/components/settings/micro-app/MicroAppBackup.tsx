@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, useMemo } from 'react';
+import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { Alert, View, ViewProps } from 'react-native';
 import { Button } from '@ui-kitten/components';
 import { useMutation } from '@apollo/client';
@@ -37,6 +37,18 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     focusedMicroAppHeaders,
   ]);
 
+  const dispatchError = useCallback(
+    () =>
+      dispatch(
+        setApplicationError({
+          title: `${itemName} Backup Error`,
+          message:
+            'There was an error backing this micro app up to the server.',
+        }),
+      ),
+    [dispatch, itemName],
+  );
+
   const onButtonPress = () => setShowModal(true);
 
   const onConfirmUpdateMicroApp = () => {
@@ -45,7 +57,13 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
       typeof focusedMicroAppHeaders !== 'undefined'
     ) {
       const name = focusedMicroAppHeaders.name;
-      const updaterUsername = user?.username ?? '98sean98';
+      const updaterUsername = user?.username;
+
+      if (typeof updaterUsername === 'undefined') {
+        // no-op as the user should be logged in, and their information is stored in redux
+        dispatchError();
+        return;
+      }
 
       const data = { controlEntities, setups, makerConfig };
       const jsonData = JSON.stringify(data);
@@ -74,15 +92,8 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
   // error effect
   useEffect(() => {
-    if (typeof error !== 'undefined')
-      dispatch(
-        setApplicationError({
-          title: `${itemName} Backup Error`,
-          message:
-            'There was an error backing this micro app up to the server.',
-        }),
-      );
-  }, [dispatch, error, itemName]);
+    if (typeof error !== 'undefined') dispatchError();
+  }, [dispatchError, error]);
 
   return (
     <>
