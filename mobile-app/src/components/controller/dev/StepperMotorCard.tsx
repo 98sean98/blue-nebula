@@ -7,24 +7,20 @@ import { tailwind } from '@styles/tailwind';
 
 import { DeclarableValueType } from '@models/ValueType';
 import { DevControlInterface } from '@models/ui';
-import {
-  ControlEntities,
-  Direction,
-  Enable,
-  StepperMotor,
-} from '@models/control-entity';
+import { ControlEntities, Enable, StepperMotor } from '@models/control-entity';
+
+import { removeControlEntity } from '@reduxApp/control/actions';
 
 import { ControlEntityCard } from '@components/shared/interface';
 import {
-  ResponsiveButton,
   ResponsiveInput,
   ControlEntityParameterToggle,
+  ControlEntityParameterDirection,
 } from '@components/shared/actionable';
 import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
 
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
-import { removeControlEntity } from '@reduxApp/control/actions';
 
 interface StepperMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof ControlEntities;
@@ -93,30 +89,16 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
 
       {controlInterface === DevControlInterface.Testing ? (
         <View style={tailwind('mt-3 flex-row justify-between items-center')}>
-          <View style={tailwind('flex-row items-center')}>
-            <ResponsiveButton
-              isSelected={controlEntity.direction === Direction.CCW}
-              onSelected={() =>
-                onParameterChange(
-                  'direction',
-                  parseFromTypeToString(Direction.CCW),
-                  'number',
-                )
-              }>
-              CCW
-            </ResponsiveButton>
-            <ResponsiveButton
-              isSelected={controlEntity.direction === Direction.CW}
-              onSelected={() =>
-                onParameterChange(
-                  'direction',
-                  parseFromTypeToString(Direction.CW),
-                  'number',
-                )
-              }>
-              CW
-            </ResponsiveButton>
-          </View>
+          <ControlEntityParameterDirection
+            currentDirection={controlEntity.direction}
+            onChange={(newDirection) =>
+              onParameterChange(
+                'direction',
+                parseFromTypeToString(newDirection),
+                'number',
+              )
+            }
+          />
           <View style={tailwind('ml-4 items-center')}>
             <ControlEntityParameterToggle
               checked={controlEntity.enable === Enable.High}
