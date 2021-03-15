@@ -18,9 +18,9 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* scraperTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* scraperTests.m */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		DB240BED3C8DDFDB6973B8D7 /* libPods-scraper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B23CDA14337B76F176F5C797 /* libPods-scraper.a */; };
 		E93F54FA25B96924004BF039 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E93F54F925B96924004BF039 /* File.swift */; };
+		E9E8848825FD266D0045F0D3 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E9E8848725FD266D0045F0D3 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,13 +59,13 @@
 		391E4279AC76C7F11907248E /* Pods-scraper-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper-tvOS.release.xcconfig"; path = "Target Support Files/Pods-scraper-tvOS/Pods-scraper-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		5E79B073E0C5A539C0C64331 /* Pods-scraper.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper.debug.xcconfig"; path = "Target Support Files/Pods-scraper/Pods-scraper.debug.xcconfig"; sourceTree = "<group>"; };
 		664749D5CB99BF878B430E72 /* Pods-scraper-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-scraper-tvOSTests/Pods-scraper-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = scraper/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8AB86F937E1EF8B3BDE1C4EC /* Pods-scraper-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-scraper-tvOS/Pods-scraper-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		922A09D3128B47DF4E38522E /* Pods-scraper-scraperTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper-scraperTests.release.xcconfig"; path = "Target Support Files/Pods-scraper-scraperTests/Pods-scraper-scraperTests.release.xcconfig"; sourceTree = "<group>"; };
 		B23CDA14337B76F176F5C797 /* libPods-scraper.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-scraper.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B52503C7125C0F340F8A03F5 /* libPods-scraper-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-scraper-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E93F54F825B96923004BF039 /* scraper-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "scraper-Bridging-Header.h"; sourceTree = "<group>"; };
 		E93F54F925B96924004BF039 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		E9E8848725FD266D0045F0D3 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		F5880B1A7C18FDBA0B856ED9 /* Pods-scraper-scraperTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-scraper-scraperTests.debug.xcconfig"; path = "Target Support Files/Pods-scraper-scraperTests/Pods-scraper-scraperTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -133,7 +133,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
+				E9E8848725FD266D0045F0D3 /* Launch Screen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
 			name = scraper;
@@ -346,7 +346,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				E9E8848825FD266D0045F0D3 /* Launch Screen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
