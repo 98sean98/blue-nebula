@@ -77,6 +77,8 @@ class BLDCMotor(Motor):
         duration_value = self.parameters['duration']
         print(f"{self.motor_name}.duration = {duration_value}")
 
+        # set the direction output
+        GPIO.output(self.direction_pin, direction_value)
         # set the enable output
         GPIO.output(self.enable_pin, enable_value)
         # set the brake output to LOW to allow motor operation
