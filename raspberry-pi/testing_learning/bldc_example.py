@@ -11,6 +11,7 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(PWM, GPIO.OUT)
 motor_pwm = GPIO.PWM(PWM, 1000)
+motor_pwm.start(0)
 
 GPIO.setup(DIR, GPIO.OUT)
 GPIO.setup(EN, GPIO.OUT)
@@ -38,7 +39,7 @@ def forward(motor_pwm, pwm_duty_cycle, duration):
 
     sleep(duration)
 
-    stop(motor_pwm, duty_cycle)
+    stop(motor_pwm)
 
 def backward(motor_pwm, pwm_duty_cycle, duration):
     GPIO.output(DIR, GPIO.HIGH)
@@ -58,19 +59,18 @@ def backward(motor_pwm, pwm_duty_cycle, duration):
 
     sleep(duration)
 
-    stop(motor_pwm, duty_cycle)
+    stop(motor_pwm)
 
-def stop(motor_pwm, current_pwm_duty_cycle):
+def stop(motor_pwm):
     motor_pwm.ChangeDutyCycle(0)
     if sudden_brake: GPIO.output(BRK, GPIO.HIGH)
     else: GPIO.output(EN, GPIO.HIGH)
 
-def run_cycle(cycles, motor_pwm):
+def run_cycle(motor_pwm, cycles):
     print("started running all cycles")
-    motor_pwm.start(0)
     for i in range(cycles):
         print(f"started running the {i}-th cycle")
-        forward(motor_pwm, 120, 5)
+        forward(motor_pwm, 100, 5)
         sleep(0.5)
         backward(motor_pwm, 50, 5)
         sleep(1)
@@ -79,10 +79,15 @@ def run_cycle(cycles, motor_pwm):
     print("finished running all cycles, yay!")
 
 if __name__ == '__main__':
-    p = Process(target=run_cycle, args=(10, motor_pwm))
-    p.start()
-    while p.is_alive():
-        print('still running')
-        sleep(2)
-    p.join()
-    print('exit')
+    try:
+        run_cycle(motor_pwm, 10)
+    except KeyboardInterrupt:
+        stop(motor_pwm)
+        GPIO.cleanup()
+    # p = Process(target=run_cycle, args=[10])
+    # p.start()
+    # while p.is_alive():
+    #     print('still running')
+    #     sleep(2)
+    # p.join()
+    # print('exit')
