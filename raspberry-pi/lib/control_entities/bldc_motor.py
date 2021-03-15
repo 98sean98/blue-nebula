@@ -100,7 +100,7 @@ class BLDCMotor(Motor):
         self.stop_running(run_arguments)
 
         # call parent method to finish running
-        super().run(is_running, run_arguments, tracked_parameters)
+        super().run(is_running)
 
     def stop_running(self, run_arguments):
         # stop the motor based on whether sudden braking is required

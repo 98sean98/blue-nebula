@@ -31,7 +31,7 @@ class StepperMotor(Motor):
         GPIO.setup(self.direction_pin, GPIO.OUT)
         GPIO.setup(self.enable_pin, GPIO.OUT)
 
-        super().__init__(motor_name, multiprocessing_manager, {'revolution': 0})
+        super().__init__(motor_name, multiprocessing_manager = multiprocessing_manager, initial_tracked_parameters = {'revolution': 0})
 
     def get_pins(self):
         pins = {'pulse_pin': self.pulse_pin, 'direction_pin': self.direction_pin, 'enable_pin': self.enable_pin}
@@ -43,7 +43,7 @@ class StepperMotor(Motor):
     def get_parameters(self):
         return self.parameters
 
-    def run(self, is_running, tracked_parameters):
+    def run(self, is_running, run_arguments, tracked_parameters):
         sleep(0.1) # pause due to a possible change in direction
 
         # determine total pulse, and delay per pulse
@@ -73,9 +73,9 @@ class StepperMotor(Motor):
         self.stop_running()
 
         # call parent method to finish running
-        super().run(is_running, tracked_parameters)
+        super().run(is_running)
 
-    def stop_running(self):
+    def stop_running(self, run_arguments = None):
         # disable the motor by setting enable to LOW
         GPIO.output(self.enable_pin, GPIO.LOW)
         sleep(0.5) # pause for a while

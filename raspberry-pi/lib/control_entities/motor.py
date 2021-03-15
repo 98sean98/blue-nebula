@@ -68,7 +68,7 @@ class Motor:
         # reset running duration
         self.running_duration.value = 0.0
 
-    def run(self, is_running, run_arguments, tracked_parameters):
+    def run(self, is_running):
         is_running.value = False
         print(f"{self.motor_name} has finished running!")
 
