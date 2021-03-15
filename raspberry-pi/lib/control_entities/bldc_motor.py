@@ -35,12 +35,11 @@ class BLDCMotor(Motor):
         GPIO.setup(brake_pin, GPIO.OUT)
 
         # initialise enable, and brake outputs
-        GPIO.output(enable_pin, GPIO.LOW)
-        GPIO.output(brake_pin, GPIO.LOW)
+        GPIO.output(enable_pin, GPIO.HIGH)
+        GPIO.output(brake_pin, GPIO.HIGH)
 
         # create motor pwm object as an argument for the running process
         motor_pwm = GPIO.PWM(self.pwm_pin, self.parameters['pwm_frequency'])
-        motor_pwm.start(0)
 
         run_arguments = {'motor_pwm': motor_pwm}
 
@@ -80,19 +79,19 @@ class BLDCMotor(Motor):
 
         # set the enable output
         GPIO.output(self.enable_pin, enable_value)
-        # set the brake output to LOW
+        # set the brake output to LOW to allow motor operation
         GPIO.output(self.brake_pin, GPIO.LOW)
 
         motor_pwm = run_arguments['motor_pwm']
+        motor_pwm.start(0)
 
         # change the frequency
         motor_pwm.ChangeFrequency(pwm_frequency_value)
 
         # actual running by gradually increasing pwm duty cycle from 0
-        # for i in range(pwm_duty_cycle_value + 1):
-        #     self.motor_pwm.ChangeDutyCycle(i)
-        #     sleep(0.005)
-        motor_pwm.ChangeDutyCycle(pwm_duty_cycle_value)
+        for i in range(pwm_duty_cycle_value + 1):
+            motor_pwm.ChangeDutyCycle(i)
+            sleep(0.005)
 
         # run duration
         sleep(duration_value)
@@ -105,7 +104,7 @@ class BLDCMotor(Motor):
 
     def stop_running(self, run_arguments):
         # stop the motor based on whether sudden braking is required
-        sudden_brake = 0 if self.parameters['brake'] == 0 else 1
+        sudden_brake = self.parameters['brake'] == 1
 
         motor_pwm = run_arguments['motor_pwm']
 
@@ -114,5 +113,7 @@ class BLDCMotor(Motor):
             GPIO.output(self.brake_pin, GPIO.HIGH)
         else:
             GPIO.output(self.enable_pin, GPIO.HIGH)
+
+        motor_pwm.stop(0)
 
         sleep(0.5) # pause for a while
