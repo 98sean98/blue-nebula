@@ -5,12 +5,17 @@ import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ControlEntityEnum, StepperMotor } from '@models/control-entity';
+import {
+  BLDCMotor,
+  ControlEntityEnum,
+  StepperMotor,
+} from '@models/control-entity';
 import { DevControlInterface } from '@models/ui';
 
 import { RootState } from '@reduxApp';
 
 import { StepperMotorCard } from './StepperMotorCard';
+import { BLDCMotorCard } from './BLDCMotorCard';
 import {
   BleReadDeviceButton,
   BleRunIdleButton,
@@ -49,6 +54,15 @@ export const TestingMode: FC<TestingModeProps> = () => {
         );
       case ControlEntityEnum.DCMotor:
         return <></>;
+      case ControlEntityEnum.BLDCMotor:
+        return (
+          <BLDCMotorCard
+            entity={entity}
+            controlEntity={controlEntity as BLDCMotor}
+            controlInterface={DevControlInterface.Testing}
+            style={tailwind('my-2 mx-4')}
+          />
+        );
     }
   };
 
