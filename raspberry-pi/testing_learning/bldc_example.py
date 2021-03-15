@@ -11,7 +11,6 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(PWM, GPIO.OUT)
 motor_pwm = GPIO.PWM(PWM, 1000)
-motor_pwm.start(0)
 
 GPIO.setup(DIR, GPIO.OUT)
 GPIO.setup(EN, GPIO.OUT)
@@ -68,6 +67,7 @@ def stop(motor_pwm, current_pwm_duty_cycle):
 
 def run_cycle(cycles, motor_pwm):
     print("started running all cycles")
+    motor_pwm.start(0)
     for i in range(cycles):
         print(f"started running the {i}-th cycle")
         forward(motor_pwm, 120, 5)
