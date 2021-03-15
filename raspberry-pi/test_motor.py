@@ -17,10 +17,13 @@ def main():
 
     user_prompt = input('Enter command: ')
 
-    while user_prompt != '0':
-        is_running = user_prompt == '1'
-        bldc_motor.set_is_running(is_running)
-        user_prompt = input('Enter new command: ')
+    try:
+        while user_prompt != '0':
+            is_running = user_prompt == '1'
+            bldc_motor.set_is_running(is_running)
+            user_prompt = input('Enter new command: ')
+    except KeyboardInterrupt:
+        bldc_motor.set_is_running(False)
 
     print('exit')
 
