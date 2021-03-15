@@ -20,7 +20,10 @@ def main():
     multiprocessing_manager = Manager()
 
     app = Application()
-    app.add_service(RobotControllerService(0, multiprocessing_manager))
+
+    service = RobotControllerService(0, multiprocessing_manager)
+
+    app.add_service(service)
     app.register()
 
     adv = RobotControllerAdvertisement(0)
@@ -29,6 +32,7 @@ def main():
     try:
         app.run()
     except KeyboardInterrupt:
+        service.set_is_running(False)
         app.quit()
         GPIO.cleanup()
 
