@@ -1,6 +1,6 @@
 import React, { FC, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem, View } from 'react-native';
-import { Divider } from '@ui-kitten/components';
+import { Divider, Layout } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
@@ -81,16 +81,16 @@ export const TestingMode: FC<TestingModeProps> = () => {
           data={data}
           renderItem={renderItem}
           keyExtractor={keyExtractor}
-          ListFooterComponentStyle={tailwind('px-4 pb-3')}
         />
       </PlatformKeyboardAvoidingView>
 
       <Divider />
 
-      <View style={tailwind('my-1 mx-3')}>
+      <Layout style={tailwind('w-full py-1 px-3')} level={'2'}>
         <Timer
           shouldRun={isRunningTimer}
           style={tailwind('w-2/3 self-center')}
+          level={'2'}
         />
         <View style={tailwind('mt-2 flex-row justify-between')}>
           <BleReadDeviceButton style={{ width: '49%' }} />
@@ -100,7 +100,7 @@ export const TestingMode: FC<TestingModeProps> = () => {
             onStateChange={onRunningStateChange}
           />
         </View>
-      </View>
+      </Layout>
     </View>
   );
 };
