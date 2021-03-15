@@ -32,6 +32,8 @@ def forward(motor_pwm, pwm_duty_cycle, duration):
     elif pwm_duty_cycle > 100: duty_cycle = 100
     else: duty_cycle = pwm_duty_cycle
 
+    motor_pwm.start(0)
+
     for i in range(duty_cycle + 1):
         motor_pwm.ChangeDutyCycle(i)
         sleep(0.005)
@@ -46,6 +48,8 @@ def backward(motor_pwm, pwm_duty_cycle, duration):
     GPIO.output(BRK, GPIO.LOW)
 
     sleep(0.1)
+
+    motor_pwm.start(0)
 
     duty_cycle = 0
     if pwm_duty_cycle < 0: duty_cycle = 0
@@ -64,10 +68,10 @@ def stop(motor_pwm):
     motor_pwm.ChangeDutyCycle(0)
     if sudden_brake: GPIO.output(BRK, GPIO.HIGH)
     else: GPIO.output(EN, GPIO.HIGH)
+    motor_pwm.stop()
 
 def run_cycle(motor_pwm, cycles):
     print("started running all cycles")
-    motor_pwm.start(0)
     for i in range(cycles):
         print(f"started running the {i}-th cycle")
         forward(motor_pwm, 100, 5)

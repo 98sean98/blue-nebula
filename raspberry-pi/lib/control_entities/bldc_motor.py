@@ -56,8 +56,6 @@ class BLDCMotor(Motor):
         return self.parameters
 
     def run(self, is_running, run_arguments, tracked_parameters):
-        sleep(0.1) # pause due to a possible change in direction
-
         # determine pwm duty cycle, pwm frequency, direction, enable, brake, duration
         pwm_duty_cycle_value = 0
         if self.parameters['pwm_duty_cycle'] < 0: pwm_duty_cycle_value = 0
@@ -85,10 +83,12 @@ class BLDCMotor(Motor):
         GPIO.output(self.brake_pin, GPIO.LOW)
 
         motor_pwm = run_arguments['motor_pwm']
+        # start pwm
         motor_pwm.start(0)
-
         # change the frequency
         motor_pwm.ChangeFrequency(pwm_frequency_value)
+
+        sleep(0.1) # pause due to a possible change in direction
 
         # actual running by gradually increasing pwm duty cycle from 0
         for i in range(pwm_duty_cycle_value + 1):
@@ -116,6 +116,7 @@ class BLDCMotor(Motor):
         else:
             GPIO.output(self.enable_pin, GPIO.HIGH)
 
-        motor_pwm.stop(0)
+        # stop pwm
+        motor_pwm.stop()
 
         sleep(0.5) # pause for a while
