@@ -11,7 +11,6 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(PWM, GPIO.OUT)
 motor_pwm = GPIO.PWM(PWM, 1000)
-motor_pwm.start(0)
 
 GPIO.setup(DIR, GPIO.OUT)
 GPIO.setup(EN, GPIO.OUT)
@@ -68,6 +67,7 @@ def stop(motor_pwm):
 
 def run_cycle(motor_pwm, cycles):
     print("started running all cycles")
+    motor_pwm.start(0)
     for i in range(cycles):
         print(f"started running the {i}-th cycle")
         forward(motor_pwm, 100, 5)
@@ -80,14 +80,13 @@ def run_cycle(motor_pwm, cycles):
 
 if __name__ == '__main__':
     try:
-        run_cycle(motor_pwm, 10)
+        p = Process(target=run_cycle, args=[motor_pwm, 10])
+        p.start()
+        while p.is_alive():
+            print('still running...')
+            sleep(2)
+        p.join()
+        print('exit')
     except KeyboardInterrupt:
         stop(motor_pwm)
         GPIO.cleanup()
-    # p = Process(target=run_cycle, args=[10])
-    # p.start()
-    # while p.is_alive():
-    #     print('still running')
-    #     sleep(2)
-    # p.join()
-    # print('exit')
