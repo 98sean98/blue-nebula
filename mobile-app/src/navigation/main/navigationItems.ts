@@ -27,6 +27,11 @@ export const navigationItems: Array<{
     text: 'App Maker',
     iconName: 'cube-outline',
   },
+  {
+    routeName: 'MicroApp',
+    text: 'Micro App',
+    iconName: 'smartphone-outline',
+  },
   { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
 ];
 

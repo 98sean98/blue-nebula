@@ -10,6 +10,7 @@ import { CustomHeader } from './CustomHeader';
 import {
   AppMakerScreen,
   DevControllerScreen,
+  MicroAppScreen,
   SettingsScreen,
   SetupsScreen,
   SimpleControllerScreen,
@@ -41,6 +42,7 @@ export const Main: FC<MainScreenProps> = ({ navigation }) => {
       />
       <Screen name={'Setups'} component={SetupsScreen} />
       <Screen name={'AppMaker'} component={AppMakerScreen} />
+      <Screen name={'MicroApp'} component={MicroAppScreen} />
       <Screen name={'Settings'} component={SettingsScreen} />
     </Navigator>
   );
