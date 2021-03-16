@@ -58,41 +58,34 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
 
   const onButtonPress = async () => {
     try {
-      const nextRunningState = !isRunning;
-      // write all control entities to device, and pop the confirmation modal if it is supposed to run
-      if (nextRunningState) {
-        await writeAll();
-        setShouldShowModal(true);
-      }
-      // write false to stop the device
-      else {
-        await write(false);
-        setIsRunning(false);
-      }
+      // write all control entities to device if the next state is to run
+      if (!isRunning) await writeAll();
+      // pop the confirmation modal
+      setShouldShowModal(true);
     } catch (error) {
       console.log(error);
       renderBleErrorAlert({
-        title: 'Start / Stop Error',
-        message:
-          'There was something wrong with starting / stopping the device.',
+        title: 'Data Communication Error',
+        message: 'There was something wrong with communicating the device.',
       });
     }
   };
 
-  const onConfirmStartPress = useCallback(async () => {
+  const onConfirmPress = useCallback(async () => {
     try {
-      await write(true);
+      const nextRunningState = !isRunning;
+      await write(nextRunningState);
     } catch (error) {
       console.log(error);
       renderBleErrorAlert({
-        title: 'Confirm Start Error',
+        title: `Confirm ${isRunning ? 'Stop' : 'Start'} Error`,
         message:
           'There was something wrong with confirming to start the device.',
       });
     } finally {
       setShouldShowModal(false);
     }
-  }, [write]);
+  }, [write, isRunning]);
 
   return (
     <>
@@ -110,9 +103,9 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
         style={[tailwind('w-4/5')]}>
         <Card disabled style={tailwind('m-4')}>
           <Text category={'h5'} style={tailwind('text-center')}>
-            Are you ready to start?
+            {`Are you ready to ${isRunning ? 'stop' : 'start'} ?`}
           </Text>
-          {showVerbose ? (
+          {!isRunning && showVerbose ? (
             <ScrollView
               style={{ maxHeight: Dimensions.get('window').height * 0.6 }}
               showsVerticalScrollIndicator={false}>
@@ -125,7 +118,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
 
           <ConfirmationButtonGroup
             onNoPress={() => setShouldShowModal(false)}
-            onYesPress={onConfirmStartPress}
+            onYesPress={onConfirmPress}
             style={tailwind('mt-3')}
           />
         </Card>
