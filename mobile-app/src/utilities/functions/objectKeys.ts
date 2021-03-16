@@ -1,4 +1,5 @@
 import {
+  BLDCMotor,
   ControlEntityEnum,
   DCMotor,
   StepperMotor,
@@ -48,10 +49,40 @@ export const dcMotorObjectKeys: Array<{
   },
 ];
 
+export const bldcMotorObjectKeys: Array<{
+  key: keyof BLDCMotor;
+  valueType: DeclarableValueType;
+  description: string;
+}> = [
+  { key: 'name', valueType: 'string', description: 'a unique name' },
+  {
+    key: 'pwmDutyCycle',
+    valueType: 'number',
+    description: 'pwm output (0 - 100)',
+  },
+  {
+    key: 'pwmFrequency',
+    valueType: 'number',
+    description: 'cycle frequency (should be around 1000)',
+  },
+  {
+    key: 'direction',
+    valueType: 'number',
+    description: '0 - clockwise, 1 - counter-clockwise',
+  },
+  { key: 'enable', valueType: 'number', description: '0 - Low, 1 - High' },
+  { key: 'brake', valueType: 'number', description: '0 - Low, 1 - High' },
+  {
+    key: 'duration',
+    valueType: 'number',
+    description: 'motor running duration',
+  },
+];
+
 export const getObjectKeys = (
   controlEntityType: ControlEntityEnum,
 ): Array<{
-  key: keyof StepperMotor | keyof DCMotor;
+  key: keyof StepperMotor | keyof DCMotor | keyof BLDCMotor;
   valueType: DeclarableValueType;
   description: string;
 }> => {
@@ -60,6 +91,8 @@ export const getObjectKeys = (
       return stepperMotorObjectKeys;
     case ControlEntityEnum.DCMotor:
       return dcMotorObjectKeys;
+    case ControlEntityEnum.BLDCMotor:
+      return bldcMotorObjectKeys;
     default:
       throw new Error(
         'unhandled control entity type while getting object keys',

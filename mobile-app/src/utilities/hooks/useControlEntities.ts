@@ -5,7 +5,6 @@ import { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
 
 import { RootState } from '@reduxApp';
 import { setControlEntities } from '@reduxApp/control/actions';
-import { SetControlEntities } from '@reduxApp/control/types';
 
 import { ControlEntityEnum } from '@models/control-entity';
 import { DeclarableValueType } from '@models/ValueType';
@@ -13,11 +12,10 @@ import { DeclarableValueType } from '@models/ValueType';
 import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
 import {
   mapControlEntityToString,
-  mapStringArrayToControlEntity,
+  mapStringToControlEntities,
 } from '@utilities/functions/map';
 
 import { parseStringToType } from '@utilities/functions/parse';
-import { getObjectKeys } from '@utilities/functions/objectKeys';
 
 type UseControlEntities = {
   readAll: () => Promise<void>;
@@ -39,49 +37,56 @@ export const useControlEntities = (): UseControlEntities => {
     read: readStepperMotors,
     write: writeStepperMotor,
   } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
+  const {
+    read: readBLDCMotors,
+    write: writeBLDCMotor,
+  } = useBleRpiDeviceCharacteristic('bldcMotors', 'string');
 
   const readAll: UseControlEntities['readAll'] = useCallback(async () => {
-    // decipher string into control entity objects
+    // decipher strings into control entity objects
     const stepperMotorString = (await readStepperMotors()) as string;
-    const stepperMotorStringArray = stepperMotorString.split(', ');
-
-    const objectKeysCount = getObjectKeys(ControlEntityEnum.StepperMotor)
-      .length;
-
-    const newControlEntities: SetControlEntities = {};
-
-    for (let i = 0; i < stepperMotorStringArray.length / objectKeysCount; i++) {
-      const stringArray = stepperMotorStringArray.slice(
-        i * objectKeysCount,
-        (i + 1) * objectKeysCount,
-      );
-      const entity = stringArray[0];
-      newControlEntities[entity] = {
-        ...mapStringArrayToControlEntity(
-          stringArray,
-          ControlEntityEnum.StepperMotor,
-        ),
-        type: ControlEntityEnum.StepperMotor,
-      };
-    }
-
-    dispatch(setControlEntities(newControlEntities));
-  }, [dispatch, readStepperMotors]);
-
-  const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
-    const stepperMotorStrings: Array<string> = Object.values(
-      controlEntities,
-    ).map((controlEntity) =>
-      controlEntity.type === ControlEntityEnum.StepperMotor &&
-      checkIfObjectValuesAreDefined(controlEntity)
-        ? mapControlEntityToString(controlEntity)
-        : '',
+    const bldcMotorString = (await readBLDCMotors()) as string;
+    const newStepperMotors = mapStringToControlEntities(
+      stepperMotorString,
+      ControlEntityEnum.StepperMotor,
+    );
+    const newBLDCMotors = mapStringToControlEntities(
+      bldcMotorString,
+      ControlEntityEnum.BLDCMotor,
     );
 
+    const newControlEntities = { ...newStepperMotors, ...newBLDCMotors };
+
+    dispatch(setControlEntities(newControlEntities));
+  }, [dispatch, readStepperMotors, readBLDCMotors]);
+
+  const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
+    const stepperMotorStrings: Array<string> = [];
+    const bldcMotorStrings: Array<string> = [];
+
+    Object.values(controlEntities).forEach((controlEntity) => {
+      if (checkIfObjectValuesAreDefined(controlEntity)) {
+        const string = mapControlEntityToString(controlEntity);
+        switch (controlEntity.type) {
+          case ControlEntityEnum.StepperMotor:
+            stepperMotorStrings.push(string);
+            break;
+          case ControlEntityEnum.BLDCMotor:
+            bldcMotorStrings.push(string);
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
     for (const string of stepperMotorStrings) {
-      if (string.length > 0) await writeStepperMotor(string);
+      await writeStepperMotor(string);
     }
-  }, [controlEntities, writeStepperMotor]);
+    for (const string of bldcMotorStrings) {
+      await writeBLDCMotor(string);
+    }
+  }, [controlEntities, writeStepperMotor, writeBLDCMotor]);
 
   const setControlEntityByParameter: UseControlEntities['setControlEntityByParameter'] = (
     entity,
