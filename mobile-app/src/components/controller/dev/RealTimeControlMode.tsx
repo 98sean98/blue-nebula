@@ -15,8 +15,8 @@ import {
 
 import { RootState } from '@reduxApp';
 
-import { StepperMotorCard } from './StepperMotorCard';
-import { BLDCMotorCard } from './BLDCMotorCard';
+import { StepperMotorCard } from './stepper-motor';
+import { BLDCMotorCard } from './bldc-motor';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 

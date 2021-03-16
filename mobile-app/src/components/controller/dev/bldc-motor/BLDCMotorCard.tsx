@@ -24,6 +24,7 @@ import {
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
 import { tailwind } from '@styles/tailwind';
+import { BLDCMotorContinuousControl } from '@components/controller/dev/bldc-motor/BLDCMotorContinuousControl';
 
 interface BLDCMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof ControlEntities;
@@ -119,6 +120,13 @@ export const BLDCMotorCard: FC<BLDCMotorCardProps> = ({
             />
           </View>
         </>
+      ) : null}
+
+      {controlInterface === DevControlInterface.RealTimeControl ? (
+        <BLDCMotorContinuousControl
+          controlEntity={controlEntity}
+          style={tailwind('mt-4 w-full')}
+        />
       ) : null}
     </ControlEntityCard>
   );

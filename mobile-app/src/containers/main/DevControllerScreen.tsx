@@ -7,7 +7,10 @@ import { DevControllerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 
-import { RealTimeControlMode, TestingMode } from '@components/controller/dev';
+import {
+  // RealTimeControlMode,
+  TestingMode,
+} from '@components/controller/dev';
 import { RenderBleComponent } from '@components/shared/bluetooth';
 
 export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
@@ -26,9 +29,9 @@ export const DevControllerScreen: FC<DevControllerScreenProps> = () => {
           <Tab title={'Testing'}>
             <TestingMode isFocused={selectedIndex === 0} />
           </Tab>
-          <Tab title={'Real Time Control'}>
-            <RealTimeControlMode isFocused={selectedIndex === 1} />
-          </Tab>
+          {/*<Tab title={'Real Time Control'}>*/}
+          {/*  <RealTimeControlMode isFocused={selectedIndex === 1} />*/}
+          {/*</Tab>*/}
         </TabView>
       </View>
     </RenderBleComponent>
