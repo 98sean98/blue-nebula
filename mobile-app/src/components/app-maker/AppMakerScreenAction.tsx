@@ -14,7 +14,7 @@ import { renderIcon } from '@components/shared/interface';
 
 import { useAppMakerContext } from '@utilities/hooks';
 import { getBackdropStyle } from '@utilities/functions/ui';
-import { AppMakerMode } from '@utilities/context';
+import { AppMakerMode, AppMakerViewType } from '@utilities/context';
 
 interface AppMakerScreenActionProps {
   iconProps?: IconProps;
@@ -27,6 +27,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
 
   const {
     mode,
+    viewType,
     cachedPages,
     focusedPageIndex,
     createNewPage,
@@ -159,6 +160,7 @@ export const AppMakerScreenAction: FC<AppMakerScreenActionProps> = ({
             />
           ) : (
             <MenuItem
+              disabled={viewType !== AppMakerViewType.Layout}
               accessoryLeft={renderIcon('stop-circle-outline', {
                 fill: theme['color-warning-default'],
                 ...iconProps,

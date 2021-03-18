@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -14,7 +14,7 @@ import {
 } from '@components/app-maker';
 
 import { useAppMakerContext } from '@utilities/hooks';
-import { AppMakerMode } from '@utilities/context';
+import { AppMakerMode, AppMakerViewType } from '@utilities/context';
 
 const mainAnimationWidth = {
   overall: Dimensions.get('window').width * 2,
@@ -32,11 +32,6 @@ const carouselDimensions = {
   item: Dimensions.get('window').width,
 };
 
-enum ViewType {
-  Layout = '@@ViewType/Layout',
-  Setups = '@@ViewType/Setups',
-}
-
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const insets = useSafeAreaInsets();
 
@@ -46,9 +41,12 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     fling: 28,
   };
 
-  const { setMode, chartingActions } = useAppMakerContext();
-
-  const [viewType, setViewType] = useState<ViewType>(ViewType.Layout);
+  const {
+    setMode,
+    viewType,
+    setViewType,
+    chartingActions,
+  } = useAppMakerContext();
 
   const slideAnimation = useRef(new Animated.Value(0)).current;
 
@@ -69,12 +67,12 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   }, [slideAnimation]);
 
   const toggleShowSetupsSelection = () => {
-    if (viewType === ViewType.Setups) {
+    if (viewType === AppMakerViewType.Setups) {
       slideLeft();
-      setViewType(ViewType.Layout);
+      setViewType(AppMakerViewType.Layout);
     } else {
       slideRight();
-      setViewType(ViewType.Setups);
+      setViewType(AppMakerViewType.Setups);
     }
   };
 

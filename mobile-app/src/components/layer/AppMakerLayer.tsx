@@ -10,6 +10,7 @@ import { setMakerConfig } from '@reduxApp/builder/actions';
 import {
   AppMakerContext,
   AppMakerMode,
+  AppMakerViewType,
   ChartingActions,
   initialAppMakerContext,
 } from '@utilities/context/AppMakerContext';
@@ -28,6 +29,10 @@ export const AppMakerLayer: FC = ({ children }) => {
   } = useSelector((state: RootState) => state.builder);
 
   const [mode, setMode] = useState<AppMakerMode>(AppMakerMode.ContentBuilding);
+
+  const [viewType, setViewType] = useState<AppMakerViewType>(
+    AppMakerViewType.Layout,
+  );
 
   const [shouldExpandConfigView, setShouldExpandConfigView] = useState<boolean>(
     initialAppMakerContext.shouldExpandConfigView,
@@ -259,6 +264,8 @@ export const AppMakerLayer: FC = ({ children }) => {
       value={{
         mode,
         setMode,
+        viewType,
+        setViewType,
         shouldExpandConfigView,
         setShouldExpandConfigView,
         cachedPages,
