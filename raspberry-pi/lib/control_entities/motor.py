@@ -7,7 +7,7 @@ class Motor:
 
     tracked_parameters_keys = ['running_duration']
 
-    def __init__(self, motor_name, multiprocessing_manager = None, initial_tracked_parameters = None):
+    def __init__(self, motor_name, run_arguments = None, multiprocessing_manager = None, initial_tracked_parameters = None):
         self.motor_name = motor_name
 
         self.is_running = Value(c_bool, False)
@@ -15,11 +15,14 @@ class Motor:
 
         self.processes = []
 
-        self.tracked_parameters = None
+        self.run_arguments = run_arguments
 
         if multiprocessing_manager is not None and initial_tracked_parameters is not None:
             self.tracked_parameters = multiprocessing_manager.dict(initial_tracked_parameters)
             self.initial_tracked_parameters = initial_tracked_parameters
+        else:
+            self.tracked_parameters = None
+            self.initial_tracked_parameters = None
 
     def get_is_running(self):
         return self.is_running.value
@@ -43,14 +46,14 @@ class Motor:
                 self.spawn_processes()
 
     def spawn_processes(self):
-        main = Process(target=self.run, args=[self.is_running, self.tracked_parameters])
+        main = Process(target=self.run, args=[self.is_running, self.run_arguments, self.tracked_parameters])
         duration = Process(target=self.track_running_duration, args=[self.running_duration])
         main.start()
         duration.start()
         self.processes = [main, duration]
 
     def terminate_processes(self):
-        self.stop_running()
+        self.stop_running(self.run_arguments)
         for p in self.processes:
             if p.is_alive():
                 p.terminate()
@@ -58,17 +61,18 @@ class Motor:
         self.processes = []
 
     def reset_running_parameters(self):
-        # reset tracked parameters
-        for [key, value] in list(self.initial_tracked_parameters.items()):
-            self.tracked_parameters[key] = value
+        # reset tracked parameters if initial tracked parameters exist
+        if self.initial_tracked_parameters is not None and self.tracked_parameters is not None:
+            for [key, value] in list(self.initial_tracked_parameters.items()):
+                self.tracked_parameters[key] = value
         # reset running duration
         self.running_duration.value = 0.0
 
-    def run(self, is_running, tracked_parameters):
+    def run(self, is_running):
         is_running.value = False
         print(f"{self.motor_name} has finished running!")
 
-    def stop_running(self):
+    def stop_running(self, run_arguments = None):
         pass
 
     def get_tracked_parameters(self):
