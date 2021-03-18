@@ -13,6 +13,11 @@ export enum AppMakerMode {
   ActionsCharting = '@@AppMakerMode/ActionsCharting',
 }
 
+export enum AppMakerViewType {
+  Layout = '@@AppMakerViewType/Layout',
+  Setups = '@@AppMakerViewType/Setups',
+}
+
 export type ChartingActions = {
   isCompleted: boolean;
   chartedActionTree: RootActionNode;
@@ -22,6 +27,8 @@ export type ChartingActions = {
 type AppMakerContext = {
   mode: AppMakerMode;
   setMode: Dispatch<SetStateAction<AppMakerMode>>;
+  viewType: AppMakerViewType;
+  setViewType: Dispatch<SetStateAction<AppMakerViewType>>;
   shouldExpandConfigView: boolean;
   setShouldExpandConfigView: Dispatch<SetStateAction<boolean>>;
   cachedPages: Pages;
@@ -45,6 +52,8 @@ type AppMakerContext = {
 export const initialAppMakerContext: AppMakerContext = {
   mode: AppMakerMode.ContentBuilding,
   setMode: () => {},
+  viewType: AppMakerViewType.Layout,
+  setViewType: () => {},
   shouldExpandConfigView: false,
   setShouldExpandConfigView: () => {},
   cachedPages: {},
