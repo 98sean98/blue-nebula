@@ -17,7 +17,7 @@ import { removeControlEntity } from '@reduxApp/control/actions';
 import { ControlEntityCard } from '@components/shared/interface';
 import {
   ControlEntityParameterDirection,
-  ControlEntityParameterToggle,
+  ControlEntityParameterToggleWithLabel,
   ResponsiveInput,
 } from '@components/shared/actionable';
 
@@ -87,37 +87,45 @@ export const BLDCMotorCard: FC<BLDCMotorCardProps> = ({
               onParameterChange('duration', value || '0', 'number')
             }
           />
-          <ControlEntityParameterDirection
-            currentDirection={controlEntity.direction}
-            onChange={(newDirection) =>
-              onParameterChange(
-                'direction',
-                parseFromTypeToString(newDirection),
-                'number',
-              )
-            }
-          />
-          <View style={tailwind('flex-row justify-between')}>
-            <ControlEntityParameterToggle
-              checked={controlEntity.enable === Enable.High}
-              onChange={(checked) =>
+          <View style={tailwind('mt-3 flex-row justify-between items-center')}>
+            <ControlEntityParameterDirection
+              currentDirection={controlEntity.direction}
+              onChange={(newDirection) =>
                 onParameterChange(
-                  'enable',
-                  checked ? Enable.High.toString() : Enable.Low.toString(),
+                  'direction',
+                  parseFromTypeToString(newDirection),
                   'number',
                 )
               }
             />
-            <ControlEntityParameterToggle
-              checked={controlEntity.brake === Brake.High}
-              onChange={(checked) =>
-                onParameterChange(
-                  'brake',
-                  checked ? Brake.High.toString() : Brake.Low.toString(),
-                  'number',
-                )
-              }
-            />
+            <View
+              style={tailwind('ml-2 flex-row justify-between items-center')}>
+              <ControlEntityParameterToggleWithLabel
+                toggleProps={{
+                  checked: controlEntity.brake === Brake.High,
+                  onChange: (checked) =>
+                    onParameterChange(
+                      'brake',
+                      checked ? Brake.High.toString() : Brake.Low.toString(),
+                      'number',
+                    ),
+                }}
+                labelText={'Brake'}
+              />
+              <ControlEntityParameterToggleWithLabel
+                toggleProps={{
+                  checked: controlEntity.enable === Enable.High,
+                  onChange: (checked) =>
+                    onParameterChange(
+                      'enable',
+                      checked ? Enable.High.toString() : Enable.Low.toString(),
+                      'number',
+                    ),
+                }}
+                labelText={'Enable'}
+                style={tailwind('ml-4')}
+              />
+            </View>
           </View>
         </>
       ) : null}

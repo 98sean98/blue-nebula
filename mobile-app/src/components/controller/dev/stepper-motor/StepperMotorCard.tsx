@@ -1,6 +1,6 @@
 import React, { FC, useCallback } from 'react';
 import { View } from 'react-native';
-import { CardProps, Text } from '@ui-kitten/components';
+import { CardProps } from '@ui-kitten/components';
 import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
@@ -14,8 +14,8 @@ import { removeControlEntity } from '@reduxApp/control/actions';
 import { ControlEntityCard } from '@components/shared/interface';
 import {
   ResponsiveInput,
-  ControlEntityParameterToggle,
   ControlEntityParameterDirection,
+  ControlEntityParameterToggleWithLabel,
 } from '@components/shared/actionable';
 import { StepperMotorContinuousControl } from './StepperMotorContinuousControl';
 
@@ -99,24 +99,19 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
               )
             }
           />
-          <View style={tailwind('ml-4 items-center')}>
-            <ControlEntityParameterToggle
-              checked={controlEntity.enable === Enable.High}
-              onChange={(checked) =>
+          <ControlEntityParameterToggleWithLabel
+            toggleProps={{
+              checked: controlEntity.enable === Enable.High,
+              onChange: (checked) =>
                 onParameterChange(
                   'enable',
                   checked ? Enable.High.toString() : Enable.Low.toString(),
                   'number',
-                )
-              }
-            />
-            <Text
-              category={'label'}
-              appearance={'hint'}
-              style={tailwind('mt-1')}>
-              Enable
-            </Text>
-          </View>
+                ),
+            }}
+            labelText={'Enable'}
+            style={tailwind('ml-4')}
+          />
         </View>
       ) : null}
 
