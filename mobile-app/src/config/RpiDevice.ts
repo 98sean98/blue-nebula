@@ -9,5 +9,6 @@ export class RpiDevice {
     runIdle: '00000003-710e-4a5b-8d75-3e5b444bc3cf',
     stepperMotors: '00000004-710e-4a5b-8d75-3e5b444bc3cf',
     dcMotors: '00000005-710e-4a5b-8d75-3e5b444bc3cf',
+    bldcMotors: '00000006-710e-4a5b-8d75-3e5b444bc3cf',
   };
 }
