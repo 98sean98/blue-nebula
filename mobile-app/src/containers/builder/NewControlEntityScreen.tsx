@@ -82,9 +82,10 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
     return { ordinary, special };
   }, [selectedControlEntityType]);
 
-  const [cachedNewControlEntities, setCachedNewControlEntities] = useState<
-    ControlEntities
-  >(emptyNewControlEntities);
+  const [
+    cachedNewControlEntities,
+    setCachedNewControlEntities,
+  ] = useState<ControlEntities>(emptyNewControlEntities);
 
   const getCachedValue = (key: string): Value => {
     try {

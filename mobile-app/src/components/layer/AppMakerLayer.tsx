@@ -44,9 +44,10 @@ export const AppMakerLayer: FC = ({ children }) => {
 
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
 
-  const [shouldGoToNextFocusedPage, setShouldGoToNextFocusedPage] = useState<
-    boolean
-  >(false);
+  const [
+    shouldGoToNextFocusedPage,
+    setShouldGoToNextFocusedPage,
+  ] = useState<boolean>(false);
   const [nextFocusedPageIndex, setNextFocusedPageIndex] = useState<number>(0);
 
   const createNewPage = useCallback(

@@ -33,9 +33,10 @@ export const ApplicationLayer: FC = ({ children }) => {
     }
   }, [dispatch, applicationError]);
 
-  const [requiresApplicationUpdate, setRequiresApplicationUpdate] = useState<
-    boolean
-  >(false);
+  const [
+    requiresApplicationUpdate,
+    setRequiresApplicationUpdate,
+  ] = useState<boolean>(false);
 
   useEffect(() => {
     const getLatestReleaseTag = async (): Promise<string> => {

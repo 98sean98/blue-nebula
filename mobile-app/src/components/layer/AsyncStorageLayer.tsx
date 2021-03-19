@@ -35,16 +35,17 @@ export const AsyncStorageLayer: FC = ({ children }) => {
     (state: RootState) => state.builder,
   );
 
-  const readStorage = useCallback(async (storageKey: string): Promise<
-    unknown
-  > => {
-    const json = await AsyncStorage.getItem(storageKey);
-    if (json !== null) {
-      console.log(`successfully read ${storageKey} data from storage!`);
-      return JSON.parse(json);
-    }
-    return {};
-  }, []);
+  const readStorage = useCallback(
+    async (storageKey: string): Promise<unknown> => {
+      const json = await AsyncStorage.getItem(storageKey);
+      if (json !== null) {
+        console.log(`successfully read ${storageKey} data from storage!`);
+        return JSON.parse(json);
+      }
+      return {};
+    },
+    [],
+  );
 
   // --- read storage on first render ---
   useEffect(() => {

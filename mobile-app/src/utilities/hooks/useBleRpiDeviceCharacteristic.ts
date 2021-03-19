@@ -75,9 +75,10 @@ export function useBleRpiDeviceCharacteristic(
 
   const [isMonitoring, setIsMonitoring] = useState<boolean>(false);
   const [monitoredValue, setMonitoredValue] = useState<Value>();
-  const [monitorSubscription, setMonitorSubscription] = useState<
-    Subscription
-  >();
+  const [
+    monitorSubscription,
+    setMonitorSubscription,
+  ] = useState<Subscription>();
 
   const start: UseBleRpiDeviceCharacteristic['monitor']['start'] = (
     decipherMonitorValue,
