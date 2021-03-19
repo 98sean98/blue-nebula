@@ -1,0 +1,12 @@
+[Unit]
+Description=Blue Nebula Control Program
+After=multi-user.target bluetooth.service bluetooth.target
+Requires=bluetooth.service bluetooth.target
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/Documents/blue-nebula/raspberry-pi/main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

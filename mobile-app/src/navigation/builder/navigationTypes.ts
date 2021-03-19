@@ -26,12 +26,8 @@ type BuilderScreenProps<T extends keyof BuilderStackParamList> = {
   >; // first parameter of CompositeNavigationProp is the primary (navigator owning this screen) type, second parameter is the secondary (parent navigator) type
 }; // generic type for both the route and navigation props for a screen
 
-export type NewControlEntityScreenProps = BuilderScreenProps<
-  'NewControlEntity'
->;
+export type NewControlEntityScreenProps = BuilderScreenProps<'NewControlEntity'>;
 
 export type SetupFormScreenProps = BuilderScreenProps<'SetupForm'>;
 
-export type SetupsReplacementScreenProps = BuilderScreenProps<
-  'SetupsReplacement'
->;
+export type SetupsReplacementScreenProps = BuilderScreenProps<'SetupsReplacement'>;
