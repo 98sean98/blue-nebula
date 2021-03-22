@@ -23,8 +23,8 @@ model User {
   MicroAppCreator MicroApp[] @relation(name: "CreatorOnMicroApp")
   MicroAppUpdater MicroApp[] @relation(name: "UpdaterOnMicroApp")
 
-  @@unique([username])
   MicroAppData MicroAppData[] @relation("CreatorOnMicroAppData")
+  @@unique([username])
 }
 
 model Session {
