@@ -5,7 +5,7 @@ import '@config/localisation/i18n';
 import { useTranslation } from 'react-i18next';
 
 export const LocalisationLayer: FC = ({ children }) => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
 
   const handleLocalisationChange = useCallback(async () => {
     const bestLanguage = RNLocalize.findBestAvailableLanguage(['en', 'zh']);
@@ -23,8 +23,6 @@ export const LocalisationLayer: FC = ({ children }) => {
     return () =>
       RNLocalize.removeEventListener('change', handleLocalisationChange);
   }, [handleLocalisationChange]);
-
-  console.log('translated text:', t('simple controller'));
 
   return <>{children}</>;
 };

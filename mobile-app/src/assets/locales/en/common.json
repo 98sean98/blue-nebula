@@ -1,0 +1,13 @@
+{
+  "navigation": {
+    "simple controller": "Simple Controller",
+    "dev controller": "Dev Controller",
+    "setups": "Setups",
+    "app maker": "App Maker",
+    "settings": "Settings"
+  },
+  "response": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

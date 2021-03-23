@@ -1,12 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-import enTranslation from '@assets/locales/en.json';
-import zhTranslation from '@assets/locales/zh-yue.json';
+import { en } from '@assets/locales/en';
+import { zh } from '@assets/locales/zh-hk';
 
 export const resources = {
-  en: { translation: enTranslation },
-  zh: { translation: zhTranslation },
+  en,
+  zh,
 } as const;
 
 i18n
@@ -15,6 +15,8 @@ i18n
     resources,
     lng: 'en',
     fallbackLng: 'en',
+    ns: ['bluetooth', 'common'],
+    defaultNS: 'common',
     interpolation: {
       escapeValue: false,
     },
