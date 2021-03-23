@@ -1,6 +1,7 @@
 export { ApolloLayer } from './ApolloLayer';
 export { ApplicationLayer } from './ApplicationLayer';
 export { BleLayer } from './BleLayer';
+export { LocalisationLayer } from './LocalisationLayer';
 export { AsyncStorageLayer } from './AsyncStorageLayer';
 export { SettingsLayer } from './SettingsLayer';
 export { TimerLayer } from './TimerLayer';
