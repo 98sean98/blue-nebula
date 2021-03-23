@@ -1,7 +1,7 @@
 {
   "navigation": {
     "main": {
-      "SimpleController": "简单控制界面",
+      "SimpleController": "控制器",
       "DevController": "Dev Controller",
       "Setups": "Setups",
       "AppMaker": "App Maker",
@@ -16,8 +16,14 @@
   "general": {
     "cancel": "取消"
   },
+  "run/idle": {
+    "Are you ready to": "確定",
+    "start": "開始",
+    "stop": "停止",
+    "You have selected": "你已選擇"
+  },
   "response": {
-    "yes": "Yes",
-    "no": "No"
+    "yes": "確定",
+    "no": "取消"
   }
 }

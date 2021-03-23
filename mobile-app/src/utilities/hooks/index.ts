@@ -6,3 +6,4 @@ export { useApplicationQuery } from './useApplicationQuery';
 
 export { useTimerContext } from './useTimerContext';
 export { useAppMakerContext } from './useAppMakerContext';
+export { useSimpleControllerContext } from './useSimpleControllerContext';

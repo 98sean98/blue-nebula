@@ -2,9 +2,5 @@
   "connection": {
     "bluetooth is not connected": "Bluetooth is not connected!",
     "make sure to enable bluetooth before connecting": "Make sure to enable bluetooth before connecting!"
-  },
-  "run/idle": {
-    "start": "Start",
-    "stop": "Stop"
   }
 }

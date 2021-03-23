@@ -47,6 +47,7 @@ import {
 } from '@components/shared/bluetooth';
 import { LayoutDivider } from '@components/shared/interface';
 
+import { SimpleControllerContext } from '@utilities/context';
 import {
   checkIfActionTreeLeadsToSetup,
   traverseActionTree,
@@ -100,12 +101,18 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
     item: [key, { layout, boxes }],
   }) => (
-    <LayoutDivider
-      pageKey={key}
-      layout={layout}
-      boxes={boxes}
-      renderItem={renderLayoutDividerItem}
-    />
+    <View style={{ flex: 1 }}>
+      <Text
+        category={'h5'}
+        style={tailwind('text-center mt-4')}>{`請選擇SDR`}</Text>
+      <LayoutDivider
+        style={tailwind('mt-2')}
+        pageKey={key}
+        layout={layout}
+        boxes={boxes}
+        renderItem={renderLayoutDividerItem}
+      />
+    </View>
   );
 
   const onBoxPress = (pageIndex: number, boxKey: keyof Boxes): void => {
@@ -222,35 +229,40 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
   return (
-    <RenderBleComponent>
-      <View style={{ flex: 1, marginBottom: insets.bottom }}>
-        {showController ? (
-          <>
-            <Carousel
-              ref={carouselRef}
-              data={data}
-              renderItem={renderCarouselItem}
-              onSnapToItem={setFocusedPageIndex}
-              sliderWidth={carouselDimensions.slider}
-              itemWidth={carouselDimensions.item}
-              scrollEnabled={carouselScrollEnabled}
-            />
-            <BleRunIdleButton
-              disabled={isRunIdleDisabled}
-              style={[tailwind('m-4')]}
-              onStateChange={setIsRunning}
-            />
-          </>
-        ) : (
-          <View
-            style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
-            <Text style={tailwind('text-center')}>
-              This simple controller has not been configured by the App Maker
-              yet.
-            </Text>
-          </View>
-        )}
-      </View>
-    </RenderBleComponent>
+    <SimpleControllerContext.Provider value={{ actionTreePath }}>
+      <RenderBleComponent overrideShouldShow>
+        <View style={{ flex: 1, marginBottom: insets.bottom }}>
+          {showController ? (
+            <>
+              <Carousel
+                ref={carouselRef}
+                data={data}
+                renderItem={renderCarouselItem}
+                onSnapToItem={setFocusedPageIndex}
+                sliderWidth={carouselDimensions.slider}
+                itemWidth={carouselDimensions.item}
+                scrollEnabled={carouselScrollEnabled}
+              />
+              <BleRunIdleButton
+                disabled={isRunIdleDisabled}
+                style={[tailwind('m-4')]}
+                onStateChange={setIsRunning}
+              />
+            </>
+          ) : (
+            <View
+              style={[
+                { flex: 1 },
+                tailwind('m-4 justify-center items-center'),
+              ]}>
+              <Text style={tailwind('text-center')}>
+                This simple controller has not been configured by the App Maker
+                yet.
+              </Text>
+            </View>
+          )}
+        </View>
+      </RenderBleComponent>
+    </SimpleControllerContext.Provider>
   );
 };

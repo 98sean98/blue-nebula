@@ -2,9 +2,5 @@
   "connection": {
     "bluetooth is not connected": "蓝牙还没连上！",
     "make sure to enable bluetooth before connecting": "aaa"
-  },
-  "run/idle": {
-    "start": "Start",
-    "stop": "Stop"
   }
 }
