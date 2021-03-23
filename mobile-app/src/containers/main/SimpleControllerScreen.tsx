@@ -232,7 +232,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
 
   return (
     <SimpleControllerContext.Provider value={{ actionTreePath }}>
-      <RenderBleComponent overrideShouldShow>
+      <RenderBleComponent>
         <View style={{ flex: 1, marginBottom: insets.bottom }}>
           {showController ? (
             <>
