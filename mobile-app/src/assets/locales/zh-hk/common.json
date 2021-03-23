@@ -1,10 +1,20 @@
 {
   "navigation": {
-    "simple controller": "简单控制界面",
-    "dev controller": "Dev Controller",
-    "setups": "Setups",
-    "app maker": "App Maker",
-    "settings": "Settings"
+    "main": {
+      "SimpleController": "简单控制界面",
+      "DevController": "Dev Controller",
+      "Setups": "Setups",
+      "AppMaker": "App Maker",
+      "Settings": "Settings"
+    },
+    "builder": {
+      "NewControlEntity": "新 Control Entity",
+      "SetupForm": "Setup Form",
+      "SetupsReplacement": "Setups Replacement"
+    }
+  },
+  "general": {
+    "cancel": "取消"
   },
   "response": {
     "yes": "Yes",

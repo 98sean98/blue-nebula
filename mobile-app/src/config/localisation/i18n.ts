@@ -1,10 +1,12 @@
-import i18n from 'i18next';
+import i18n, { ResourceLanguage } from 'i18next';
 import { initReactI18next } from 'react-i18next';
+
+import { Language } from './Language';
 
 import { en } from '@assets/locales/en';
 import { zh } from '@assets/locales/zh-hk';
 
-export const resources = {
+export const resources: Record<Language, ResourceLanguage> = {
   en,
   zh,
 } as const;

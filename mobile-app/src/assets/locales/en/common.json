@@ -1,10 +1,20 @@
 {
   "navigation": {
-    "simple controller": "Simple Controller",
-    "dev controller": "Dev Controller",
-    "setups": "Setups",
-    "app maker": "App Maker",
-    "settings": "Settings"
+    "main": {
+      "SimpleController": "Simple Controller",
+      "DevController": "Dev Controller",
+      "Setups": "Setups",
+      "AppMaker": "App Maker",
+      "Settings": "Settings"
+    },
+    "builder": {
+      "NewControlEntity": "New Control Entity",
+      "SetupForm": "Setup Form",
+      "SetupsReplacement": "Setups Replacement"
+    }
+  },
+  "general": {
+    "cancel": "cancel"
   },
   "response": {
     "yes": "Yes",

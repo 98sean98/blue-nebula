@@ -3,36 +3,32 @@ import { ApplicationMode } from '@models/application';
 
 export const navigationItems: Array<{
   routeName: keyof MainDrawerParamList;
-  text: string;
   iconName: string;
   screenParams?: Record<string, unknown>;
 }> = [
   {
     routeName: 'SimpleController',
-    text: 'Simple Controller',
+
     iconName: 'grid-outline',
   },
   {
     routeName: 'DevController',
-    text: 'Dev Controller',
+
     iconName: 'flash-outline',
   },
   {
     routeName: 'Setups',
-    text: 'Setups',
     iconName: 'file-text-outline',
   },
   {
     routeName: 'AppMaker',
-    text: 'App Maker',
+
     iconName: 'cube-outline',
   },
   {
-    routeName: 'MicroApp',
-    text: 'Micro App',
-    iconName: 'smartphone-outline',
+    routeName: 'MicroApp', iconName: 'smartphone-outline',
   },
-  { routeName: 'Settings', text: 'Settings', iconName: 'settings-2-outline' },
+  { routeName: 'Settings', iconName: 'settings-2-outline' },
 ];
 
 export const getNavigationItems = (
