@@ -1,6 +1,5 @@
 {
   "connection": {
-    "bluetooth is not connected": "蓝牙还没连上！",
-    "make sure to enable bluetooth before connecting": ""
+    "connect to bluetooth device": "請開啟藍芽功能後按右上角進行連線"
   }
 }

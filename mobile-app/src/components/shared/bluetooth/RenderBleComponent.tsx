@@ -34,14 +34,7 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
         <View
           style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
           <Text style={tailwind('text-center')}>
-            {t('connection.bluetooth is not connected') as string}
-          </Text>
-          <Text style={tailwind('mt-2 text-center')}>
-            {
-              t(
-                'connection.make sure to enable bluetooth before connecting',
-              ) as string
-            }
+            {t('connection.connect to bluetooth device') as string}
           </Text>
         </View>
       ) : null}
