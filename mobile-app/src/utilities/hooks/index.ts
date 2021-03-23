@@ -7,3 +7,5 @@ export { useApplicationQuery } from './useApplicationQuery';
 export { useTimerContext } from './useTimerContext';
 export { useAppMakerContext } from './useAppMakerContext';
 export { useSimpleControllerContext } from './useSimpleControllerContext';
+
+export { useCasingForENTranslation } from './useCasingForENTranslation';

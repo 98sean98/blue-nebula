@@ -7,7 +7,7 @@ import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
-import { Language } from '@config/localisation/Language';
+import { useCasingForENTranslation } from '@utilities/hooks';
 
 export const CustomHeader: FC<StackHeaderProps> = ({
   scene: { route, descriptor },
@@ -15,7 +15,7 @@ export const CustomHeader: FC<StackHeaderProps> = ({
   insets: { top },
   previous,
 }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { options } = descriptor;
   const title =
@@ -26,13 +26,14 @@ export const CustomHeader: FC<StackHeaderProps> = ({
       : route.name;
 
   const cancelText = useMemo(() => t('general.cancel'), [t]);
+  const casedCancelText = useCasingForENTranslation(cancelText, sentenceCase);
 
   const renderLeftAction = () => (
     <Button
       appearance={'ghost'}
       style={tailwind('p-1')}
       onPress={navigation.goBack}>
-      {i18n.language === Language.EN ? sentenceCase(cancelText) : cancelText}
+      {casedCancelText}
     </Button>
   );
 

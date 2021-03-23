@@ -11,6 +11,7 @@ import { Button, ButtonProps, Card, Modal, Text } from '@ui-kitten/components';
 import { useIsFocused } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -25,6 +26,7 @@ import {
   useBleRpiDeviceCharacteristic,
   useControlEntities,
   useSimpleControllerContext,
+  useCasingForENTranslation,
 } from '@utilities/hooks';
 
 interface BleRunIdleButtonProps extends Omit<ButtonProps, 'onPress'> {
@@ -109,7 +111,10 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
         status={isRunning ? 'danger' : 'primary'}
         {...props}
         onPress={onButtonPress}>
-        {isRunning ? text.stop : text.start}
+        {useCasingForENTranslation(
+          isRunning ? text.stop : text.start,
+          sentenceCase,
+        )}
       </Button>
 
       <Modal
