@@ -70,6 +70,8 @@ export const MakerBox: FC<MakerBoxProps> = ({
           placeholder={'Title'}
           placeholderTextColor={theme['text-hint-color']}
           multiline
+          textAlign={'center'}
+          textAlignVertical={'center'}
         />
       ) : (
         <Text style={styles.text}>{cachedTitle}</Text>
