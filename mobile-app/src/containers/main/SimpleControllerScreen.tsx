@@ -99,14 +99,16 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   );
 
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
-    item: [key, { layout, boxes }],
+    item: [key, { title, layout, boxes }],
   }) => (
     <View style={{ flex: 1 }}>
-      <Text
-        category={'h5'}
-        style={tailwind('text-center mt-4')}>{`請選擇SDR`}</Text>
+      {typeof title !== 'undefined' ? (
+        <Text category={'h5'} style={tailwind('text-center mt-4')}>
+          {title}
+        </Text>
+      ) : null}
       <LayoutDivider
-        style={tailwind('mt-2')}
+        style={typeof title !== 'undefined' ? tailwind('mt-2') : undefined}
         pageKey={key}
         layout={layout}
         boxes={boxes}

@@ -1,12 +1,19 @@
-import React, { FC, ReactNode, useEffect, useMemo, useRef } from 'react';
-import { ListRenderItem, StyleSheet } from 'react-native';
+import React, {
+  FC,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
+import { ListRenderItem, StyleSheet, TextInput } from 'react-native';
 import { useTheme } from '@ui-kitten/components';
 import Carousel, { CarouselProps } from 'react-native-snap-carousel';
 import { IterableElement } from 'type-fest';
 
 import { tailwind } from '@styles/tailwind';
 
-import { ActionNode, Box, Boxes, Pages } from '@models/app-maker';
+import { ActionNode, Box, Boxes, Page, Pages } from '@models/app-maker';
 import { PageCarouselData } from '@models/ui';
 
 import {
@@ -45,6 +52,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
   const {
     mode,
     cachedPages,
+    setCachedPages,
     focusedPageIndex,
     setFocusedPageIndex,
     chartingActions,
@@ -57,13 +65,38 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
 
   const carouselRef = useRef<Carousel<IterableElement<typeof data>>>(null);
 
+  const onPageTitleChange = useCallback(
+    (title: string) => {
+      const focusedPage = cachedPages[focusedPageIndex];
+      const updatedPage: Page = {
+        ...focusedPage,
+        title: title === '' ? undefined : title,
+      };
+      setCachedPages((currentCachedPages) => ({
+        ...currentCachedPages,
+        [focusedPageIndex]: updatedPage,
+      }));
+    },
+    [focusedPageIndex, cachedPages, setCachedPages],
+  );
+
   const renderCarouselItem: ListRenderItem<IterableElement<typeof data>> = ({
-    item: [key, { layout, boxes }],
+    item: [key, { title, layout, boxes }],
   }) => (
     <PlatformKeyboardAvoidingView
       style={{ flex: 1 }}
       keyboardVerticalOffset={90}>
+      <TextInput
+        value={title}
+        onChangeText={onPageTitleChange}
+        placeholder={'Page title'}
+        placeholderTextColor={theme['text-hint-color']}
+        textAlign={'center'}
+        textAlignVertical={'center'}
+        style={tailwind('mt-4')}
+      />
       <LayoutDivider
+        style={tailwind('mt-2')}
         pageKey={key}
         layout={layout}
         boxes={getBoxesBasedOnLayout(boxes, layout)}
