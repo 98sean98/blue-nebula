@@ -5,7 +5,7 @@ export const GET_MICRO_APPS_HEADERS = gql`
     microApps {
       id
       name
-      version
+      activeVersion
     }
   }
 `;
@@ -15,18 +15,18 @@ export const GET_MICRO_APP_HEADER = gql`
     microApp(where: { name: $name }) {
       id
       name
-      version
+      activeVersion
     }
   }
 `;
 
-export const GET_MICRO_APP_DATA = gql`
+export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
   query microApp($name: String!) {
     microApp(where: { name: $name }) {
       id
       name
-      version
-      data
+      activeVersion
+      activeMicroAppData
       createdAt
       updatedAt
       creatorId

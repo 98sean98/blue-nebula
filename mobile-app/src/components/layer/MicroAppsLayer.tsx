@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MicroApp, MicroAppHeaders } from '@models/application';
 
 import {
-  GET_MICRO_APP_DATA,
+  GET_MICRO_APP_WITH_ACTIVE_DATA,
   GET_MICRO_APPS_HEADERS,
 } from '@api/graphql/microApp';
 
@@ -64,7 +64,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
       error: microAppDataError,
       called: microAppDataCalled,
     },
-  ] = useLazyQuery(GET_MICRO_APP_DATA, { fetchPolicy: 'network-only' });
+  ] = useLazyQuery(GET_MICRO_APP_WITH_ACTIVE_DATA, { fetchPolicy: 'network-only' });
 
   // loading effect
   useEffect(() => {
