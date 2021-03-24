@@ -81,10 +81,10 @@ export const MicroAppsLayer: FC = ({ children }) => {
     if (typeof focusedMicroAppHeaders !== 'undefined') {
       const variables = { name: focusedMicroAppHeaders.name };
       // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
-      if (microAppDataCalled || shouldFetchMicroApps) {
+      if (shouldFetchMicroApps) {
         loadAppData({ variables });
-        if (shouldFetchMicroApps) dispatch(setShouldFetchMicroApps(false));
-      } else {
+        dispatch(setShouldFetchMicroApps(false));
+      } else if (!microAppDataCalled) {
         const timeout = setTimeout(() => {
           if (!isLoggedIn) loadAppData({ variables });
         }, 1000);
