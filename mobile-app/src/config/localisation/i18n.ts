@@ -17,7 +17,7 @@ i18n
     resources,
     lng: 'en',
     fallbackLng: 'en',
-    ns: ['bluetooth', 'common'],
+    ns: ['bluetooth', 'common', 'control'],
     defaultNS: 'common',
     interpolation: {
       escapeValue: false,

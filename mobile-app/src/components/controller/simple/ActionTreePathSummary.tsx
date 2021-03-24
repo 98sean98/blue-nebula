@@ -18,7 +18,7 @@ export const ActionTreePathSummary: FC<ActionTreeSummaryProps> = ({
   actionTreePath,
   ...props
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('control');
 
   const { pages } = useSelector(
     (state: RootState) => state.builder.makerConfig,

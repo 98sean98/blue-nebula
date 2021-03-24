@@ -39,7 +39,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   onStateChange,
   ...props
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('control');
 
   const { controlEntities } = useSelector((state: RootState) => state.control);
   const { actionTreePath } = useSimpleControllerContext();
