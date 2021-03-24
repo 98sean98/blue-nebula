@@ -127,6 +127,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
       {/* user authentication */}
       <UserAuth style={tailwind('mt-4')} />
 
+      {/* micro app manual download */}
       <MicroAppDownload style={tailwind('mt-4')} />
     </ScrollView>
   );

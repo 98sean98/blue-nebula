@@ -5,6 +5,7 @@ import {
   InMemoryCache,
   ApolloProvider,
   DefaultOptions,
+  NormalizedCacheObject,
 } from '@apollo/client';
 import { useSelector } from 'react-redux';
 
@@ -32,7 +33,7 @@ export const ApolloLayer: FC = ({ children }) => {
   const authorizationToken = useSelector(
     (state: RootState) => state.auth.authorizationToken,
   );
-  const [client, setClient] = useState<ApolloClient<unknown>>();
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
 
   useEffect(() => {
     // setup apollo client
