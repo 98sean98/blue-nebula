@@ -1,16 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const GET_MICRO_APPS_HEADERS = gql`
-  query microApps {
-    microApps {
-      id
-      name
-      activeVersion
-    }
-  }
-`;
-
-export const GET_MICRO_APP_HEADER = gql`
+export const GET_MICRO_APP_HEADERS = gql`
   query microApp($name: String!) {
     microApp(where: { name: $name }) {
       id
@@ -46,7 +36,7 @@ export const GET_ALL_MICRO_APP_DATA = gql`
   query microAppData($name: String!) {
     findManyMicroAppData(
       where: { microApp: { is: { name: { equals: $name } } } }
-      orderBy: { version: asc }
+      orderBy: { version: desc }
     ) {
       id
       name
@@ -94,6 +84,24 @@ export const UPDATE_MICRO_APP_DATA = gql`
       where: { name: $name }
     ) {
       id
+    }
+  }
+`;
+
+export const UPDATE_MICRO_APP = gql`
+  mutation updateMicroApp(
+    $name: String!
+    $activeVersion: Int!
+    $updaterUsername: String!
+  ) {
+    updateMicroApp(
+      data: {
+        activeVersion: { set: $activeVersion }
+        updater: { connect: { username: $updaterUsername } }
+      }
+      where: { name: $name }
+    ) {
+      activeVersion
     }
   }
 `;

@@ -1,14 +1,10 @@
 import React, { FC, useEffect, useMemo } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { MicroAppHeaders, MicroAppWithActiveData } from '@models/application';
+import { MicroAppWithActiveData } from '@models/application';
 
-import {
-  GET_MICRO_APP_WITH_ACTIVE_DATA,
-  GET_MICRO_APPS_HEADERS,
-} from '@api/graphql/microApp';
+import { GET_MICRO_APP_WITH_ACTIVE_DATA } from '@api/graphql/microApp';
 
 import { RootState } from '@reduxApp';
 import {
@@ -51,11 +47,6 @@ export const MicroAppsLayer: FC = ({ children }) => {
     authorizationToken,
   ]);
 
-  const {
-    data: microAppsHeaders,
-    loading: microAppsHeadersLoading,
-    error: microAppsHeadersError,
-  } = useQuery(GET_MICRO_APPS_HEADERS);
   const [
     loadAppData,
     {
@@ -70,37 +61,20 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // loading effect
   useEffect(() => {
-    if (microAppsHeadersLoading || microAppDataLoading)
-      dispatch(setIsLoading(true));
-    else if (!microAppsHeadersLoading && !microAppDataLoading)
-      dispatch(setIsLoading(false));
-  }, [dispatch, microAppsHeadersLoading, microAppDataLoading]);
+    dispatch(setIsLoading(microAppDataLoading));
+  }, [dispatch, microAppDataLoading]);
 
   // error effect
   useEffect(() => {
-    if (microAppsHeadersError)
-      dispatch(
-        setApplicationError({
-          title: 'Micro Apps Fetch Error',
-          message:
-            'There was an error fetching all micro apps from the server.',
-        }),
-      );
+    const microAppName = focusedMicroAppHeaders?.name ?? 'Micro App';
     if (microAppDataError)
       dispatch(
         setApplicationError({
-          title: `${
-            focusedMicroAppHeaders?.name ?? 'Micro App'
-          } Data Fetch Error`,
+          title: `${microAppName} Data Query Error`,
           message: `There was an error fetching this micro app's data from the server.`,
         }),
       );
-  }, [
-    dispatch,
-    microAppsHeadersError,
-    microAppDataError,
-    focusedMicroAppHeaders,
-  ]);
+  }, [dispatch, microAppDataError, focusedMicroAppHeaders]);
 
   // query the micro app data lazily based on the headers
   useEffect(() => {
@@ -108,7 +82,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
       const variables = { name: focusedMicroAppHeaders.name };
       // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
       if (microAppDataCalled || shouldFetchMicroApps) {
-        loadAppData({ variables: { name: focusedMicroAppHeaders.name } });
+        loadAppData({ variables });
         if (shouldFetchMicroApps) dispatch(setShouldFetchMicroApps(false));
       } else {
         const timeout = setTimeout(() => {
@@ -125,24 +99,6 @@ export const MicroAppsLayer: FC = ({ children }) => {
     isLoggedIn,
     shouldFetchMicroApps,
   ]);
-
-  // write micro apps headers into async storage
-  useEffect(() => {
-    if (typeof microAppsHeaders !== 'undefined') {
-      try {
-        const microAppsHeadersObject: Record<string, MicroAppHeaders> = {};
-        (microAppsHeaders.microApps as Array<MicroAppHeaders>).forEach(
-          (item) => (microAppsHeadersObject[item.name] = item),
-        );
-        AsyncStorage.setItem(
-          'microAppsHeaders',
-          JSON.stringify(microAppsHeadersObject),
-        ).then();
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [microAppsHeaders]);
 
   // destructure micro app data, and put into redux store
   useEffect(() => {
