@@ -13,6 +13,7 @@ import {
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
   CreateMicroAppDataResolver,
+  AggregateMicroAppDataResolver,
 } from '@artifacts/type-graphql';
 
 import { MeUserResolver } from '@graphql-api/user';
@@ -32,6 +33,7 @@ const selectedResolvers = [
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
   CreateMicroAppDataResolver,
+  AggregateMicroAppDataResolver,
 ] as const;
 
 const customResolvers = [
