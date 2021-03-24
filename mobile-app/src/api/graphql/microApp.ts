@@ -22,11 +22,18 @@ export const GET_MICRO_APP_HEADER = gql`
 
 export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
   query microApp($name: String!) {
-    microApp(where: { name: $name }) {
+    microAppWithActiveData(where: { name: $name }) {
       id
       name
       activeVersion
-      activeMicroAppData
+      activeMicroAppData {
+        id
+        name
+        version
+        data
+        createdAt
+        creatorId
+      }
       createdAt
       updatedAt
       creatorId

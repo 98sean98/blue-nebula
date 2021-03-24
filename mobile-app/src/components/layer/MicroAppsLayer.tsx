@@ -3,7 +3,7 @@ import { useLazyQuery, useQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { MicroApp, MicroAppHeaders } from '@models/application';
+import { MicroAppHeaders, MicroAppWithActiveData } from '@models/application';
 
 import {
   GET_MICRO_APP_WITH_ACTIVE_DATA,
@@ -64,7 +64,9 @@ export const MicroAppsLayer: FC = ({ children }) => {
       error: microAppDataError,
       called: microAppDataCalled,
     },
-  ] = useLazyQuery(GET_MICRO_APP_WITH_ACTIVE_DATA, { fetchPolicy: 'network-only' });
+  ] = useLazyQuery(GET_MICRO_APP_WITH_ACTIVE_DATA, {
+    fetchPolicy: 'network-only',
+  });
 
   // loading effect
   useEffect(() => {
@@ -102,7 +104,6 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // query the micro app data lazily based on the headers
   useEffect(() => {
-    // todo: check micro app version before querying
     if (typeof focusedMicroAppHeaders !== 'undefined') {
       const variables = { name: focusedMicroAppHeaders.name };
       // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
@@ -146,12 +147,12 @@ export const MicroAppsLayer: FC = ({ children }) => {
   // destructure micro app data, and put into redux store
   useEffect(() => {
     if (typeof microAppData !== 'undefined') {
-      const microApp = microAppData.microApp as MicroApp;
+      const microAppWithActiveData = microAppData.microAppWithActiveData as MicroAppWithActiveData;
       // if null, escape function execution
-      if (!microApp?.data) return;
+      if (!microAppWithActiveData?.activeMicroAppData) return;
 
       const { controlEntities, setups, makerConfig } = JSON.parse(
-        microApp.data,
+        microAppWithActiveData.activeMicroAppData.data,
       );
 
       // set control entities

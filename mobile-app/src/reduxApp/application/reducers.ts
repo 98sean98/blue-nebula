@@ -9,7 +9,7 @@ const initialState: ApplicationState = {
   applicationError: undefined,
   applicationMode: ApplicationMode.NORMAL,
   // todo: set headers to undefined when first loaded screen showing a dropdown to choose a micro app is built
-  focusedMicroAppHeaders: { id: 'some-id', name: 'scraper', version: 1 },
+  focusedMicroAppHeaders: { id: 'some-id', name: 'scraper', activeVersion: 1 },
   shouldFetchMicroApps: false,
 };
 

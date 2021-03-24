@@ -1,4 +1,4 @@
-const main = 'https://localhost:4000';
+const main = 'http://localhost:4000';
 
 export const serverUrl = {
   main,
