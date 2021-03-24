@@ -42,6 +42,22 @@ export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
   }
 `;
 
+export const GET_ALL_MICRO_APP_DATA = gql`
+  query microAppData($name: String!) {
+    findManyMicroAppData(
+      where: { microApp: { is: { name: { equals: $name } } } }
+      orderBy: { version: asc }
+    ) {
+      id
+      name
+      version
+      data
+      createdAt
+      creatorId
+    }
+  }
+`;
+
 export const GET_LATEST_MICRO_APP_DATA_VERSION = gql`
   query aggregateMicroAppData($name: String!) {
     aggregateMicroAppData(

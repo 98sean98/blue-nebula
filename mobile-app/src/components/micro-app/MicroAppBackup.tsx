@@ -1,10 +1,11 @@
 import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
-import { Alert, View, ViewProps } from 'react-native';
-import { Button } from '@ui-kitten/components';
+import { Alert, GestureResponderEvent } from 'react-native';
+import { Button, ButtonProps } from '@ui-kitten/components';
 import { useMutation, useQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  GET_ALL_MICRO_APP_DATA,
   GET_LATEST_MICRO_APP_DATA_VERSION,
   UPDATE_MICRO_APP_DATA,
 } from '@api/graphql/microApp';
@@ -18,7 +19,7 @@ import {
 import { ConfirmationModal } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
 
-interface MicroAppBackupProps extends ViewProps {}
+interface MicroAppBackupProps extends ButtonProps {}
 
 export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     control: { controlEntities },
   } = useSelector((state: RootState) => state);
 
-  const versionQueryVariables = useMemo(
+  const microAppQueryVariables = useMemo(
     () => ({ name: focusedMicroAppHeaders?.name }),
     [focusedMicroAppHeaders],
   );
@@ -38,7 +39,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
   const { data: versionData, error: versionError } = useQuery(
     GET_LATEST_MICRO_APP_DATA_VERSION,
     {
-      variables: versionQueryVariables,
+      variables: microAppQueryVariables,
       fetchPolicy: 'network-only',
       pollInterval: 5000,
     },
@@ -50,7 +51,11 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     refetchQueries: [
       {
         query: GET_LATEST_MICRO_APP_DATA_VERSION,
-        variables: versionQueryVariables,
+        variables: microAppQueryVariables,
+      },
+      {
+        query: GET_ALL_MICRO_APP_DATA,
+        variables: microAppQueryVariables,
       },
     ],
     awaitRefetchQueries: true,
@@ -74,7 +79,10 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     [dispatch, itemName],
   );
 
-  const onButtonPress = () => setShowModal(true);
+  const onButtonPress = (e: GestureResponderEvent) => {
+    setShowModal(true);
+    if (typeof props.onPress !== 'undefined') props.onPress(e);
+  };
 
   const onConfirmUpdateMicroApp = async () => {
     try {
@@ -136,20 +144,18 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
   return (
     <>
-      <View {...props}>
-        <Button
-          appearance={'outline'}
-          accessoryLeft={renderIcon('cloud-upload-outline')}
-          onPress={onButtonPress}>
-          {`Backup ${itemName} data to the server`}
-        </Button>
-      </View>
+      <Button
+        accessoryLeft={renderIcon('cloud-upload-outline')}
+        {...props}
+        onPress={onButtonPress}>
+        {`Backup ${itemName} data to the server`}
+      </Button>
 
       {/* confirmation modal */}
       <ConfirmationModal
         visible={showModal}
         onBackdropPress={() => setShowModal(false)}
-        action={'update'}
+        action={'backup'}
         itemName={itemName}
         onYesPress={onConfirmUpdateMicroApp}
       />
