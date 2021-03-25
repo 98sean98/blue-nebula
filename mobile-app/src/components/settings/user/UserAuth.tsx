@@ -45,7 +45,7 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
           appearance={'outline'}
           accessoryLeft={renderIcon('person-outline')}
           onPress={onButtonPress}>
-          {isLoggedIn ? `Dev Logout` : `Dev Login`}
+          {isLoggedIn ? `Dev logout` : `Dev login`}
         </Button>
       </View>
 

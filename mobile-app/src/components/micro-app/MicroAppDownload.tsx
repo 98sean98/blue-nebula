@@ -1,9 +1,8 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button } from '@ui-kitten/components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import { RootState } from '@reduxApp';
 import { setShouldFetchMicroApp } from '@reduxApp/application/actions';
 
 import { renderIcon } from '@components/shared/interface';
@@ -13,26 +12,16 @@ interface MicroAppDownloadProps extends ViewProps {}
 export const MicroAppDownload: FC<MicroAppDownloadProps> = ({ ...props }) => {
   const dispatch = useDispatch();
 
-  const focusedMicroAppHeaders = useSelector(
-    (state: RootState) => state.application.focusedMicroAppHeaders,
-  );
-
   const onButtonPress = () => {
     dispatch(setShouldFetchMicroApp(true));
   };
-
-  const itemName = useMemo(() => focusedMicroAppHeaders?.name ?? 'Micro App', [
-    focusedMicroAppHeaders,
-  ]);
 
   return (
     <View {...props}>
       <Button
         appearance={'outline'}
         accessoryLeft={renderIcon('cloud-download-outline')}
-        onPress={
-          onButtonPress
-        }>{`Download ${itemName} from the server`}</Button>
+        onPress={onButtonPress}>{`Download from the server`}</Button>
     </View>
   );
 };

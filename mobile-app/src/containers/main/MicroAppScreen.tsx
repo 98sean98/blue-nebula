@@ -7,18 +7,18 @@ import { MicroAppScreenProps } from '@navigation/main';
 import { tailwind } from '@styles/tailwind';
 
 import {
+  DataVersionList,
   MicroAppBackup,
-  MicroAppInfo,
+  MicroAppDetails,
   MicroAppSelector,
 } from '@components/micro-app';
-import { DataVersionList } from '@components/micro-app/DataVersionList';
 
 export const MicroAppScreen: FC<MicroAppScreenProps> = () => {
   return (
     <View style={[{ flex: 1 }, tailwind('mb-5 justify-between')]}>
       <Layout style={tailwind('p-4')} level={'4'}>
         <MicroAppSelector />
-        <MicroAppInfo style={tailwind('mt-3')} />
+        <MicroAppDetails style={tailwind('mt-3')} />
       </Layout>
 
       <View style={[{ flex: 1 }, tailwind('mt-4')]}>

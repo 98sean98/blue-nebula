@@ -13,9 +13,9 @@ import { MicroApp } from '@models/application';
 
 import { RootState } from '@reduxApp/rootReducer';
 
-interface MicroAppInfoProps extends ViewProps {}
+interface MicroAppDetailsProps extends ViewProps {}
 
-export const MicroAppInfo: FC<MicroAppInfoProps> = ({ ...props }) => {
+export const MicroAppDetails: FC<MicroAppDetailsProps> = ({ ...props }) => {
   const { focusedMicroAppHeaders } = useSelector(
     (state: RootState) => state.application,
   );
