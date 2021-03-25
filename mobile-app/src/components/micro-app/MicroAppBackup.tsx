@@ -78,20 +78,21 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const itemName = useMemo(() => focusedMicroAppHeaders?.name ?? 'Micro App', [
-    focusedMicroAppHeaders,
-  ]);
+  const microAppName = useMemo(
+    () => focusedMicroAppHeaders?.name ?? 'Micro App',
+    [focusedMicroAppHeaders],
+  );
 
   const dispatchError = useCallback(
     () =>
       dispatch(
         setApplicationError({
-          title: `${itemName} Backup Error`,
+          title: `${microAppName} Backup Error`,
           message:
             'There was an error backing this micro app up to the server.',
         }),
       ),
-    [dispatch, itemName],
+    [dispatch, microAppName],
   );
 
   const onButtonPress = (e: GestureResponderEvent) => {
@@ -132,7 +133,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         });
         if (response.data?.updateMicroApp !== null)
           Alert.alert(
-            `${itemName} Backup Success`,
+            `${microAppName} Backup Success`,
             `This micro app's data has been backed up successfully!`,
           );
       }
@@ -163,7 +164,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         accessoryLeft={renderIcon('cloud-upload-outline')}
         {...props}
         onPress={onButtonPress}>
-        {`Backup ${itemName} data to the server`}
+        {`Backup ${microAppName} data to the server`}
       </Button>
 
       {/* confirmation modal */}
@@ -171,7 +172,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         visible={showModal}
         onBackdropPress={() => setShowModal(false)}
         action={'backup'}
-        itemName={itemName}
+        itemName={microAppName}
         onYesPress={onConfirmUpdateMicroApp}
       />
     </>

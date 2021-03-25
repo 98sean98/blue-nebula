@@ -1,7 +1,8 @@
-import { useMutation } from '@apollo/client';
-import { SetApplicationError } from '@reduxApp/application/types';
-import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { useDispatch } from 'react-redux';
+
+import { SetApplicationError } from '@reduxApp/application/types';
 import {
   setApplicationError,
   setIsLoading,
@@ -13,18 +14,18 @@ export const useApplicationMutation = (
 ): ReturnType<typeof useMutation> => {
   const dispatch = useDispatch();
 
-  const returnObject = useMutation(...args);
+  const returnTuple = useMutation(...args);
 
-  const [, { loading, error }] = returnObject;
+  const [, returnObject] = returnTuple;
 
   // loading effect
   useEffect(() => {
-    dispatch(setIsLoading(loading));
-  }, [dispatch, loading]);
+    dispatch(setIsLoading(returnObject.loading));
+  }, [dispatch, returnObject.loading]);
 
   // error effect
   useEffect(() => {
-    if (typeof error !== 'undefined')
+    if (typeof returnObject.error !== 'undefined')
       dispatch(
         setApplicationError({
           title: 'Mutation Error',
@@ -32,7 +33,7 @@ export const useApplicationMutation = (
           ...errorConfig,
         }),
       );
-  }, [dispatch, error, errorConfig]);
+  }, [dispatch, returnObject.error, errorConfig]);
 
-  return returnObject;
+  return returnTuple;
 };

@@ -16,16 +16,14 @@ export const useApplicationQuery = (
 
   const returnObject = useQuery(...args);
 
-  const { loading, error } = returnObject;
-
   // loading effect
   useEffect(() => {
-    dispatch(setIsLoading(loading));
-  }, [dispatch, loading]);
+    dispatch(setIsLoading(returnObject.loading));
+  }, [dispatch, returnObject.loading]);
 
   // error effect
   useEffect(() => {
-    if (typeof error !== 'undefined')
+    if (typeof returnObject.error !== 'undefined')
       dispatch(
         setApplicationError({
           title: 'Query Error',
@@ -33,7 +31,7 @@ export const useApplicationQuery = (
           ...errorConfig,
         }),
       );
-  }, [dispatch, error, errorConfig]);
+  }, [dispatch, returnObject.error, errorConfig]);
 
   return returnObject;
 };
