@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp';
+import { logoutAsync } from '@reduxApp/auth/actions';
 
 import { LoginModalContent } from './LoginModalContent';
 import { ConfirmationModal } from '@components/shared/actionable';
+import { renderIcon } from '@components/shared/interface';
 
 import { getBackdropStyle } from '@utilities/functions/ui';
-import { logoutAsync } from '@reduxApp/auth/actions';
-import { renderIcon } from '@components/shared/interface';
 
 interface UserAuthProps extends ViewProps {}
 
