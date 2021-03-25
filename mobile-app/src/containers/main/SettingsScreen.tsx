@@ -21,6 +21,7 @@ import { MicroAppDownload } from '@components/micro-app';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
+import { useTranslation } from 'react-i18next';
 
 const styles = StyleSheet.create({
   text: { maxWidth: '75%' },
@@ -28,6 +29,8 @@ const styles = StyleSheet.create({
 
 export const SettingsScreen: FC<SettingsScreenProps> = () => {
   const insets = useSafeAreaInsets();
+
+  const { t } = useTranslation('settings');
 
   const dispatch = useDispatch();
 
@@ -97,7 +100,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
         {/* monitor device bluetooth connection */}
         <View style={tailwind('w-full flex-row justify-between items-center')}>
           <Text style={styles.text}>
-            Monitor device bluetooth connection when possible
+            {t('monitor bluetooth connection') as string}
           </Text>
           <Toggle
             disabled={isScanningAndConnecting}

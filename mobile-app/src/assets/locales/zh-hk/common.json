@@ -5,10 +5,11 @@
       "DevController": "Dev Controller",
       "Setups": "Setups",
       "AppMaker": "App Maker",
-      "Settings": "Settings"
+      "MicroApp": "Micro App",
+      "Settings": "設定"
     },
     "builder": {
-      "NewControlEntity": "新 Control Entity",
+      "NewControlEntity": "New Control Entity",
       "SetupForm": "Setup Form",
       "SetupsReplacement": "Setups Replacement"
     }

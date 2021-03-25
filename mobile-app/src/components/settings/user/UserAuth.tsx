@@ -2,6 +2,8 @@ import React, { FC, useMemo, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, Modal } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -13,10 +15,13 @@ import { ConfirmationModal } from '@components/shared/actionable';
 import { renderIcon } from '@components/shared/interface';
 
 import { getBackdropStyle } from '@utilities/functions/ui';
+import { useCasingForENTranslation } from '@utilities/hooks';
 
 interface UserAuthProps extends ViewProps {}
 
 export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
+  const { t } = useTranslation('auth');
+
   const dispatch = useDispatch();
 
   const authorizationToken = useSelector(
@@ -38,6 +43,11 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
     closeModal();
   };
 
+  const text = {
+    login: useCasingForENTranslation(t('dev login'), sentenceCase),
+    logout: useCasingForENTranslation(t('dev logout'), sentenceCase),
+  };
+
   return (
     <>
       <View {...props}>
@@ -45,7 +55,7 @@ export const UserAuth: FC<UserAuthProps> = ({ ...props }) => {
           appearance={'outline'}
           accessoryLeft={renderIcon('person-outline')}
           onPress={onButtonPress}>
-          {isLoggedIn ? `Dev logout` : `Dev login`}
+          {isLoggedIn ? text.logout : text.login}
         </Button>
       </View>
 

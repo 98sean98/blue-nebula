@@ -26,7 +26,8 @@ export const navigationItems: Array<{
     iconName: 'cube-outline',
   },
   {
-    routeName: 'MicroApp', iconName: 'smartphone-outline',
+    routeName: 'MicroApp',
+    iconName: 'smartphone-outline',
   },
   { routeName: 'Settings', iconName: 'settings-2-outline' },
 ];

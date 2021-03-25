@@ -178,7 +178,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         accessoryLeft={renderIcon('cloud-upload-outline')}
         {...props}
         onPress={onButtonPress}>
-        {`Backup ${microAppName} data to the server`}
+        {`Backup ${microAppName} data`}
       </Button>
 
       {/* confirmation modal */}
