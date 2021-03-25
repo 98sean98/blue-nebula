@@ -6,18 +6,22 @@ import {
   SelectProps,
 } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { sentenceCase } from 'change-case';
 
 import { Language } from '@config/localisation/Language';
 
 import { RootState } from '@reduxApp';
 import { setSettings } from '@reduxApp/settings/actions';
+import { useCasingForENTranslation } from '@utilities/hooks';
 
 interface LanguageSelectorProps extends SelectProps {}
 
 const languages = Object.entries(Language);
 
 export const LanguageSelector: FC<LanguageSelectorProps> = ({ ...props }) => {
+  const { t } = useTranslation('settings');
+
   const dispatch = useDispatch();
 
   const { language } = useSelector((state: RootState) => state.settings);
@@ -36,30 +40,36 @@ export const LanguageSelector: FC<LanguageSelectorProps> = ({ ...props }) => {
     dispatch(setSettings({ language: newLanguage }));
   };
 
-  const useDeviceLanguageText = 'Use device language';
+  const useDeviceLanguageText = useCasingForENTranslation(
+    t('language.use device language'),
+    sentenceCase,
+  );
 
-  const value = useMemo(() => {
-    const selectedLanguageKey =
+  const value = useMemo(
+    () =>
       selectedIndex.row < languages.length
-        ? languages[selectedIndex.row][0]
-        : useDeviceLanguageText;
-    return sentenceCase(selectedLanguageKey);
-  }, [selectedIndex, useDeviceLanguageText]);
+        ? sentenceCase(languages[selectedIndex.row][0])
+        : useDeviceLanguageText,
+    [selectedIndex, useDeviceLanguageText],
+  );
 
   const languagesSelection = useMemo(
-    () => languages.map(([key]) => key).concat([useDeviceLanguageText]),
+    () =>
+      languages
+        .map(([key]) => sentenceCase(key))
+        .concat([useDeviceLanguageText]),
     [useDeviceLanguageText],
   );
 
   return (
     <Select
-      label={'Language'}
+      label={useCasingForENTranslation(t('language.language'), sentenceCase)}
       value={value}
       selectedIndex={selectedIndex}
       onSelect={(index) => setSelectedIndex(index as IndexPath)}
       {...props}>
       {languagesSelection.map((selectionTitle, index) => (
-        <SelectItem key={index} title={sentenceCase(selectionTitle)} />
+        <SelectItem key={index} title={selectionTitle} />
       ))}
     </Select>
   );
