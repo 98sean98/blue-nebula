@@ -1,7 +1,6 @@
 import React, { FC, ReactNode } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text, Layout, LayoutProps } from '@ui-kitten/components';
-import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -10,6 +9,7 @@ import { Setup } from '@models/setup';
 import { ControlEntitySummary } from '@components/shared/interface';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
+import { formatDate } from '@utilities/functions/formatDate';
 
 interface SetupDetailsCardProps extends LayoutProps {
   setup: Setup;
@@ -45,12 +45,10 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
             {description}
           </Text>
         ) : null}
-        <Text category={'c2'} style={tailwind('mt-1')}>{`Created ${moment(
+        <Text category={'c2'} style={tailwind('mt-1')}>{`Created: ${formatDate(
           createdAt,
-        ).fromNow()}`}</Text>
-        <Text category={'c2'}>{`Last updated ${moment(
-          updatedAt,
-        ).fromNow()}`}</Text>
+        )}`}</Text>
+        <Text category={'c2'}>{`Last updated: ${formatDate(updatedAt)}`}</Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={tailwind('mt-2')}>

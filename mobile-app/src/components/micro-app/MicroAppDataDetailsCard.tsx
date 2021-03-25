@@ -2,7 +2,6 @@ import React, { FC, useMemo } from 'react';
 import { View } from 'react-native';
 import { Button, Layout, LayoutProps, Text } from '@ui-kitten/components';
 import { useQuery, ApolloClient } from '@apollo/client';
-import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -12,6 +11,8 @@ import { User } from '@models/auth';
 import { GET_USER } from '@api/graphql/user';
 
 import { renderIcon } from '@components/shared/interface';
+
+import { formatDate } from '@utilities/functions/formatDate';
 
 interface MicroAppDataDetailsCardProps extends LayoutProps {
   apolloClient: ApolloClient<unknown>;
@@ -47,9 +48,9 @@ export const MicroAppDataDetailsCard: FC<MicroAppDataDetailsCardProps> = ({
       <Text
         category={'label'}
         appearance={'hint'}>{`Version: ${version}`}</Text>
-      <Text category={'c2'} style={tailwind('mt-1')}>{`Created ${moment(
+      <Text category={'c2'} style={tailwind('mt-1')}>{`Created: ${formatDate(
         createdAt,
-      ).fromNow()}`}</Text>
+      )}`}</Text>
 
       <View style={tailwind('mt-4')}>
         <Text category={'s1'}>Creator</Text>
