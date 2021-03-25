@@ -53,7 +53,6 @@ export const MakerBox: FC<MakerBoxProps> = ({
   const styles = StyleSheet.create({
     text: {
       color: theme['text-basic-color'],
-      textAlign: 'center',
       ...tailwind('font-bold text-2xl text-center'),
       ...page.styles.box.text,
     },

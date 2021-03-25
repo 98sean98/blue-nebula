@@ -93,7 +93,7 @@ export const MakerLayoutCarousel: FC<MakerLayoutCarouselProps> = ({
         placeholderTextColor={theme['text-hint-color']}
         textAlign={'center'}
         textAlignVertical={'center'}
-        style={tailwind('mt-4')}
+        style={[tailwind('mt-4 text-lg'), { color: theme['text-basic-color'] }]}
       />
       <LayoutDivider
         style={tailwind('mt-2')}
