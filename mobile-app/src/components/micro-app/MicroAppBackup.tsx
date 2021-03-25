@@ -76,7 +76,9 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     }, [startPolling, stopPolling]),
   );
 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(
+    false,
+  );
 
   const microAppName = useMemo(
     () => focusedMicroAppHeaders?.name ?? 'Micro App',
@@ -95,8 +97,17 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     [dispatch, microAppName],
   );
 
+  const [dataName, setDataName] = useState<string>();
+
   const onButtonPress = (e: GestureResponderEvent) => {
-    setShowModal(true);
+    Alert.prompt(
+      'Data Name',
+      'Optionally give a name to this version of data for easier identification later.',
+      (name) => {
+        if (name !== '') setDataName(name);
+        setShowConfirmationModal(true);
+      },
+    );
     if (typeof props.onPress !== 'undefined') props.onPress(e);
   };
 
@@ -123,6 +134,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
         const variables = {
           name,
+          dataName: dataName ?? null,
           version: newVersion,
           data: jsonData,
           updaterUsername,
@@ -136,11 +148,13 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
             `${microAppName} Backup Success`,
             `This micro app's data has been backed up successfully!`,
           );
+
+        setDataName(undefined);
       }
     } catch (e) {
       console.log(e);
     } finally {
-      setShowModal(false);
+      setShowConfirmationModal(false);
     }
   };
 
@@ -169,10 +183,10 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
       {/* confirmation modal */}
       <ConfirmationModal
-        visible={showModal}
-        onBackdropPress={() => setShowModal(false)}
+        visible={showConfirmationModal}
+        onBackdropPress={() => setShowConfirmationModal(false)}
         action={'backup'}
-        itemName={microAppName}
+        itemName={dataName ?? microAppName}
         onYesPress={onConfirmUpdateMicroApp}
       />
     </>
