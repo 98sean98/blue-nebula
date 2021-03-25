@@ -7,7 +7,10 @@ import moment from 'moment';
 
 import { tailwind } from '@styles/tailwind';
 
-import { setFocusedMicroAppHeaders } from '@reduxApp/application/actions';
+import {
+  setFocusedMicroAppHeaders,
+  setShouldFetchMicroApps,
+} from '@reduxApp/application/actions';
 import { MicroAppData, MicroAppHeaders } from '@models/application';
 
 import {
@@ -156,6 +159,8 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
 
       const response = await updateMicroApp({ variables });
       await refetchHeaders();
+
+      dispatch(setShouldFetchMicroApps(true));
 
       if (typeof response.data !== 'undefined') {
         Alert.alert(
