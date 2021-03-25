@@ -10,6 +10,20 @@ export const GET_MICRO_APP_HEADERS = gql`
   }
 `;
 
+export const GET_MICRO_APP = gql`
+  query microApp($name: String!) {
+    microApp(where: { name: $name }) {
+      id
+      name
+      activeVersion
+      createdAt
+      updatedAt
+      creatorId
+      updaterId
+    }
+  }
+`;
+
 export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
   query microApp($name: String!) {
     microAppWithActiveData(where: { name: $name }) {
@@ -34,7 +48,7 @@ export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
 
 export const GET_ALL_MICRO_APPS_HEADERS = gql`
   query microApps {
-    microApps {
+    microApps(orderBy: { name: asc }) {
       id
       name
       activeVersion
