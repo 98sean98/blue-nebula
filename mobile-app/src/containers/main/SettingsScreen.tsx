@@ -92,7 +92,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
   );
 
   return (
-    <View style={{ flex: 1, marginBottom: insets.bottom }}>
+    <View style={{ flex: 1, marginBottom: insets.bottom + 8 }}>
       <ScrollView style={[{ flex: 1 }, tailwind('mt-5 px-4')]}>
         {/* monitor device bluetooth connection */}
         <View style={tailwind('w-full flex-row justify-between items-center')}>

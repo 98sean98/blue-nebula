@@ -127,11 +127,15 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       title={`${version}. ${name ?? id}`}
       description={`Created ${moment(createdAt).fromNow()}`}
       onPress={() => onListItemPress(id)}
-      style={
+      style={[
+        tailwind('rounded'),
         version === focusedMicroAppHeaders?.activeVersion
-          ? { backgroundColor: theme['color-info-transparent-hover'] }
-          : undefined
-      }
+          ? [
+              { borderColor: theme['color-info-default-border'] },
+              tailwind('border'),
+            ]
+          : {},
+      ]}
     />
   );
 
