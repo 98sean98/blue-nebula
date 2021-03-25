@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   GET_ALL_MICRO_APP_DATA,
   GET_LATEST_MICRO_APP_DATA_VERSION,
+  GET_MICRO_APP_HEADERS,
   UPDATE_MICRO_APP_DATA,
 } from '@api/graphql/microApp';
 
@@ -53,6 +54,10 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     refetchQueries: [
       {
         query: GET_LATEST_MICRO_APP_DATA_VERSION,
+        variables: microAppQueryVariables,
+      },
+      {
+        query: GET_MICRO_APP_HEADERS,
         variables: microAppQueryVariables,
       },
       {
