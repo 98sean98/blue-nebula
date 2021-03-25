@@ -9,6 +9,7 @@ import { GET_MICRO_APP_WITH_ACTIVE_DATA } from '@api/graphql/microApp';
 import { RootState } from '@reduxApp';
 import {
   setApplicationError,
+  setFocusedMicroAppHeaders,
   setIsLoading,
   setShouldFetchMicroApp,
 } from '@reduxApp/application/actions';
@@ -106,6 +107,11 @@ export const MicroAppsLayer: FC = ({ children }) => {
       const microAppWithActiveData = microAppData.microAppWithActiveData as MicroAppWithActiveData;
       // if null, escape function execution
       if (!microAppWithActiveData?.activeMicroAppData) return;
+
+      const { id, name, activeVersion } = microAppWithActiveData;
+
+      // set id and active version into headers
+      dispatch(setFocusedMicroAppHeaders({ id, name, activeVersion }));
 
       const { controlEntities, setups, makerConfig } = JSON.parse(
         microAppWithActiveData.activeMicroAppData.data,
