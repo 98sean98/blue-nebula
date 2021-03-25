@@ -55,7 +55,6 @@ export const MicroAppSelector: FC<MicroAppSelectorProps> = ({ ...props }) => {
       value={data[selectedIndex.row]?.name}
       selectedIndex={selectedIndex}
       onSelect={(index) => setSelectedIndex(index as IndexPath)}
-      label={'Currently Loaded Micro App'}
       {...props}>
       {data.map(({ id, name }) => (
         <SelectItem key={id} title={name} />
