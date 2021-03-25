@@ -102,7 +102,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // destructure micro app data, and put into redux store
   useEffect(() => {
-    if (typeof microAppData !== 'undefined') {
+    if (typeof microAppData !== 'undefined' && microAppData !== null) {
       const microAppWithActiveData = microAppData.microAppWithActiveData as MicroAppWithActiveData;
       // if null, escape function execution
       if (!microAppWithActiveData?.activeMicroAppData) return;
