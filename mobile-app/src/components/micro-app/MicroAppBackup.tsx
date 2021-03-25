@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { Alert, GestureResponderEvent } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
 import { useMutation, useQuery } from '@apollo/client';
+import { useFocusEffect } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -36,14 +37,15 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     [focusedMicroAppHeaders],
   );
 
-  const { data: versionData, error: versionError } = useQuery(
-    GET_LATEST_MICRO_APP_DATA_VERSION,
-    {
-      variables: microAppQueryVariables,
-      fetchPolicy: 'network-only',
-      pollInterval: 5000,
-    },
-  );
+  const {
+    data: versionData,
+    error: versionError,
+    startPolling,
+    stopPolling,
+  } = useQuery(GET_LATEST_MICRO_APP_DATA_VERSION, {
+    variables: microAppQueryVariables,
+    fetchPolicy: 'network-only',
+  });
   const [
     updateMicroApp,
     { loading: updateLoading, error: updateError },
@@ -60,6 +62,14 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     ],
     awaitRefetchQueries: true,
   });
+
+  // use a focus effect to start / stop polling for the latest micro app data version
+  useFocusEffect(
+    useCallback(() => {
+      startPolling(5000); // ms
+      return () => stopPolling();
+    }, [startPolling, stopPolling]),
+  );
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
