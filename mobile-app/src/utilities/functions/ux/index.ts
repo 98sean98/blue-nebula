@@ -1,1 +1,1 @@
-export {getDeviceLanguage} from './getDeviceLanguage'
+export { getDeviceLanguage } from './getDeviceLanguage';
