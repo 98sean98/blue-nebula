@@ -48,8 +48,8 @@ export const App: FC = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={themes.eva}>
         <LocalisationLayer>
-          <ApplicationLayer>
-            <NetworkLayer>
+          <NetworkLayer>
+            <ApplicationLayer>
               <ApolloLayer>
                 <PermissionsLayer>
                   <BleLayer>
@@ -71,8 +71,8 @@ export const App: FC = () => {
                   </BleLayer>
                 </PermissionsLayer>
               </ApolloLayer>
-            </NetworkLayer>
-          </ApplicationLayer>
+            </ApplicationLayer>
+          </NetworkLayer>
         </LocalisationLayer>
       </ApplicationProvider>
     </ReduxProvider>
