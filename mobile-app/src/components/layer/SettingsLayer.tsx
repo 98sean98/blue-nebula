@@ -11,6 +11,8 @@ import {
   stopMonitoringConnection,
 } from '@reduxApp/bluetooth/actions';
 
+import { getDeviceLanguage } from '@utilities/functions/ux';
+
 export const SettingsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
@@ -63,9 +65,9 @@ export const SettingsLayer: FC = ({ children }) => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    if (typeof language !== 'undefined') {
-      if (language !== i18n.language) i18n.changeLanguage(language).then();
-    }
+    const newLanguage =
+      typeof language !== 'undefined' ? language : getDeviceLanguage();
+    if (newLanguage !== i18n.language) i18n.changeLanguage(newLanguage).then();
   }, [language, i18n]);
 
   return <>{children}</>;
