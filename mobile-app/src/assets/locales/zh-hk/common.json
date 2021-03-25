@@ -14,6 +14,10 @@
       "SetupsReplacement": "Setups Replacement"
     }
   },
+  "network": {
+    "not connected": "網絡功能沒開啟",
+    "connect to the internet": "請開啟網絡功能"
+  },
   "general": {
     "cancel": "取消"
   },

@@ -1,5 +1,14 @@
 {
   "connection": {
+    "bluetooth not available": "Bluetooth Not Available",
+    "turn on bluetooth": "Please make sure to turn on bluetooth on your device.",
     "connect to bluetooth device": "Please make sure to enable Bluetooth on your phone, then connect to the device by clicking the bluetooth icon near the top-right corner of the screen."
+  },
+  "permissions": {
+    "title": "Permission Localisation Bluetooth",
+    "message": "This app requires bluetooth.",
+    "buttonNeutral": "Later",
+    "buttonNegative": "Cancel",
+    "buttonPositive": "OK"
   }
 }
