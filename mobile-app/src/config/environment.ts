@@ -1,4 +1,4 @@
-const main = 'http://scraper-staging.herokuapp.com';
+const main = 'https://scraper-staging.herokuapp.com';
 
 export const serverUrl = {
   main,
