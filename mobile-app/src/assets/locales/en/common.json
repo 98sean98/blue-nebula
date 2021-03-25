@@ -18,6 +18,10 @@
     "not connected": "Network Not Connected",
     "connect to the internet": "Please enable network services."
   },
+  "application update": {
+    "download latest version": "Your application is outdated. Please download the app with the latest version by going to the following link.",
+    "go to link": "Go to link"
+  },
   "general": {
     "cancel": "cancel"
   },

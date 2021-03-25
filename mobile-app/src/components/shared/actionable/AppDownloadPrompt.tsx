@@ -2,6 +2,7 @@ import React, { FC, useCallback, useMemo } from 'react';
 import { Alert, Linking, View, ViewProps } from 'react-native';
 import { Button, Layout, Text } from '@ui-kitten/components';
 import { useClipboard } from '@react-native-clipboard/clipboard';
+import { useTranslation } from 'react-i18next';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -12,6 +13,8 @@ import { renderIcon } from '@components/shared/interface';
 interface AppDownloadPromptProps extends ViewProps {}
 
 export const AppDownloadPrompt: FC<AppDownloadPromptProps> = ({ ...props }) => {
+  const { t } = useTranslation();
+
   const [data, setString] = useClipboard();
 
   const hasCopied = useMemo(() => data === appDownloadLink, [data]);
@@ -36,8 +39,7 @@ export const AppDownloadPrompt: FC<AppDownloadPromptProps> = ({ ...props }) => {
   return (
     <View {...props} style={[tailwind('items-center'), props?.style ?? {}]}>
       <Text style={tailwind('text-center')}>
-        Your application is outdated. Please download the app with the latest
-        version by going to the following link.
+        {t('application update.download latest version') as string}
       </Text>
       <Layout style={tailwind('mt-4 rounded p-4 flex-row')} level={'4'}>
         <Text style={tailwind('font-bold')}>{appDownloadLink}</Text>
@@ -53,7 +55,7 @@ export const AppDownloadPrompt: FC<AppDownloadPromptProps> = ({ ...props }) => {
         accessoryRight={renderIcon('arrowhead-right-outline')}
         style={tailwind('w-40 mt-6')}
         onPress={onLinkButtonPress}>
-        Go to link
+        {t('application update.go to link') as string}
       </Button>
     </View>
   );

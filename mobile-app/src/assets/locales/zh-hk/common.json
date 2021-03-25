@@ -18,6 +18,10 @@
     "not connected": "網絡功能沒開啟",
     "connect to the internet": "請開啟網絡功能"
   },
+  "application update": {
+    "download latest version": "您的應用程序版本需要更新。 請通過以下鏈接下載具有最新版本的應用程序。",
+    "go to link": "去鏈接"
+  },
   "general": {
     "cancel": "取消"
   },
