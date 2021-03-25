@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, Toggle } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -16,11 +16,8 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
-import {
-  UserAuth,
-  MicroAppBackup,
-  MicroAppDownload,
-} from '@components/settings';
+import { UserAuth } from '@components/settings';
+import { MicroAppDownload } from '@components/micro-app';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
@@ -35,13 +32,6 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
   const dispatch = useDispatch();
 
   const settings = useSelector((state: RootState) => state.settings);
-  const authorizationToken = useSelector(
-    (state: RootState) => state.auth.authorizationToken,
-  );
-
-  const isLoggedIn = useMemo(() => typeof authorizationToken !== 'undefined', [
-    authorizationToken,
-  ]);
 
   useEffect(() => {
     const writeStorage = async () => {
@@ -97,50 +87,65 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
     }
   };
 
+  const { focusedMicroAppHeaders } = useSelector(
+    (state: RootState) => state.application,
+  );
+
   return (
-    <ScrollView
-      style={[{ flex: 1, marginBottom: insets.bottom }, tailwind('my-5 px-4')]}>
-      {/* monitor device bluetooth connection */}
-      <View style={tailwind('w-full flex-row justify-between items-center')}>
-        <Text style={styles.text}>
-          Monitor device bluetooth connection when possible
-        </Text>
-        <Toggle
-          disabled={isScanningAndConnecting}
-          checked={shouldMonitorDeviceConnection}
-          onChange={() =>
-            dispatch(
-              setSettings({
-                shouldMonitorDeviceConnection: !shouldMonitorDeviceConnection,
-              }),
-            )
-          }
-        />
-      </View>
-
-      {/* todo: build app language selector after implementing i18n */}
-
-      {/* read ip address */}
-      <RenderBleComponent shouldShowHelperText={false}>
-        <View
-          style={tailwind('mt-4 w-full flex-row justify-between items-center')}>
+    <View style={{ flex: 1, marginBottom: insets.bottom }}>
+      <ScrollView style={[{ flex: 1 }, tailwind('mt-5 px-4')]}>
+        {/* monitor device bluetooth connection */}
+        <View style={tailwind('w-full flex-row justify-between items-center')}>
           <Text style={styles.text}>
-            {`Device ip address: `}
-            <Text style={tailwind('font-bold')}>{ipAddress ?? ''}</Text>
+            Monitor device bluetooth connection when possible
           </Text>
-          <Button appearance={'ghost'} onPress={onIpAddressRead}>
-            Read
-          </Button>
+          <Toggle
+            disabled={isScanningAndConnecting}
+            checked={shouldMonitorDeviceConnection}
+            onChange={() =>
+              dispatch(
+                setSettings({
+                  shouldMonitorDeviceConnection: !shouldMonitorDeviceConnection,
+                }),
+              )
+            }
+          />
         </View>
-      </RenderBleComponent>
 
-      {/* user authentication */}
-      <UserAuth style={tailwind('mt-4')} />
+        {/* todo: build app language selector after implementing i18n */}
 
-      {/* micro app update */}
-      {isLoggedIn ? <MicroAppBackup style={tailwind('mt-4')} /> : null}
+        {/* read ip address */}
+        <RenderBleComponent shouldShowHelperText={false}>
+          <View
+            style={tailwind(
+              'mt-4 w-full flex-row justify-between items-center',
+            )}>
+            <Text style={styles.text}>
+              {`Device ip address: `}
+              <Text style={tailwind('font-bold')}>{ipAddress ?? ''}</Text>
+            </Text>
+            <Button appearance={'ghost'} onPress={onIpAddressRead}>
+              Read
+            </Button>
+          </View>
+        </RenderBleComponent>
+      </ScrollView>
 
-      <MicroAppDownload style={tailwind('mt-4')} />
-    </ScrollView>
+      <View style={tailwind('mt-4 px-4')}>
+        {/* user authentication */}
+        <UserAuth />
+
+        {/* micro app manual download */}
+        <MicroAppDownload style={tailwind('mt-2')} />
+
+        {/* micro app info */}
+        {typeof focusedMicroAppHeaders !== 'undefined' ? (
+          <Text
+            style={tailwind(
+              'mt-2 text-center',
+            )}>{`${focusedMicroAppHeaders.name} (version ${focusedMicroAppHeaders.activeVersion})`}</Text>
+        ) : null}
+      </View>
+    </View>
   );
 };

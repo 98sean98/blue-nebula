@@ -18,7 +18,7 @@ export type SetApplicationMode = ApplicationMode;
 
 export type SetFocusedMicroAppHeaders = MicroAppHeaders;
 
-export type SetShouldFetchMicroApps = boolean;
+export type SetShouldFetchMicroApp = boolean;
 
 // feature state
 export type ApplicationState = {
@@ -26,5 +26,5 @@ export type ApplicationState = {
   readonly applicationError: ApplicationError | undefined;
   readonly applicationMode: ApplicationMode;
   readonly focusedMicroAppHeaders: MicroAppHeaders | undefined;
-  readonly shouldFetchMicroApps: boolean;
+  readonly shouldFetchMicroApp: boolean;
 };

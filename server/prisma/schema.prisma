@@ -23,6 +23,7 @@ model User {
   MicroAppCreator MicroApp[] @relation(name: "CreatorOnMicroApp")
   MicroAppUpdater MicroApp[] @relation(name: "UpdaterOnMicroApp")
 
+  MicroAppData MicroAppData[] @relation("CreatorOnMicroAppData")
   @@unique([username])
 }
 
@@ -34,20 +35,38 @@ model Session {
 }
 
 model MicroApp {
-  id      String @id @default(uuid())
-  name    String
-  version Int    @default(1)
+  id            String @id @default(uuid())
+  name          String
+  activeVersion Int    @default(1)
 
-  data Json? @db.Json
+  microAppDataList MicroAppData[] @relation(name: "MicroAppDataOnMicroApp")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  creatorId String?
-  creator   User?   @relation(name: "CreatorOnMicroApp", fields: [creatorId], references: [id])
+  creatorId String
+  creator   User   @relation(name: "CreatorOnMicroApp", fields: [creatorId], references: [id])
 
-  updaterId String?
-  updater   User?   @relation(name: "UpdaterOnMicroApp", fields: [updaterId], references: [id])
+  updaterId String
+  updater   User   @relation(name: "UpdaterOnMicroApp", fields: [updaterId], references: [id])
 
   @@unique([name])
+}
+
+model MicroAppData {
+  id         String   @id @default(uuid())
+  microApp   MicroApp @relation(name: "MicroAppDataOnMicroApp", fields: [microAppId], references: [id])
+  microAppId String
+
+  name    String?
+  version Int
+
+  data Json @db.Json
+
+  createdAt DateTime @default(now())
+
+  creatorId String
+  creator   User   @relation(name: "CreatorOnMicroAppData", fields: [creatorId], references: [id])
+
+  @@unique([microAppId, version])
 }

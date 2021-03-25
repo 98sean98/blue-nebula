@@ -13,6 +13,7 @@ export type MainDrawerParamList = {
   DevController: undefined;
   Setups: undefined;
   AppMaker: undefined;
+  MicroApp: undefined;
   Settings: undefined;
 };
 
@@ -33,5 +34,7 @@ export type DevControllerScreenProps = MainScreenProps<'DevController'>;
 export type SetupsScreenProps = MainScreenProps<'Setups'>;
 
 export type AppMakerScreenProps = MainScreenProps<'AppMaker'>;
+
+export type MicroAppScreenProps = MainScreenProps<'MicroApp'>;
 
 export type SettingsScreenProps = MainScreenProps<'Settings'>;

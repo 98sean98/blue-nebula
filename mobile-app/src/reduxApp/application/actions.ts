@@ -5,7 +5,7 @@ import {
   SetApplicationMode,
   SetFocusedMicroAppHeaders,
   SetIsLoading,
-  SetShouldFetchMicroApps,
+  SetShouldFetchMicroApp,
 } from './types';
 
 export const setIsLoading = (
@@ -40,11 +40,11 @@ export const setFocusedMicroAppHeaders = (
     payload,
   } as const);
 
-export const setShouldFetchMicroApps = (
-  payload: SetShouldFetchMicroApps, // required action arg
+export const setShouldFetchMicroApp = (
+  payload: SetShouldFetchMicroApp, // required action arg
 ) =>
   ({
-    type: ApplicationConstants.SET_SHOULD_FETCH_MICRO_APPS,
+    type: ApplicationConstants.SET_SHOULD_FETCH_MICRO_APP,
     payload,
   } as const);
 
@@ -62,8 +62,8 @@ export type SetApplicationModeApplicationAction = ReturnType<
 export type SetFocusedMicroAppHeadersApplicationAction = ReturnType<
   typeof setFocusedMicroAppHeaders
 >;
-export type SetShouldFetchMicroAppsApplicationAction = ReturnType<
-  typeof setShouldFetchMicroApps
+export type SetShouldFetchMicroAppApplicationAction = ReturnType<
+  typeof setShouldFetchMicroApp
 >;
 
 export type ApplicationActionTypes =
@@ -71,4 +71,4 @@ export type ApplicationActionTypes =
   | SetApplicationErrorApplicationAction
   | SetApplicationModeApplicationAction
   | SetFocusedMicroAppHeadersApplicationAction
-  | SetShouldFetchMicroAppsApplicationAction;
+  | SetShouldFetchMicroAppApplicationAction;

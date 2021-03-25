@@ -58,6 +58,8 @@ export const CustomHeader: FC<StackHeaderProps> = ({
         return <></>;
       case 'AppMaker':
         return <AppMakerScreenAction />;
+      case 'MicroApp':
+        return <></>;
       default:
         return (
           <BleConnectIcon iconProps={iconProps} style={tailwind('w-8 h-8')} />
