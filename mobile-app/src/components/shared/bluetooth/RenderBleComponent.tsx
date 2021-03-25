@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Text } from '@ui-kitten/components';
+import { useTranslation } from 'react-i18next';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -17,6 +18,8 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
   shouldShowHelperText = true,
   children,
 }) => {
+  const { t } = useTranslation('bluetooth');
+
   const isBleRpiDeviceConnected = useSelector(
     (state: RootState) => state.bluetooth.isBleRpiDeviceConnected,
   );
@@ -31,10 +34,7 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
         <View
           style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
           <Text style={tailwind('text-center')}>
-            Bluetooth is not connected!
-          </Text>
-          <Text style={tailwind('mt-2 text-center')}>
-            Make sure to enable bluetooth before connecting!
+            {t('connection.connect to bluetooth device') as string}
           </Text>
         </View>
       ) : null}

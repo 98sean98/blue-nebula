@@ -2,13 +2,17 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { useLazyQuery } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { MicroAppWithActiveData } from '@models/application';
+import { MicroAppHeaders, MicroAppWithActiveData } from '@models/application';
 
-import { GET_MICRO_APP_WITH_ACTIVE_DATA } from '@api/graphql/microApp';
+import {
+  GET_MICRO_APP_HEADERS,
+  GET_MICRO_APP_WITH_ACTIVE_DATA,
+} from '@api/graphql/microApp';
 
 import { RootState } from '@reduxApp';
 import {
   setApplicationError,
+  setFocusedMicroAppHeaders,
   setIsLoading,
   setShouldFetchMicroApp,
 } from '@reduxApp/application/actions';
@@ -32,6 +36,7 @@ import {
 } from '@utilities/functions/object-convert';
 import { ConvertibleState } from '@utilities/functions/object-convert/convertStateWithTimestamps';
 import { ConvertibleObject } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
+import { useApplicationQuery } from '@utilities/hooks';
 
 export const MicroAppsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -43,10 +48,32 @@ export const MicroAppsLayer: FC = ({ children }) => {
     (state: RootState) => state.application,
   );
 
+  const microAppName = useMemo(
+    () => focusedMicroAppHeaders?.name ?? 'Micro App',
+    [focusedMicroAppHeaders],
+  );
+  const microAppQueryVariables = useMemo(
+    () => ({ name: focusedMicroAppHeaders?.name }),
+    [focusedMicroAppHeaders],
+  );
+
   const isLoggedIn = useMemo(() => typeof authorizationToken !== 'undefined', [
     authorizationToken,
   ]);
 
+  const { data: microAppHeaders } = useApplicationQuery(
+    [
+      GET_MICRO_APP_HEADERS,
+      {
+        variables: { name: focusedMicroAppHeaders?.name },
+        fetchPolicy: 'network-only',
+      },
+    ],
+    {
+      title: `${microAppName} Headers Query Error`,
+      message: `There was an error fetching this micro app's headers from the server.`,
+    },
+  );
   const [
     loadAppData,
     {
@@ -66,7 +93,6 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // error effect
   useEffect(() => {
-    const microAppName = focusedMicroAppHeaders?.name ?? 'Micro App';
     if (microAppDataError)
       dispatch(
         setApplicationError({
@@ -74,19 +100,32 @@ export const MicroAppsLayer: FC = ({ children }) => {
           message: `There was an error fetching this micro app's data from the server.`,
         }),
       );
-  }, [dispatch, microAppDataError, focusedMicroAppHeaders]);
+  }, [dispatch, microAppDataError, microAppName]);
+
+  // set focused micro app headers
+  useEffect(() => {
+    const typedMicroAppHeaders = microAppHeaders as
+      | { microApp: MicroAppHeaders | null }
+      | undefined;
+    if (
+      typeof typedMicroAppHeaders !== 'undefined' &&
+      typedMicroAppHeaders.microApp !== null
+    ) {
+      const { id, name, activeVersion } = typedMicroAppHeaders.microApp;
+      dispatch(setFocusedMicroAppHeaders({ id, name, activeVersion }));
+    }
+  }, [dispatch, microAppHeaders]);
 
   // query the micro app data lazily based on the headers
   useEffect(() => {
-    if (typeof focusedMicroAppHeaders !== 'undefined') {
-      const variables = { name: focusedMicroAppHeaders.name };
+    if (typeof microAppQueryVariables !== 'undefined') {
       // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
       if (shouldFetchMicroApp) {
-        loadAppData({ variables });
+        loadAppData({ variables: microAppQueryVariables });
         dispatch(setShouldFetchMicroApp(false));
       } else if (!microAppDataCalled) {
         const timeout = setTimeout(() => {
-          if (!isLoggedIn) loadAppData({ variables });
+          if (!isLoggedIn) loadAppData({ variables: microAppQueryVariables });
         }, 1000);
         return () => clearTimeout(timeout);
       }
@@ -94,7 +133,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
   }, [
     dispatch,
     loadAppData,
-    focusedMicroAppHeaders,
+    microAppQueryVariables,
     microAppDataCalled,
     isLoggedIn,
     shouldFetchMicroApp,

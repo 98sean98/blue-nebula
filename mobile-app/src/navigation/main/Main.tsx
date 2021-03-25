@@ -30,16 +30,8 @@ export const Main: FC<MainScreenProps> = ({ navigation }) => {
       drawerContent={(props) => <CustomDrawer {...props} />}
       backBehavior={'history'}
       initialRouteName={'SimpleController'}>
-      <Screen
-        name={'SimpleController'}
-        component={SimpleControllerScreen}
-        options={{ headerTitle: 'Simple Controller' }}
-      />
-      <Screen
-        name={'DevController'}
-        component={DevControllerScreen}
-        options={{ headerTitle: 'Developer Controller' }}
-      />
+      <Screen name={'SimpleController'} component={SimpleControllerScreen} />
+      <Screen name={'DevController'} component={DevControllerScreen} />
       <Screen name={'Setups'} component={SetupsScreen} />
       <Screen name={'AppMaker'} component={AppMakerScreen} />
       <Screen name={'MicroApp'} component={MicroAppScreen} />

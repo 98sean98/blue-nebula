@@ -1,0 +1,24 @@
+{
+  "navigation": {
+    "main": {
+      "SimpleController": "Simple Controller",
+      "DevController": "Dev Controller",
+      "Setups": "Setups",
+      "AppMaker": "App Maker",
+      "MicroApp": "Micro App",
+      "Settings": "Settings"
+    },
+    "builder": {
+      "NewControlEntity": "New Control Entity",
+      "SetupForm": "Setup Form",
+      "SetupsReplacement": "Setups Replacement"
+    }
+  },
+  "general": {
+    "cancel": "cancel"
+  },
+  "response": {
+    "yes": "Yes",
+    "no": "No"
+  }
+}

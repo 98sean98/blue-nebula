@@ -10,6 +10,7 @@ import {
   TopNavigationAction,
   Divider,
 } from '@ui-kitten/components';
+import { useTranslation } from 'react-i18next';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -25,14 +26,17 @@ export const CustomHeader: FC<StackHeaderProps> = ({
   navigation,
   insets: { top },
 }) => {
+  const { t } = useTranslation();
+
   const focusedRouteName = getFocusedRouteNameFromRoute(route);
   const foundNavigationItem = navigationItems.find(
     ({ routeName }) => routeName === focusedRouteName,
   );
-  const title =
+  const titleI18nKey =
     typeof foundNavigationItem !== 'undefined'
-      ? foundNavigationItem.text
-      : navigationItems[0].text;
+      ? foundNavigationItem.routeName
+      : navigationItems[0].routeName;
+  const title = t(`navigation.main.${titleI18nKey}`);
 
   const iconProps = { width: 20, height: 20 };
 

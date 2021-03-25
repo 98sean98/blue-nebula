@@ -3,12 +3,15 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Dimensions, ScrollView } from 'react-native';
 import { Button, ButtonProps, Card, Modal, Text } from '@ui-kitten/components';
 import { useIsFocused } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -17,10 +20,13 @@ import { RootState } from '@reduxApp';
 import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
 import { ControlEntitySummary } from '@components/shared/interface';
 import { ConfirmationButtonGroup } from '@components/shared/actionable';
+import { ActionTreePathSummary } from '@components/controller/simple';
 
 import {
   useBleRpiDeviceCharacteristic,
   useControlEntities,
+  useSimpleControllerContext,
+  useCasingForENTranslation,
 } from '@utilities/hooks';
 
 interface BleRunIdleButtonProps extends Omit<ButtonProps, 'onPress'> {
@@ -33,7 +39,10 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   onStateChange,
   ...props
 }) => {
+  const { t } = useTranslation('control');
+
   const { controlEntities } = useSelector((state: RootState) => state.control);
+  const { actionTreePath } = useSimpleControllerContext();
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
@@ -87,13 +96,25 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
     }
   }, [write, isRunning]);
 
+  const text = useMemo(
+    () => ({
+      readyTo: t('run/idle.Are you ready to'),
+      start: t('run/idle.start'),
+      stop: t('run/idle.stop'),
+    }),
+    [t],
+  );
+
   return (
     <>
       <Button
         status={isRunning ? 'danger' : 'primary'}
         {...props}
         onPress={onButtonPress}>
-        {isRunning ? 'Stop' : 'Start'}
+        {useCasingForENTranslation(
+          isRunning ? text.stop : text.start,
+          sentenceCase,
+        )}
       </Button>
 
       <Modal
@@ -103,7 +124,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
         style={[tailwind('w-4/5')]}>
         <Card disabled style={tailwind('m-4')}>
           <Text category={'h5'} style={tailwind('text-center')}>
-            {`Are you ready to ${isRunning ? 'stop' : 'start'} ?`}
+            {`${text.readyTo} ${isRunning ? text.stop : text.start} ?`}
           </Text>
           {!isRunning && showVerbose ? (
             <ScrollView
@@ -114,7 +135,12 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
                 controlEntities={controlEntities}
               />
             </ScrollView>
-          ) : null}
+          ) : (
+            <ActionTreePathSummary
+              actionTreePath={actionTreePath}
+              style={tailwind('mt-4 mx-2')}
+            />
+          )}
 
           <ConfirmationButtonGroup
             onNoPress={() => setShouldShowModal(false)}

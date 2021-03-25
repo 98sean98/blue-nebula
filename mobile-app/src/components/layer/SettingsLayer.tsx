@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reduxApp';
 import { setSettings } from '@reduxApp/settings/actions';
@@ -9,6 +10,8 @@ import {
   startMonitoringConnectionAsync,
   stopMonitoringConnection,
 } from '@reduxApp/bluetooth/actions';
+
+import { getDeviceLanguage } from '@utilities/functions/ux';
 
 export const SettingsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -33,7 +36,7 @@ export const SettingsLayer: FC = ({ children }) => {
     }
   }, [dispatch]);
 
-  const { shouldMonitorDeviceConnection } = useSelector(
+  const { shouldMonitorDeviceConnection, language } = useSelector(
     (state: RootState) => state.settings,
   );
   const {
@@ -58,6 +61,14 @@ export const SettingsLayer: FC = ({ children }) => {
     isScanningAndConnecting,
     isMonitoringBleRpiDeviceConnection,
   ]);
+
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    const newLanguage =
+      typeof language !== 'undefined' ? language : getDeviceLanguage();
+    if (newLanguage !== i18n.language) i18n.changeLanguage(newLanguage).then();
+  }, [language, i18n]);
 
   return <>{children}</>;
 };

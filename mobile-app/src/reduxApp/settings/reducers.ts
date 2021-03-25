@@ -6,6 +6,7 @@ import { SettingsActionTypes } from './actions';
 
 const initialState: SettingsState = {
   shouldMonitorDeviceConnection: false,
+  language: undefined,
 };
 
 export const settingsReducer = (

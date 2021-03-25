@@ -10,7 +10,7 @@ const initialState: BluetoothState = {
   bleManager: new BleManager(),
   bleManagerState: State.Unknown,
   isScanningAndConnecting: false,
-  isMonitoringBleRpiDeviceConnection: false,
+  isMonitoringBleRpiDeviceConnection: true,
   isBleRpiDeviceConnected: false,
 };
 

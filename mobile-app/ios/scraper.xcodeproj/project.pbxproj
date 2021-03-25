@@ -321,6 +321,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-HK",
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;

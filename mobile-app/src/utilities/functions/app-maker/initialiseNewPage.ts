@@ -2,6 +2,8 @@ import { Page, Boxes, Layout, PageStyles } from '@models/app-maker';
 import { initialiseNewBox } from './initialiseNewBox';
 
 export const initialiseNewPage = (): Page => {
+  const title = undefined;
+
   const layout: Layout = { rows: 4, columns: 3, boxCount: 12 };
 
   const boxes: Boxes = {};
@@ -17,6 +19,7 @@ export const initialiseNewPage = (): Page => {
   };
 
   return {
+    title,
     layout,
     boxes,
     styles,

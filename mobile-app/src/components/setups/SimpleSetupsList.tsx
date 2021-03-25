@@ -9,7 +9,7 @@ import { Setup, Setups } from '@models/setup';
 
 import { RootState } from '@reduxApp';
 
-import { SetupDetailsCard } from '@components/setups';
+import { SetupDetailsCard } from '@components/setups/SetupDetailsCard';
 
 import { getBackdropStyle } from '@utilities/functions/ui';
 

@@ -16,11 +16,12 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
-import { UserAuth } from '@components/settings';
+import { UserAuth, LanguageSelector } from '@components/settings';
 import { MicroAppDownload } from '@components/micro-app';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
+import { useTranslation } from 'react-i18next';
 
 const styles = StyleSheet.create({
   text: { maxWidth: '75%' },
@@ -29,17 +30,16 @@ const styles = StyleSheet.create({
 export const SettingsScreen: FC<SettingsScreenProps> = () => {
   const insets = useSafeAreaInsets();
 
+  const { t } = useTranslation('settings');
+
   const dispatch = useDispatch();
 
   const settings = useSelector((state: RootState) => state.settings);
 
   useEffect(() => {
     const writeStorage = async () => {
-      const newSettingsJson = JSON.stringify(settings);
-      const oldSettingsJson = await AsyncStorage.getItem('settings');
-      if (oldSettingsJson !== null)
-        await AsyncStorage.mergeItem('settings', newSettingsJson);
-      else await AsyncStorage.setItem('settings', newSettingsJson);
+      const settingsJson = JSON.stringify(settings);
+      await AsyncStorage.setItem('settings', settingsJson);
     };
     try {
       writeStorage().then();
@@ -97,7 +97,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
         {/* monitor device bluetooth connection */}
         <View style={tailwind('w-full flex-row justify-between items-center')}>
           <Text style={styles.text}>
-            Monitor device bluetooth connection when possible
+            {t('monitor bluetooth connection') as string}
           </Text>
           <Toggle
             disabled={isScanningAndConnecting}
@@ -112,7 +112,8 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
           />
         </View>
 
-        {/* todo: build app language selector after implementing i18n */}
+        {/* language selector */}
+        <LanguageSelector style={tailwind('mt-4')} />
 
         {/* read ip address */}
         <RenderBleComponent shouldShowHelperText={false}>

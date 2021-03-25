@@ -1,10 +1,13 @@
 import React, { FC, useCallback, useEffect, useRef } from 'react';
 import { Animated, Dimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 
 import { AppMakerScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
+
+import { setMakerConfig } from '@reduxApp/builder/actions';
 
 import {
   AnimatedFlingContainer,
@@ -34,6 +37,7 @@ const carouselDimensions = {
 
 export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
   const insets = useSafeAreaInsets();
+  const dispatch = useDispatch();
 
   const configurationViewHeight: ConfigurationViewHeight = {
     collapsed: 80 + insets.bottom,
@@ -80,8 +84,14 @@ export const AppMakerScreen: FC<AppMakerScreenProps> = () => {
     if (chartingActions.isCompleted) {
       console.log('every possible action has been populated!');
       setMode(AppMakerMode.ContentBuilding);
+      dispatch(
+        setMakerConfig({
+          actions: chartingActions.chartedActionTree,
+          updatedAt: new Date(),
+        }),
+      );
     }
-  }, [setMode, chartingActions.isCompleted]);
+  }, [dispatch, setMode, chartingActions]);
 
   return (
     <Animated.View

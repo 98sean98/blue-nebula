@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { View, ViewProps } from 'react-native';
 import { tailwind } from '@styles/tailwind';
 import { Button, ButtonProps } from '@ui-kitten/components';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmationButtonGroupProps extends ViewProps {
   onNoPress: () => void;
@@ -15,6 +16,8 @@ export const ConfirmationButtonGroup: FC<ConfirmationButtonGroupProps> = ({
   commonButtonProps,
   ...props
 }) => {
+  const { t } = useTranslation();
+
   return (
     <View
       {...props}
@@ -25,7 +28,7 @@ export const ConfirmationButtonGroup: FC<ConfirmationButtonGroupProps> = ({
         size={'large'}
         onPress={onNoPress}
         {...commonButtonProps}>
-        No
+        {t('response.no') as string}
       </Button>
       <Button
         appearance={'ghost'}
@@ -33,7 +36,7 @@ export const ConfirmationButtonGroup: FC<ConfirmationButtonGroupProps> = ({
         size={'large'}
         onPress={onYesPress}
         {...commonButtonProps}>
-        Yes
+        {t('response.yes') as string}
       </Button>
     </View>
   );
