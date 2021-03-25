@@ -10,7 +10,7 @@ import { RootState } from '@reduxApp';
 import {
   setApplicationError,
   setIsLoading,
-  setShouldFetchMicroApps,
+  setShouldFetchMicroApp,
 } from '@reduxApp/application/actions';
 
 import {
@@ -39,7 +39,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
   const authorizationToken = useSelector(
     (state: RootState) => state.auth.authorizationToken,
   );
-  const { focusedMicroAppHeaders, shouldFetchMicroApps } = useSelector(
+  const { focusedMicroAppHeaders, shouldFetchMicroApp } = useSelector(
     (state: RootState) => state.application,
   );
 
@@ -81,9 +81,9 @@ export const MicroAppsLayer: FC = ({ children }) => {
     if (typeof focusedMicroAppHeaders !== 'undefined') {
       const variables = { name: focusedMicroAppHeaders.name };
       // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
-      if (shouldFetchMicroApps) {
+      if (shouldFetchMicroApp) {
         loadAppData({ variables });
-        dispatch(setShouldFetchMicroApps(false));
+        dispatch(setShouldFetchMicroApp(false));
       } else if (!microAppDataCalled) {
         const timeout = setTimeout(() => {
           if (!isLoggedIn) loadAppData({ variables });
@@ -97,7 +97,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
     focusedMicroAppHeaders,
     microAppDataCalled,
     isLoggedIn,
-    shouldFetchMicroApps,
+    shouldFetchMicroApp,
   ]);
 
   // destructure micro app data, and put into redux store

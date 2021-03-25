@@ -4,7 +4,7 @@ import { Button } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '@reduxApp';
-import { setShouldFetchMicroApps } from '@reduxApp/application/actions';
+import { setShouldFetchMicroApp } from '@reduxApp/application/actions';
 
 import { renderIcon } from '@components/shared/interface';
 
@@ -18,7 +18,7 @@ export const MicroAppDownload: FC<MicroAppDownloadProps> = ({ ...props }) => {
   );
 
   const onButtonPress = () => {
-    dispatch(setShouldFetchMicroApps(true));
+    dispatch(setShouldFetchMicroApp(true));
   };
 
   const itemName = useMemo(() => focusedMicroAppHeaders?.name ?? 'Micro App', [

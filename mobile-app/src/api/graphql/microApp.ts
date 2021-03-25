@@ -32,6 +32,16 @@ export const GET_MICRO_APP_WITH_ACTIVE_DATA = gql`
   }
 `;
 
+export const GET_ALL_MICRO_APPS_HEADERS = gql`
+  query microApps {
+    microApps {
+      id
+      name
+      activeVersion
+    }
+  }
+`;
+
 export const GET_ALL_MICRO_APP_DATA = gql`
   query microAppData($name: String!) {
     findManyMicroAppData(

@@ -9,7 +9,7 @@ import { tailwind } from '@styles/tailwind';
 
 import {
   setFocusedMicroAppHeaders,
-  setShouldFetchMicroApps,
+  setShouldFetchMicroApp,
 } from '@reduxApp/application/actions';
 import { MicroAppData, MicroAppHeaders } from '@models/application';
 
@@ -160,7 +160,7 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       const response = await updateMicroApp({ variables });
       await refetchHeaders();
 
-      dispatch(setShouldFetchMicroApps(true));
+      dispatch(setShouldFetchMicroApp(true));
 
       if (typeof response.data !== 'undefined') {
         Alert.alert(
