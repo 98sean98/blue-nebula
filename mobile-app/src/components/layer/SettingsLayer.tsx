@@ -2,6 +2,7 @@ import React, { FC, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 
 import { RootState } from '@reduxApp';
 import { setSettings } from '@reduxApp/settings/actions';
@@ -33,7 +34,7 @@ export const SettingsLayer: FC = ({ children }) => {
     }
   }, [dispatch]);
 
-  const { shouldMonitorDeviceConnection } = useSelector(
+  const { shouldMonitorDeviceConnection, language } = useSelector(
     (state: RootState) => state.settings,
   );
   const {
@@ -58,6 +59,14 @@ export const SettingsLayer: FC = ({ children }) => {
     isScanningAndConnecting,
     isMonitoringBleRpiDeviceConnection,
   ]);
+
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (typeof language !== 'undefined') {
+      if (language !== i18n.language) i18n.changeLanguage(language).then();
+    }
+  }, [language, i18n]);
 
   return <>{children}</>;
 };

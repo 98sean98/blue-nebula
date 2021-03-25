@@ -7,6 +7,6 @@ export const useCasingForENTranslation = (
 ): string => {
   const { i18n } = useTranslation();
 
-  if (i18n.language === Language.EN) return casingFunction(text);
+  if (i18n.language === Language.ENGLISH) return casingFunction(text);
   return text;
 };

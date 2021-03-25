@@ -16,7 +16,7 @@ import {
   RenderBleComponent,
   renderBleErrorAlert,
 } from '@components/shared/bluetooth';
-import { UserAuth } from '@components/settings';
+import { UserAuth, LanguageSelector } from '@components/settings';
 import { MicroAppDownload } from '@components/micro-app';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
@@ -38,11 +38,8 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
 
   useEffect(() => {
     const writeStorage = async () => {
-      const newSettingsJson = JSON.stringify(settings);
-      const oldSettingsJson = await AsyncStorage.getItem('settings');
-      if (oldSettingsJson !== null)
-        await AsyncStorage.mergeItem('settings', newSettingsJson);
-      else await AsyncStorage.setItem('settings', newSettingsJson);
+      const settingsJson = JSON.stringify(settings);
+      await AsyncStorage.setItem('settings', settingsJson);
     };
     try {
       writeStorage().then();
@@ -115,7 +112,8 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
           />
         </View>
 
-        {/* todo: build app language selector after implementing i18n */}
+        {/* language selector */}
+        <LanguageSelector style={tailwind('mt-4')} />
 
         {/* read ip address */}
         <RenderBleComponent shouldShowHelperText={false}>

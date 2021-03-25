@@ -1,8 +1,11 @@
 import { PartialDeep } from 'type-fest';
 
+import { Language } from '@config/localisation/Language';
+
 // types and interfaces for feature
 export type Settings = {
   shouldMonitorDeviceConnection: boolean;
+  language: Language | undefined;
 };
 
 // action payload
