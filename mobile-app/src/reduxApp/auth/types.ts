@@ -5,7 +5,7 @@ import { LoginCredentials, User } from '@models/auth';
 // action payload
 export type SetAuthorizationToken = string | undefined;
 
-export type SetUser = User;
+export type SetUser = User | undefined;
 
 export type LoginAsync = LoginCredentials;
 

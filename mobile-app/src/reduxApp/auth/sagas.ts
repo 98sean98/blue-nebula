@@ -9,7 +9,11 @@ import {
 } from 'redux-saga/effects';
 
 import { AuthConstants } from './constants';
-import { LoginAsyncAuthAction, setAuthorizationToken } from './actions';
+import {
+  LoginAsyncAuthAction,
+  setAuthorizationToken,
+  setUser,
+} from './actions';
 
 import { isAuthenticated, login, logout } from '@api/auth';
 
@@ -67,6 +71,9 @@ function* logoutAsync(): Generator<StrictEffect, void> {
 
     // remove authentication token
     yield put(setAuthorizationToken(undefined));
+
+    // set the user object to undefined
+    yield put(setUser(undefined));
 
     // set application loading state
     yield put(setIsLoading(false));
