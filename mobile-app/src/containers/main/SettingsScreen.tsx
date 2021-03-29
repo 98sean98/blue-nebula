@@ -22,6 +22,7 @@ import { MicroAppDownload } from '@components/micro-app';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
 import { useTranslation } from 'react-i18next';
+import { releaseTag } from '@config/environment';
 
 const styles = StyleSheet.create({
   text: { maxWidth: '75%' },
@@ -139,13 +140,13 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
         {/* micro app manual download */}
         <MicroAppDownload style={tailwind('mt-2')} />
 
-        {/* micro app info */}
-        {typeof focusedMicroAppHeaders !== 'undefined' ? (
-          <Text
-            style={tailwind(
-              'mt-2 text-center',
-            )}>{`${focusedMicroAppHeaders.name} (version ${focusedMicroAppHeaders.activeVersion})`}</Text>
-        ) : null}
+        {/* micro app info, and mobile app version */}
+        <View style={tailwind('mt-2 items-center')}>
+          {typeof focusedMicroAppHeaders !== 'undefined' ? (
+            <Text>{`${focusedMicroAppHeaders.name} (version ${focusedMicroAppHeaders.activeVersion})`}</Text>
+          ) : null}
+          <Text>{`mobile app (version ${releaseTag})`}</Text>
+        </View>
       </View>
     </View>
   );
