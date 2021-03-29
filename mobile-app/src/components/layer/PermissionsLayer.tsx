@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export const PermissionsLayer: FC = ({ children }) => {
+  const { t } = useTranslation('bluetooth');
+
   const [
     androidBluetoothPermissions,
     setAndroidBluetoothPermissions,
@@ -17,18 +20,18 @@ export const PermissionsLayer: FC = ({ children }) => {
           PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
             {
-              title: 'Permission Localisation Bluetooth',
-              message: 'Requirement for Bluetooth',
-              buttonNeutral: 'Later',
-              buttonNegative: 'Cancel',
-              buttonPositive: 'OK',
+              title: t('permissions.title'),
+              message: t('permissions.message'),
+              buttonNeutral: t('permissions.buttonNeutral'),
+              buttonNegative: t('permissions.buttonNegative'),
+              buttonPositive: t('permissions.buttonPositive'),
             },
           ).then((granted) => {
             if (granted === 'granted') setAndroidBluetoothPermissions(true);
             else setAndroidBluetoothPermissions(false);
           });
       });
-  }, []);
+  }, [t]);
 
   return (
     <>

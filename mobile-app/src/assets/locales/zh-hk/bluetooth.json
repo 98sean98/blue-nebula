@@ -1,5 +1,14 @@
 {
   "connection": {
-    "connect to bluetooth device": "請開啟藍芽功能後按右上角進行連線"
+    "bluetooth not available": "藍牙沒開啟",
+    "turn on bluetooth": "請開啟手機藍牙功能",
+    "connect to bluetooth device": "請開啟藍牙功能後按右上角進行連線"
+  },
+  "permissions": {
+    "title": "藍牙權限",
+    "message": "程序需要藍牙功能",
+    "buttonNeutral": "以後",
+    "buttonNegative": "取消",
+    "buttonPositive": "同意"
   }
 }

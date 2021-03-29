@@ -118,12 +118,11 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         typeof focusedMicroAppHeaders !== 'undefined'
       ) {
         const name = focusedMicroAppHeaders.name;
-        const updaterUsername = user?.username;
+        const updaterUsername = user.username;
 
         if (typeof updaterUsername === 'undefined') {
           // no-op as the user should be logged in, and their information is stored in redux
-          dispatchError();
-          return;
+          throw new Error('updater username is undefined');
         }
 
         const newVersion = versionData?.aggregateMicroAppData
@@ -153,6 +152,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
       }
     } catch (e) {
       console.log(e);
+      dispatchError();
     } finally {
       setShowConfirmationModal(false);
     }

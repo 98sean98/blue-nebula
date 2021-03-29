@@ -230,9 +230,15 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
 
   const showController = useMemo(() => pageCount > 0, [pageCount]);
 
+  const { authorizationToken } = useSelector((state: RootState) => state.auth);
+
+  const isLoggedIn = useMemo(() => typeof authorizationToken !== 'undefined', [
+    authorizationToken,
+  ]);
+
   return (
     <SimpleControllerContext.Provider value={{ actionTreePath }}>
-      <RenderBleComponent>
+      <RenderBleComponent allowDangerousOverride={isLoggedIn}>
         <View style={{ flex: 1, marginBottom: insets.bottom }}>
           {showController ? (
             <>

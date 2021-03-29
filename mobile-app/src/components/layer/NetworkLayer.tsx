@@ -1,0 +1,38 @@
+import React, { FC, useEffect, useState } from 'react';
+import { Alert } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
+import { useTranslation } from 'react-i18next';
+
+export const NetworkLayer: FC = ({ children }) => {
+  const { t } = useTranslation();
+
+  const [isNetworkConnected, setIsNetworkConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(
+      ({ type, isInternetReachable }) => {
+        console.log('network info:', { type, isInternetReachable });
+        setIsNetworkConnected(Boolean(isInternetReachable));
+      },
+    );
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!isNetworkConnected) {
+      // delay network status error alert
+      const timeout = setTimeout(
+        () =>
+          Alert.alert(
+            t('network.not connected'),
+            t('network.connect to the internet'),
+          ),
+        1000,
+      );
+      return () => clearTimeout(timeout);
+    }
+  }, [isNetworkConnected, t]);
+
+  return <>{isNetworkConnected ? children : null}</>;
+};

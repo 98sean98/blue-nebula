@@ -1,6 +1,12 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, FlatListProps, ListRenderItem } from 'react-native';
-import { Divider, ListItem, Modal, useTheme } from '@ui-kitten/components';
+import {
+  Divider,
+  ListItem,
+  Modal,
+  Text,
+  useTheme,
+} from '@ui-kitten/components';
 import { useApolloClient } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
@@ -64,11 +70,18 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       },
     ],
     {
-      title: `${microAppName} Headers Query Error`,
-      message: `There was an error fetching this micro app's headers from the server.`,
+      errorConfig: {
+        title: `${microAppName} Headers Query Error`,
+        message: `There was an error fetching this micro app's headers from the server.`,
+      },
     },
   );
-  const { data: queryData } = useApplicationQuery(
+  const {
+    data: queryData,
+    refetch: refetchData,
+    loading: dataLoading,
+    called: calledData,
+  } = useApplicationQuery(
     [
       GET_ALL_MICRO_APP_DATA,
       {
@@ -77,13 +90,18 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       },
     ],
     {
-      title: `${microAppName} Data Query Error`,
-      message:
-        'There was an error querying the list of data for this micro app.',
+      shouldSetIsLoading: false,
+      errorConfig: {
+        title: `${microAppName} Data Query Error`,
+        message:
+          'There was an error querying the list of data for this micro app.',
+      },
     },
   );
   const [updateMicroApp] = useApplicationMutation([UPDATE_MICRO_APP], {
-    title: `Activate ${microAppName} Version Error`,
+    errorConfig: {
+      title: `Activate ${microAppName} Version Error`,
+    },
   });
 
   // set focused micro app headers
@@ -127,15 +145,40 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       title={`${version}. ${name ?? id}`}
       description={`Created ${moment(createdAt).fromNow()}`}
       onPress={() => onListItemPress(id)}
-      style={
+      style={[
+        tailwind('rounded'),
         version === focusedMicroAppHeaders?.activeVersion
-          ? { backgroundColor: theme['color-info-transparent-hover'] }
-          : undefined
-      }
+          ? [
+              { borderColor: theme['color-info-default-border'] },
+              tailwind('border'),
+            ]
+          : {},
+      ]}
     />
   );
 
   const keyExtractor = (item: Data) => item.id;
+
+  const onRefresh = useCallback(() => {
+    refetchData(microAppQueryVariables);
+  }, [refetchData, microAppQueryVariables]);
+
+  const ListHeaderComponent = useMemo(
+    () => (
+      <Text
+        category={'s2'}
+        appearance={'hint'}
+        style={tailwind('text-center mb-2')}>
+        Pull down to refresh
+      </Text>
+    ),
+    [],
+  );
+
+  const refreshing = useMemo(() => calledData && dataLoading, [
+    calledData,
+    dataLoading,
+  ]);
 
   const selectedData = useMemo(
     () => data.find(({ id }) => id === selectedDataId),
@@ -182,6 +225,9 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         ItemSeparatorComponent={Divider}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListHeaderComponent={ListHeaderComponent}
         {...props}
       />
       <Modal

@@ -23,11 +23,11 @@ export const navigationItems: Array<{
   {
     routeName: 'AppMaker',
 
-    iconName: 'cube-outline',
+    iconName: 'color-palette-outline',
   },
   {
     routeName: 'MicroApp',
-    iconName: 'smartphone-outline',
+    iconName: 'archive-outline',
   },
   { routeName: 'Settings', iconName: 'settings-2-outline' },
 ];

@@ -25,6 +25,7 @@ import {
   MicroAppsLayer,
   AuthLayer,
   LocalisationLayer,
+  NetworkLayer,
 } from '@components/layer';
 
 import { darkTheme, lightTheme } from '@styles/theme/reactNavigationTheme';
@@ -47,29 +48,31 @@ export const App: FC = () => {
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider {...eva} theme={themes.eva}>
         <LocalisationLayer>
-          <ApplicationLayer>
-            <ApolloLayer>
-              <PermissionsLayer>
-                <BleLayer>
-                  <SettingsLayer>
-                    <AsyncStorageLayer>
-                      <AuthLayer>
-                        <MicroAppsLayer>
-                          <TimerLayer>
-                            <AppMakerLayer>
-                              <NavigationContainer theme={themes.navigation}>
-                                <RootNavigator />
-                              </NavigationContainer>
-                            </AppMakerLayer>
-                          </TimerLayer>
-                        </MicroAppsLayer>
-                      </AuthLayer>
-                    </AsyncStorageLayer>
-                  </SettingsLayer>
-                </BleLayer>
-              </PermissionsLayer>
-            </ApolloLayer>
-          </ApplicationLayer>
+          <NetworkLayer>
+            <ApplicationLayer>
+              <ApolloLayer>
+                <PermissionsLayer>
+                  <BleLayer>
+                    <SettingsLayer>
+                      <AsyncStorageLayer>
+                        <AuthLayer>
+                          <MicroAppsLayer>
+                            <TimerLayer>
+                              <AppMakerLayer>
+                                <NavigationContainer theme={themes.navigation}>
+                                  <RootNavigator />
+                                </NavigationContainer>
+                              </AppMakerLayer>
+                            </TimerLayer>
+                          </MicroAppsLayer>
+                        </AuthLayer>
+                      </AsyncStorageLayer>
+                    </SettingsLayer>
+                  </BleLayer>
+                </PermissionsLayer>
+              </ApolloLayer>
+            </ApplicationLayer>
+          </NetworkLayer>
         </LocalisationLayer>
       </ApplicationProvider>
     </ReduxProvider>

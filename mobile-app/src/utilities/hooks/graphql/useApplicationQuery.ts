@@ -2,24 +2,31 @@ import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 
-import { SetApplicationError } from '@reduxApp/application/types';
 import {
   setApplicationError,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
+import { Options } from './Options';
+
 export const useApplicationQuery = (
   args: Parameters<typeof useQuery>,
-  errorConfig?: Partial<SetApplicationError>,
+  options?: Options,
 ): ReturnType<typeof useQuery> => {
+  const { shouldSetIsLoading, errorConfig } = {
+    shouldSetIsLoading: true,
+    errorConfig: undefined,
+    ...options,
+  };
+
   const dispatch = useDispatch();
 
   const returnObject = useQuery(...args);
 
   // loading effect
   useEffect(() => {
-    dispatch(setIsLoading(returnObject.loading));
-  }, [dispatch, returnObject.loading]);
+    if (shouldSetIsLoading) dispatch(setIsLoading(returnObject.loading));
+  }, [shouldSetIsLoading, dispatch, returnObject.loading]);
 
   // error effect
   useEffect(() => {

@@ -53,7 +53,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
     [focusedMicroAppHeaders],
   );
   const microAppQueryVariables = useMemo(
-    () => ({ name: focusedMicroAppHeaders?.name }),
+    () => ({ name: focusedMicroAppHeaders?.name ?? '' }),
     [focusedMicroAppHeaders],
   );
 
@@ -65,13 +65,15 @@ export const MicroAppsLayer: FC = ({ children }) => {
     [
       GET_MICRO_APP_HEADERS,
       {
-        variables: { name: focusedMicroAppHeaders?.name },
+        variables: microAppQueryVariables,
         fetchPolicy: 'network-only',
       },
     ],
     {
-      title: `${microAppName} Headers Query Error`,
-      message: `There was an error fetching this micro app's headers from the server.`,
+      errorConfig: {
+        title: `${microAppName} Headers Query Error`,
+        message: `There was an error fetching this micro app's headers from the server.`,
+      },
     },
   );
   const [
@@ -93,7 +95,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // error effect
   useEffect(() => {
-    if (microAppDataError)
+    if (typeof microAppDataError !== 'undefined')
       dispatch(
         setApplicationError({
           title: `${microAppName} Data Query Error`,
@@ -118,17 +120,15 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
   // query the micro app data lazily based on the headers
   useEffect(() => {
-    if (typeof microAppQueryVariables !== 'undefined') {
-      // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
-      if (shouldFetchMicroApp) {
-        loadAppData({ variables: microAppQueryVariables });
-        dispatch(setShouldFetchMicroApp(false));
-      } else if (!microAppDataCalled) {
-        const timeout = setTimeout(() => {
-          if (!isLoggedIn) loadAppData({ variables: microAppQueryVariables });
-        }, 1000);
-        return () => clearTimeout(timeout);
-      }
+    // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
+    if (shouldFetchMicroApp) {
+      loadAppData({ variables: microAppQueryVariables });
+      dispatch(setShouldFetchMicroApp(false));
+    } else if (!microAppDataCalled) {
+      const timeout = setTimeout(() => {
+        if (!isLoggedIn) loadAppData({ variables: microAppQueryVariables });
+      }, 1000);
+      return () => clearTimeout(timeout);
     }
   }, [
     dispatch,

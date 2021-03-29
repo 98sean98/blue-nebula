@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { View } from 'react-native';
 import { Divider, Layout, Text } from '@ui-kitten/components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MicroAppScreenProps } from '@navigation/main';
 
@@ -14,8 +15,11 @@ import {
 } from '@components/micro-app';
 
 export const MicroAppScreen: FC<MicroAppScreenProps> = () => {
+  const { bottom } = useSafeAreaInsets();
+
   return (
-    <View style={[{ flex: 1 }, tailwind('mb-5 justify-between')]}>
+    <View
+      style={[{ flex: 1, marginBottom: bottom }, tailwind('justify-between')]}>
       <Layout style={tailwind('p-4')} level={'4'}>
         <MicroAppSelector />
         <MicroAppDetails style={tailwind('mt-3')} />
@@ -25,7 +29,10 @@ export const MicroAppScreen: FC<MicroAppScreenProps> = () => {
         <Text category={'h6'} style={tailwind('text-center')}>
           Data Versions
         </Text>
-        <DataVersionList style={tailwind('mt-2')} />
+        <DataVersionList
+          style={tailwind('mt-2')}
+          contentContainerStyle={tailwind('px-2')}
+        />
       </View>
 
       <View>

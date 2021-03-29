@@ -22,6 +22,7 @@ import { MicroAppDownload } from '@components/micro-app';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
 import { useTranslation } from 'react-i18next';
+import { releaseTag } from '@config/environment';
 
 const styles = StyleSheet.create({
   text: { maxWidth: '75%' },
@@ -92,7 +93,7 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
   );
 
   return (
-    <View style={{ flex: 1, marginBottom: insets.bottom }}>
+    <View style={{ flex: 1, marginBottom: insets.bottom + 8 }}>
       <ScrollView style={[{ flex: 1 }, tailwind('mt-5 px-4')]}>
         {/* monitor device bluetooth connection */}
         <View style={tailwind('w-full flex-row justify-between items-center')}>
@@ -139,13 +140,13 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
         {/* micro app manual download */}
         <MicroAppDownload style={tailwind('mt-2')} />
 
-        {/* micro app info */}
-        {typeof focusedMicroAppHeaders !== 'undefined' ? (
-          <Text
-            style={tailwind(
-              'mt-2 text-center',
-            )}>{`${focusedMicroAppHeaders.name} (version ${focusedMicroAppHeaders.activeVersion})`}</Text>
-        ) : null}
+        {/* micro app info, and mobile app version */}
+        <View style={tailwind('mt-2 items-center')}>
+          {typeof focusedMicroAppHeaders !== 'undefined' ? (
+            <Text>{`${focusedMicroAppHeaders.name} (version ${focusedMicroAppHeaders.activeVersion})`}</Text>
+          ) : null}
+          <Text>{`mobile app (version ${releaseTag})`}</Text>
+        </View>
       </View>
     </View>
   );
