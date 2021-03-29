@@ -10,7 +10,6 @@ import { Direction, Enable, StepperMotor } from '@models/control-entity';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
-
 import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
 
@@ -38,7 +37,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
     write: writeStepperMotor,
     monitor: monitorStepperMotor,
   } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
-  const { write: WriteRunIdle } = useBleRpiDeviceCharacteristic(
+  const { write: writeRunIdle } = useBleRpiDeviceCharacteristic(
     'runIdle',
     'boolean',
   );
@@ -58,19 +57,19 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
           enable: Enable.High,
         });
         await writeStepperMotor(stringValue);
+        await writeRunIdle(true);
         monitorStepperMotor.start(
           generateMethodToDecipherMonitorValue(controlEntity.name),
         );
-        await WriteRunIdle(true);
       } else {
         // disable the controls for a short while
         setIsControlDisabled(true);
-        await WriteRunIdle(false);
         monitorStepperMotor.stop();
         const stringValue = mapControlEntityToString({
           ...controlEntity,
           enable: Enable.Low,
         });
+        await writeRunIdle(false);
         await writeStepperMotor(stringValue);
       }
     } catch (error) {
@@ -94,7 +93,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
     current: number;
     previous: number;
   }>({ current: 0, previous: 0 });
-  const throttledSetRevolution = useThrottledCallback(setRevolution, 100, {});
+  const throttledSetRevolution = useThrottledCallback(setRevolution, 100);
   const [shouldStreamMonitor, setShouldStreamMonitor] = useState<boolean>(
     false,
   );
