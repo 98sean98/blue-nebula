@@ -70,8 +70,10 @@ export const MicroAppsLayer: FC = ({ children }) => {
       },
     ],
     {
-      title: `${microAppName} Headers Query Error`,
-      message: `There was an error fetching this micro app's headers from the server.`,
+      errorConfig: {
+        title: `${microAppName} Headers Query Error`,
+        message: `There was an error fetching this micro app's headers from the server.`,
+      },
     },
   );
   const [
