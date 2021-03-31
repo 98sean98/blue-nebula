@@ -20,9 +20,7 @@ import { BLDCMotorCard } from './bldc-motor';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
-import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
-import { mapControlEntityToString } from '@utilities/functions/map';
-import { checkIfObjectValuesAreDefined } from '@utilities/functions/checkIfObjectValuesAreDefined';
+import { useControlEntities } from '@utilities/hooks';
 
 interface RealTimeControlModeProps {
   isFocused: boolean;
@@ -73,32 +71,31 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   const [shouldShowModal, setShouldShowModal] = useState<boolean>(false);
 
-  const { write: writeStepMotor } = useBleRpiDeviceCharacteristic(
-    'stepperMotors',
-    'string',
-  );
+  const { writeAll, setControlEntityByParameter } = useControlEntities();
 
   useEffect(() => {
     if (isFocused) {
       const isEveryEnableLow = Object.values(controlEntities).every(
         (controlEntity) => controlEntity.enable === Enable.Low,
       );
-      if (!isEveryEnableLow) setShouldShowModal(true);
+      if (!isEveryEnableLow) {
+        Object.entries(controlEntities).forEach(([entity, { enable }]) => {
+          if (enable !== Enable.Low)
+            setControlEntityByParameter(
+              entity,
+              'enable',
+              Enable.Low.toString(),
+              'number',
+            );
+        });
+        setShouldShowModal(true);
+      }
     }
-  }, [controlEntities, isFocused]);
+  }, [isFocused, controlEntities, setControlEntityByParameter]);
 
   const onEnablePinOff = async () => {
     try {
-      const strings = Object.values(controlEntities).map((controlEntity) =>
-        controlEntity.type === ControlEntityEnum.StepperMotor &&
-        checkIfObjectValuesAreDefined(controlEntity)
-          ? mapControlEntityToString(controlEntity)
-          : '',
-      );
-
-      for (const string of strings) {
-        if (string.length > 0) await writeStepMotor(string);
-      }
+      await writeAll();
     } catch (error) {
       console.log(error);
       renderBleErrorAlert({

@@ -3,6 +3,8 @@ import { View } from 'react-native';
 import { CardProps } from '@ui-kitten/components';
 import { useDispatch } from 'react-redux';
 
+import { tailwind } from '@styles/tailwind';
+
 import {
   BLDCMotor,
   Brake,
@@ -20,11 +22,10 @@ import {
   ControlEntityParameterToggleWithLabel,
   ResponsiveInput,
 } from '@components/shared/actionable';
+import { BLDCMotorContinuousControl } from './BLDCMotorContinuousControl';
 
 import { useControlEntities } from '@utilities/hooks';
 import { parseFromTypeToString } from '@utilities/functions/parse';
-import { tailwind } from '@styles/tailwind';
-import { BLDCMotorContinuousControl } from '@components/controller/dev/bldc-motor/BLDCMotorContinuousControl';
 
 interface BLDCMotorCardProps extends Omit<CardProps, 'header'> {
   entity: keyof ControlEntities;
