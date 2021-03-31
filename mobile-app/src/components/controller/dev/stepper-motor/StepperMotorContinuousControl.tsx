@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps, Text } from '@ui-kitten/components';
 import { useThrottledCallback } from 'use-debounce';
@@ -44,43 +44,43 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
 
   const [isControlDisabled, setIsControlDisabled] = useState<boolean>(false);
 
-  const triggerContinuousRunning = async (
-    isRunning: boolean,
-    direction: Direction,
-  ) => {
-    try {
-      if (isRunning) {
-        const stringValue = mapControlEntityToString({
-          ...controlEntity,
-          revolution: 2000, // arbitrarily large revolution number
-          direction,
-          enable: Enable.High,
+  const triggerContinuousRunning = useCallback(
+    async (isRunning: boolean, direction: Direction) => {
+      try {
+        if (isRunning) {
+          const stringValue = mapControlEntityToString({
+            ...controlEntity,
+            revolution: 2000, // arbitrarily large revolution number
+            direction,
+            enable: Enable.High,
+          });
+          await writeStepperMotor(stringValue);
+          await writeRunIdle(true);
+          monitorStepperMotor.start(
+            generateMethodToDecipherMonitorValue(controlEntity.name),
+          );
+        } else {
+          // disable the controls for a short while
+          setIsControlDisabled(true);
+          monitorStepperMotor.stop();
+          const stringValue = mapControlEntityToString({
+            ...controlEntity,
+            enable: Enable.Low,
+          });
+          await writeRunIdle(false);
+          await writeStepperMotor(stringValue);
+        }
+      } catch (error) {
+        console.log(error);
+        renderBleErrorAlert({
+          title: 'Continuous Running Trigger Error',
+          message:
+            'There was an error with sending data to instantaneous start and stop.',
         });
-        await writeStepperMotor(stringValue);
-        await writeRunIdle(true);
-        monitorStepperMotor.start(
-          generateMethodToDecipherMonitorValue(controlEntity.name),
-        );
-      } else {
-        // disable the controls for a short while
-        setIsControlDisabled(true);
-        monitorStepperMotor.stop();
-        const stringValue = mapControlEntityToString({
-          ...controlEntity,
-          enable: Enable.Low,
-        });
-        await writeRunIdle(false);
-        await writeStepperMotor(stringValue);
       }
-    } catch (error) {
-      console.log(error);
-      renderBleErrorAlert({
-        title: 'Continuous Running Trigger Error',
-        message:
-          'There was an error with sending data to instantaneous start and stop.',
-      });
-    }
-  };
+    },
+    [controlEntity, monitorStepperMotor, writeStepperMotor, writeRunIdle],
+  );
 
   useEffect(() => {
     if (isControlDisabled) {
@@ -100,7 +100,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
 
   useEffect(() => {
     if (monitorStepperMotor.isMonitoring) {
-      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1500);
+      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1000);
       return () => clearTimeout(timeout);
     } else setShouldStreamMonitor(false);
   }, [monitorStepperMotor.isMonitoring]);
@@ -118,11 +118,14 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
           current:
             Math.round((readRevolution + thisRevolution.previous) * 10) / 10,
         }));
-    } else
+    } else {
+      // make sure to flush any pending calls first before updating the previous value
+      throttledSetRevolution.flush();
       setRevolution((thisRevolution) => ({
         ...thisRevolution,
         previous: thisRevolution.current,
       }));
+    }
   }, [
     shouldStreamMonitor,
     monitorStepperMotor.value,
