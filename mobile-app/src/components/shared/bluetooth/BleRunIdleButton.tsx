@@ -126,21 +126,23 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
           <Text category={'h5'} style={tailwind('text-center')}>
             {`${text.readyTo} ${isRunning ? text.stop : text.start} ?`}
           </Text>
-          {!isRunning && showVerbose ? (
-            <ScrollView
-              style={{ maxHeight: Dimensions.get('window').height * 0.6 }}
-              showsVerticalScrollIndicator={false}>
-              <ControlEntitySummary
-                style={tailwind('mt-2')}
-                controlEntities={controlEntities}
+          {!isRunning ? (
+            showVerbose ? (
+              <ScrollView
+                style={{ maxHeight: Dimensions.get('window').height * 0.6 }}
+                showsVerticalScrollIndicator={false}>
+                <ControlEntitySummary
+                  style={tailwind('mt-2')}
+                  controlEntities={controlEntities}
+                />
+              </ScrollView>
+            ) : (
+              <ActionTreePathSummary
+                actionTreePath={actionTreePath}
+                style={tailwind('mt-4 mx-2')}
               />
-            </ScrollView>
-          ) : (
-            <ActionTreePathSummary
-              actionTreePath={actionTreePath}
-              style={tailwind('mt-4 mx-2')}
-            />
-          )}
+            )
+          ) : null}
 
           <ConfirmationButtonGroup
             onNoPress={() => setShouldShowModal(false)}

@@ -136,42 +136,45 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
   const onResetPress = () => setRevolution({ current: 0, previous: 0 });
 
   return (
-    <View {...props}>
-      <View style={tailwind('flex-row justify-between items-center')}>
-        <GhostButton
-          status={'info'}
-          size={'large'}
-          style={tailwind('w-1/3')}
-          disabled={isControlDisabled}
-          onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
-          onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
-          CCW
-        </GhostButton>
-        <View style={tailwind('w-1/4 items-center')}>
-          <View style={tailwind('flex-row items-end')}>
-            <Text category={'h6'}>{revolution.current}</Text>
-            <Text category={'s1'} style={tailwind('ml-1')}>
-              rev
-            </Text>
-          </View>
-          <GhostButton
-            style={tailwind('mt-1')}
-            status={'basic'}
-            size={'small'}
-            onPress={onResetPress}>
-            Reset
-          </GhostButton>
+    <View
+      {...props}
+      style={[
+        tailwind('flex-row justify-between items-center'),
+        props?.style ?? {},
+      ]}>
+      <GhostButton
+        status={'info'}
+        size={'large'}
+        style={tailwind('w-1/3')}
+        disabled={isControlDisabled}
+        onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
+        onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
+        CCW
+      </GhostButton>
+      <View style={tailwind('w-1/4 items-center')}>
+        <View style={tailwind('flex-row items-end')}>
+          <Text category={'h6'}>{revolution.current}</Text>
+          <Text category={'s1'} style={tailwind('ml-1')}>
+            rev
+          </Text>
         </View>
         <GhostButton
-          status={'info'}
-          size={'large'}
-          style={tailwind('w-1/3')}
-          disabled={isControlDisabled}
-          onPressIn={() => triggerContinuousRunning(true, Direction.CCW)}
-          onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
-          CW
+          style={tailwind('mt-1')}
+          status={'basic'}
+          size={'small'}
+          onPress={onResetPress}>
+          Reset
         </GhostButton>
       </View>
+      <GhostButton
+        status={'info'}
+        size={'large'}
+        style={tailwind('w-1/3')}
+        disabled={isControlDisabled}
+        onPressIn={() => triggerContinuousRunning(true, Direction.CW)}
+        onPressOut={() => triggerContinuousRunning(false, Direction.CW)}>
+        CW
+      </GhostButton>
     </View>
   );
 };
