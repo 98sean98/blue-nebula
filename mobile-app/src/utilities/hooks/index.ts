@@ -1,7 +1,7 @@
 export { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
 export { useControlEntities } from './useControlEntities';
 
-export { useTimerContext } from './useTimerContext';
+export { useStopwatchContext } from './useStopwatchContext';
 export { useAppMakerContext } from './useAppMakerContext';
 export { useSimpleControllerContext } from './useSimpleControllerContext';
 

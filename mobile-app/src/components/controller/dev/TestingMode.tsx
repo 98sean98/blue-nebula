@@ -20,7 +20,7 @@ import {
   BleReadDeviceButton,
   BleRunIdleButton,
 } from '@components/shared/bluetooth';
-import { Timer } from '@components/shared/actionable';
+import { Stopwatch } from '@components/shared/actionable';
 import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 interface TestingModeProps {
@@ -87,7 +87,7 @@ export const TestingMode: FC<TestingModeProps> = () => {
       <Divider />
 
       <Layout style={tailwind('w-full py-1 px-3')} level={'2'}>
-        <Timer
+        <Stopwatch
           shouldRun={isRunningTimer}
           style={tailwind('w-2/3 self-center')}
           level={'2'}

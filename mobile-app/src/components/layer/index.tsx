@@ -4,7 +4,7 @@ export { BleLayer } from './BleLayer';
 export { LocalisationLayer } from './LocalisationLayer';
 export { AsyncStorageLayer } from './AsyncStorageLayer';
 export { SettingsLayer } from './SettingsLayer';
-export { TimerLayer } from './TimerLayer';
+export { StopwatchLayer } from './StopwatchLayer';
 export { AppMakerLayer } from './AppMakerLayer';
 export { NetworkLayer } from './NetworkLayer';
 export { PermissionsLayer } from './PermissionsLayer';

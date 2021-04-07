@@ -3,7 +3,7 @@ export { ControlEntityParameterToggle } from './ControlEntityParameterToggle';
 export { ControlEntityParameterToggleWithLabel } from './ControlEntityParameterToggleWithLabel';
 export { ControlEntityParameterDirection } from './ControlEntityParameterDirection';
 
-export { Timer } from './Timer';
+export { Stopwatch } from './Stopwatch';
 export { TimerInput } from './TimerInput';
 
 export { ConfirmationModal } from './ConfirmationModal';
