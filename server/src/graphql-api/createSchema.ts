@@ -12,9 +12,6 @@ import {
   DeleteMicroAppResolver,
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
-  // todo: remove create micro app data resolver, and aggregate micro app data resolver
-  CreateMicroAppDataResolver,
-  AggregateMicroAppDataResolver,
 } from '@artifacts/type-graphql';
 
 import { MeUserResolver } from '@graphql-api/user';
@@ -36,8 +33,6 @@ const selectedResolvers = [
   DeleteMicroAppResolver,
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
-  CreateMicroAppDataResolver,
-  AggregateMicroAppDataResolver,
 ] as const;
 
 const customResolvers = [
