@@ -14,7 +14,6 @@ import {
   mapControlEntityToString,
   mapStringToControlEntities,
 } from '@utilities/functions/map';
-
 import { parseStringToType } from '@utilities/functions/parse';
 
 type UseControlEntities = {
@@ -38,6 +37,10 @@ export const useControlEntities = (): UseControlEntities => {
     write: writeStepperMotor,
   } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
   const {
+    read: readDCMotors,
+    write: writeDCMotor,
+  } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
+  const {
     read: readBLDCMotors,
     write: writeBLDCMotor,
   } = useBleRpiDeviceCharacteristic('bldcMotors', 'string');
@@ -45,23 +48,33 @@ export const useControlEntities = (): UseControlEntities => {
   const readAll: UseControlEntities['readAll'] = useCallback(async () => {
     // decipher strings into control entity objects
     const stepperMotorString = (await readStepperMotors()) as string;
+    const dcMotorString = (await readDCMotors()) as string;
     const bldcMotorString = (await readBLDCMotors()) as string;
     const newStepperMotors = mapStringToControlEntities(
       stepperMotorString,
       ControlEntityEnum.StepperMotor,
+    );
+    const newDCMotors = mapStringToControlEntities(
+      dcMotorString,
+      ControlEntityEnum.DCMotor,
     );
     const newBLDCMotors = mapStringToControlEntities(
       bldcMotorString,
       ControlEntityEnum.BLDCMotor,
     );
 
-    const newControlEntities = { ...newStepperMotors, ...newBLDCMotors };
+    const newControlEntities = {
+      ...newStepperMotors,
+      ...newDCMotors,
+      ...newBLDCMotors,
+    };
 
     dispatch(setControlEntities(newControlEntities));
-  }, [dispatch, readStepperMotors, readBLDCMotors]);
+  }, [dispatch, readStepperMotors, readDCMotors, readBLDCMotors]);
 
   const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
     const stepperMotorStrings: Array<string> = [];
+    const dcMotorStrings: Array<string> = [];
     const bldcMotorStrings: Array<string> = [];
 
     Object.values(controlEntities).forEach((controlEntity) => {
@@ -70,6 +83,9 @@ export const useControlEntities = (): UseControlEntities => {
         switch (controlEntity.type) {
           case ControlEntityEnum.StepperMotor:
             stepperMotorStrings.push(string);
+            break;
+          case ControlEntityEnum.DCMotor:
+            dcMotorStrings.push(string);
             break;
           case ControlEntityEnum.BLDCMotor:
             bldcMotorStrings.push(string);
@@ -83,10 +99,13 @@ export const useControlEntities = (): UseControlEntities => {
     for (const string of stepperMotorStrings) {
       await writeStepperMotor(string);
     }
+    for (const string of dcMotorStrings) {
+      await writeDCMotor(string);
+    }
     for (const string of bldcMotorStrings) {
       await writeBLDCMotor(string);
     }
-  }, [controlEntities, writeStepperMotor, writeBLDCMotor]);
+  }, [controlEntities, writeStepperMotor, writeDCMotor, writeBLDCMotor]);
 
   const setControlEntityByParameter: UseControlEntities['setControlEntityByParameter'] = (
     entity,
