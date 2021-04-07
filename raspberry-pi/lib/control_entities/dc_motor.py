@@ -1,4 +1,8 @@
+from time import sleep
+import RPi.GPIO as GPIO
+
 from .motor import Motor
+
 from .. import utilities
 
 class DCMotor(Motor):
@@ -21,6 +25,7 @@ class DCMotor(Motor):
             'pwm_frequency': 1000,
             'direction': 0,
             'enable': 0, # software-only enable
+            'duration': 0
         } if initial_parameters is None else initial_parameters
 
         # initialise GPIO

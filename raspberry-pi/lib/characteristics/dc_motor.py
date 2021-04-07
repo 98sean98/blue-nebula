@@ -31,7 +31,7 @@ class DCMotorsCharacteristic(Characteristic):
     def ReadValue(self, options):
         value = self.get_value(lambda motor: motor.get_parameters(), DCMotor.parameters_keys)
         print("read dc motors:", utilities.decode_base64(value))
-        return values
+        return value
 
 class DCMotorsDescriptor(Descriptor):
     DESCRIPTOR_UUID = "2901"
