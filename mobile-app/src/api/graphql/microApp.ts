@@ -72,39 +72,10 @@ export const GET_ALL_MICRO_APP_DATA = gql`
   }
 `;
 
-export const GET_LATEST_MICRO_APP_DATA_VERSION = gql`
-  query aggregateMicroAppData($name: String!) {
-    aggregateMicroAppData(
-      where: { microApp: { is: { name: { equals: $name } } } }
-    ) {
-      max {
-        version
-      }
-    }
-  }
-`;
-
 export const UPDATE_MICRO_APP_DATA = gql`
-  mutation updateMicroApp(
-    $name: String!
-    $dataName: String
-    $version: Int!
-    $data: JSON!
-    $updaterUsername: String!
-  ) {
-    updateMicroApp(
-      data: {
-        activeVersion: { set: $version }
-        microAppDataList: {
-          create: {
-            name: $dataName
-            version: $version
-            data: $data
-            creator: { connect: { username: $updaterUsername } }
-          }
-        }
-        updater: { connect: { username: $updaterUsername } }
-      }
+  mutation updateMicroAppData($name: String!, $dataName: String, $data: JSON!) {
+    updateMicroAppData(
+      data: { dataName: $dataName, data: $data }
       where: { name: $name }
     ) {
       id
