@@ -2,7 +2,9 @@ import { shield } from 'graphql-shield';
 import { isAuthenticated } from './rules';
 
 export const permissions = shield({
-  Query: {},
+  Query: {
+    me: isAuthenticated,
+  },
   Mutation: {
     createUser: isAuthenticated,
     updateUser: isAuthenticated,
@@ -10,5 +12,6 @@ export const permissions = shield({
     createMicroApp: isAuthenticated,
     updateMicroApp: isAuthenticated,
     deleteMicroApp: isAuthenticated,
+    createMicroAppData: isAuthenticated,
   },
 });
