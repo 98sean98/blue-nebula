@@ -16,13 +16,22 @@ class DCMotorsCharacteristic(Characteristic):
         self.add_descriptor(DCMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
-        print('write dc motor', 'does nothing for now')
+        decoded = utilities.decode_motor_info(value, DCMotor.parameters_keys)
+        print("Write dc motor:", decoded)
+        self.service.set_motor('dc_motor', decoded['motor_name'], decoded['parameters'])
 
-    def ReadValue(self, options):
-        # encode the motor info for each step motor in the service
+    def get_value(self, get_parameters_method, dictionary_keys):
+        # encode the motor info for each dc motor in the service
         all_dc_motors = self.service.get_all_motors()['dc_motors']
         list_of_motors = list(all_dc_motors.items())
-        return utilities.encode_base64('dc motor string')
+        encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
+        # combine motor info into one long list
+        return [item for sublist in encoded_info_list for item in sublist]
+
+    def ReadValue(self, options):
+        value = self.get_value(lambda motor: motor.get_parameters(), DCMotor.parameters_keys)
+        print("read dc motors:", utilities.decode_base64(value))
+        return values
 
 class DCMotorsDescriptor(Descriptor):
     DESCRIPTOR_UUID = "2901"

@@ -23,6 +23,7 @@ class RobotControllerService(Service):
             'screw_motor': StepperMotor('screw_motor', 14, 15, 18, multiprocessing_manager)
         }
         self.dc_motors = {
+            'dc_motor': DCMotor('dc_motor', 21, 20, 16)
         }
         self.bldc_motors = {
             'bldc_motor': BLDCMotor('bldc_motor', 13, 6, 5, 0, multiprocessing_manager)
