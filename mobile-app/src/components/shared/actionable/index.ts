@@ -4,6 +4,7 @@ export { ControlEntityParameterToggleWithLabel } from './ControlEntityParameterT
 export { ControlEntityParameterDirection } from './ControlEntityParameterDirection';
 
 export { Timer } from './Timer';
+export { TimerInput } from './TimerInput';
 
 export { ConfirmationModal } from './ConfirmationModal';
 

@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo, useState, Fragment } from 'react';
 import { Alert, ScrollView, View, ViewProps } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button } from '@ui-kitten/components';
+import { Button, Text } from '@ui-kitten/components';
 import { EvaStatus } from '@ui-kitten/components/devsupport';
 
 import { SetupFormScreenProps } from '@navigation/builder';
@@ -18,7 +18,7 @@ import {
   setSetups,
 } from '@reduxApp/builder/actions';
 
-import { ResponsiveInput } from '@components/shared/actionable';
+import { ResponsiveInput, TimerInput } from '@components/shared/actionable';
 import {
   PlatformKeyboardAvoidingView,
   renderIcon,
@@ -211,7 +211,7 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
           storedValue={setup.name}
           onInputBlur={(value) => onSetupKeyChange('name', value ?? '')}
         />
-        {/* description */}
+        {/* optional description */}
         <ResponsiveInput
           label={'Description'}
           caption={'Describe what this setup achieves'}
@@ -221,6 +221,27 @@ export const SetupFormScreen: FC<SetupFormScreenProps> = ({
           storedValue={setup.description ?? ''}
           onInputBlur={(value) => onSetupKeyChange('description', value ?? '')}
         />
+        {/* optional countdown timer */}
+        <View style={tailwind('mt-3')}>
+          <Text category={'label'} appearance={'hint'}>
+            Optional Countdown Timer
+          </Text>
+          <TimerInput
+            value={setup.countdownTimer ?? 0}
+            onChange={(value) => {
+              console.log({ value });
+              onSetupKeyChange(
+                'countdownTimer',
+                value !== 0 ? value : undefined,
+              );
+            }}
+            style={tailwind('mt-1')}
+          />
+          <Text category={'c1'} appearance={'hint'} style={tailwind('mt-1')}>
+            If set, a countdown timer will appear in the simple controller
+            screen, and it will run when a setup is being executed by the robot.
+          </Text>
+        </View>
 
         {/* fields */}
         <View style={tailwind('mt-3')}>
