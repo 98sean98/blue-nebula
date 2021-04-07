@@ -1,4 +1,4 @@
-import { Field, ObjectType } from 'type-graphql';
+import { Field, Int, ObjectType } from 'type-graphql';
 
 import { MicroAppData } from '@artifacts/type-graphql';
 
@@ -12,7 +12,7 @@ export class MicroAppWithActiveData {
   @Field({ nullable: true })
   name?: string;
 
-  @Field()
+  @Field(() => Int)
   activeVersion: number;
 
   @Field()

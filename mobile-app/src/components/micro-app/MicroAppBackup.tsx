@@ -1,13 +1,11 @@
 import React, { FC, useState, useEffect, useMemo, useCallback } from 'react';
 import { Alert, GestureResponderEvent } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
-import { useMutation, useQuery } from '@apollo/client';
-import { useFocusEffect } from '@react-navigation/native';
+import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
   GET_ALL_MICRO_APP_DATA,
-  GET_LATEST_MICRO_APP_DATA_VERSION,
   GET_MICRO_APP_HEADERS,
   UPDATE_MICRO_APP_DATA,
 } from '@api/graphql/microApp';
@@ -38,24 +36,11 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     [focusedMicroAppHeaders],
   );
 
-  const {
-    data: versionData,
-    error: versionError,
-    startPolling,
-    stopPolling,
-  } = useQuery(GET_LATEST_MICRO_APP_DATA_VERSION, {
-    variables: microAppQueryVariables,
-    fetchPolicy: 'network-only',
-  });
   const [
     updateMicroApp,
     { loading: updateLoading, error: updateError },
   ] = useMutation(UPDATE_MICRO_APP_DATA, {
     refetchQueries: [
-      {
-        query: GET_LATEST_MICRO_APP_DATA_VERSION,
-        variables: microAppQueryVariables,
-      },
       {
         query: GET_MICRO_APP_HEADERS,
         variables: microAppQueryVariables,
@@ -67,14 +52,6 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
     ],
     awaitRefetchQueries: true,
   });
-
-  // use a focus effect to start / stop polling for the latest micro app data version
-  useFocusEffect(
-    useCallback(() => {
-      startPolling(5000); // ms
-      return () => stopPolling();
-    }, [startPolling, stopPolling]),
-  );
 
   const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(
     false,
@@ -118,25 +95,14 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
         typeof focusedMicroAppHeaders !== 'undefined'
       ) {
         const name = focusedMicroAppHeaders.name;
-        const updaterUsername = user.username;
 
-        if (typeof updaterUsername === 'undefined') {
-          // no-op as the user should be logged in, and their information is stored in redux
-          throw new Error('updater username is undefined');
-        }
-
-        const newVersion = versionData?.aggregateMicroAppData
-          ? versionData.aggregateMicroAppData.max.version + 1
-          : 1;
         const data = { controlEntities, setups, makerConfig };
         const jsonData = JSON.stringify(data);
 
         const variables = {
           name,
           dataName: dataName ?? null,
-          version: newVersion,
           data: jsonData,
-          updaterUsername,
         };
 
         const response = await updateMicroApp({
@@ -165,12 +131,8 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
 
   // error effect
   useEffect(() => {
-    if (
-      typeof versionError !== 'undefined' ||
-      typeof updateError !== 'undefined'
-    )
-      dispatchError();
-  }, [dispatchError, versionError, updateError]);
+    if (typeof updateError !== 'undefined') dispatchError();
+  }, [dispatchError, updateError]);
 
   return (
     <>
