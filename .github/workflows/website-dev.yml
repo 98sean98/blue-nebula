@@ -1,0 +1,29 @@
+name: Run tests for website
+
+on:
+  push:
+    branches-ignore:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use NodeJS stable
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install
+        run: npm install
+
+      - name: Build
+        run: npm run build
