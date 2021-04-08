@@ -68,5 +68,33 @@ model MicroAppData {
   creatorId String
   creator   User   @relation(name: "CreatorOnMicroAppData", fields: [creatorId], references: [id])
 
+  microAppDataUsageLogs MicroAppDataUsageLog[] @relation(name: "MicroAppDataUsageLogOnMicroAppData")
+
   @@unique([microAppId, version])
+}
+
+model SimpleUser {
+  id         String   @id @default(uuid())
+  identifier String
+  createdAt  DateTime @default(now())
+  lastSeen   DateTime @default(now())
+
+  microAppDataUsageLogs MicroAppDataUsageLog[] @relation(name: "MicroAppDataUsageLogOnSimpleUser")
+
+  @@unique([identifier])
+}
+
+model MicroAppDataUsageLog {
+  id String @id @default(uuid())
+
+  simpleUser   SimpleUser @relation(name: "MicroAppDataUsageLogOnSimpleUser", fields: [simpleUserId], references: [id])
+  simpleUserId String
+
+  microAppData   MicroAppData @relation(name: "MicroAppDataUsageLogOnMicroAppData", fields: [microAppDataId], references: [id])
+  microAppDataId String
+
+  timestamp DateTime @default(now())
+
+  locationLatitude  Float?
+  locationLongitude Float?
 }
