@@ -7,6 +7,7 @@
     "prepare": "husky install",
     "precommit:mobile-app": "cd mobile-app && npm run precommit",
     "precommit:server": "cd server && npm run precommit",
+    "precommit:website": "cd website && npm run precommit",
     "precommit": "npm-run-all precommit:*",
     "server:deploy:heroku": "git push heroku `git subtree split --prefix server master`:master --force"
   },
