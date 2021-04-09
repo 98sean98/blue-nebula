@@ -1,4 +1,11 @@
-import React, { ChangeEventHandler, FC, HTMLAttributes, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  ComponentProps,
+  FC,
+  HTMLAttributes,
+  MouseEventHandler,
+  useState,
+} from 'react';
 
 import { LoginCredentials } from 'models/auth';
 
@@ -19,11 +26,22 @@ export const CredentialsInput: FC<CredentialsInputProps> = ({
     password: '',
   });
 
-  const onButtonClick = () => handleSubmit(credentials);
+  const onButtonClick: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    handleSubmit(credentials);
+  };
 
-  const fields: Array<{ label: string; key: keyof LoginCredentials }> = [
+  const fields: Array<{
+    label: string;
+    key: keyof LoginCredentials;
+    props?: Partial<ComponentProps<typeof LabelledInput>>;
+  }> = [
     { label: 'Username', key: 'username' },
-    { label: 'Password', key: 'password' },
+    {
+      label: 'Password',
+      key: 'password',
+      props: { inputProps: { type: 'password' } },
+    },
   ];
 
   const getOnInputChangeFunction = (
@@ -38,16 +56,21 @@ export const CredentialsInput: FC<CredentialsInputProps> = ({
     <form
       {...props}
       className={combineClassNames('flex flex-col', props.className)}>
-      {fields.map(({ label, key }, index) => (
+      {fields.map(({ label, key, props }, index) => (
         <LabelledInput
           key={index}
           labelText={label}
+          {...props}
           inputProps={{
             className: 'border border-gray-200 rounded p-1',
             value: credentials[key],
             onChange: getOnInputChangeFunction(key),
+            ...props?.inputProps,
           }}
-          className={index !== 0 ? 'mt-2' : undefined}
+          className={combineClassNames(
+            index !== 0 ? 'mt-2' : '',
+            props?.className,
+          )}
         />
       ))}
 
