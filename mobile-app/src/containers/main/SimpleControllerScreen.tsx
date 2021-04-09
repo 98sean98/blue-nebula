@@ -250,6 +250,22 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     authorizationToken,
   ]);
 
+  const showTimer = useMemo(
+    () =>
+      typeof selectedSetup !== 'undefined' &&
+      typeof selectedSetup.countdownTimer !== 'undefined' &&
+      selectedSetup.countdownTimer > 0,
+    [selectedSetup],
+  );
+
+  const initialTimerSeconds = useMemo(
+    () =>
+      typeof selectedSetup !== 'undefined'
+        ? selectedSetup.countdownTimer ?? 0
+        : 0,
+    [selectedSetup],
+  );
+
   return (
     <SimpleControllerContext.Provider value={{ actionTreePath }}>
       <RenderBleComponent allowDangerousOverride={isLoggedIn}>
@@ -269,7 +285,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
                 {/* countdown timer popup overlay */}
                 <AnimatedSlideContainer
                   horizontalTranslation={{ from: -16, to: -160 }}
-                  shouldSlideIn={typeof selectedSetup !== 'undefined'}
+                  shouldSlideIn={showTimer}
                   style={[
                     {
                       bottom: 16,
@@ -285,11 +301,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
                     category={'h5'}
                     style={{ color: theme['color-basic-100'] }}
                     shouldRun={isRunning}
-                    initialTimerSeconds={
-                      typeof selectedSetup !== 'undefined'
-                        ? selectedSetup.countdownTimer ?? 0
-                        : 0
-                    }
+                    initialTimerSeconds={initialTimerSeconds}
                     shouldReset={shouldResetTimer}
                     onResetComplete={() => setShouldResetTimer(false)}
                   />
