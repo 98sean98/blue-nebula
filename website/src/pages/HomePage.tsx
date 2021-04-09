@@ -1,12 +1,16 @@
 import React, { FC } from 'react';
 
-import { ComingSoonPlaceholder } from 'components/shared/interface';
+import {
+  ComingSoonPlaceholder,
+  PageContainerWithNavBar,
+} from 'components/shared/interface';
 
 export const HomePage: FC = () => {
   return (
-    <div
-      className={'w-screen h-screen flex flex-col justify-center items-center'}>
-      <ComingSoonPlaceholder />
-    </div>
+    <PageContainerWithNavBar className={'h-screen flex flex-col'}>
+      <div className={'h-full flex flex-col justify-center items-center'}>
+        <ComingSoonPlaceholder />
+      </div>
+    </PageContainerWithNavBar>
   );
 };
