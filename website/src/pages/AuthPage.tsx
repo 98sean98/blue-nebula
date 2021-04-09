@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { AlertCircle } from 'react-feather';
 
 import { LoginCredentials } from 'models/auth';
@@ -15,13 +16,21 @@ import colors from 'styles/colors';
 export const AuthPage = () => {
   const { setIsAuthenticated } = useAuthContext();
 
+  const history = useHistory();
+
   const handleSubmit = async (loginCredentials: LoginCredentials) => {
     try {
+      // send login request
       const authenticationToken = await login(loginCredentials);
+      // set token into local storage
       localStorage.setItem('authorizationToken', authenticationToken);
+      // set auth context isAuthenticated state
       setIsAuthenticated(true);
+      // redirect
+      history.replace('/');
     } catch (error) {
-      alert('An error occurred logging you in.');
+      console.log(error);
+      alert('An error occurred logging you in. Please try again.');
     }
   };
 
