@@ -1,7 +1,13 @@
 import React, { FC, HTMLAttributes } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { combineClassNames } from 'utilities/functions';
+import { logout } from 'api/auth';
+
+import {
+  combineClassNames,
+  getTokenFromStorage,
+  removeTokenFromStorage,
+} from 'utilities/functions';
 import { useAuthContext } from 'utilities/hooks';
 
 import { robot } from 'assets/images';
@@ -13,7 +19,27 @@ export const NavBar: FC<NavBarProps> = ({ ...props }) => {
 
   const onBrandClick = () => history.push('/');
 
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, setIsAuthenticated } = useAuthContext();
+
+  const onLogoutButtonClick = async () => {
+    try {
+      const token = getTokenFromStorage();
+
+      if (token === null)
+        throw new Error(
+          'Token does not exist in the local storage. This is a no-op.',
+        );
+
+      await logout(token);
+
+      // remove token from storage, and set is authenticated state
+      removeTokenFromStorage();
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.log(error);
+      alert('There was an error logging you out. Please try again.');
+    }
+  };
 
   return (
     <div
@@ -26,9 +52,19 @@ export const NavBar: FC<NavBarProps> = ({ ...props }) => {
         className={'h-full flex flex-row items-center space-x-2 cursor-pointer'}
         onClick={onBrandClick}>
         <img src={robot} alt={'robot'} className={'h-full m-1'} />
-        <h1 className={'md:text-lg lg:text-2xl xl:text-3xl'}>Blue Nebula</h1>
+        <h1 className={'text-lg lg:text-2xl xl:text-3xl'}>Blue Nebula</h1>
       </div>
-      <div>{isAuthenticated ? <Link to={'/auth'}>Login</Link> : null}</div>
+      <div>
+        {!isAuthenticated ? (
+          <Link className={'text-base'} to={'/auth'}>
+            Login
+          </Link>
+        ) : (
+          <Link className={'text-base'} to={'/'} onClick={onLogoutButtonClick}>
+            Logout
+          </Link>
+        )}
+      </div>
     </div>
   );
 };
