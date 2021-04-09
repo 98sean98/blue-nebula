@@ -1,1 +1,1 @@
-export {};
+export { ComingSoonPlaceholder } from './ComingSoonPlaceholder';
