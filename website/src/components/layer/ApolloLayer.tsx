@@ -7,6 +7,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from '@apollo/client';
+import { persistCache, SessionStorageWrapper } from 'apollo3-cache-persist';
 
 import { serverUrl } from 'config/environment';
 
@@ -55,15 +56,22 @@ export const ApolloLayer: FC = ({ children }) => {
 
     const cache = new InMemoryCache();
 
-    const newClient = new ApolloClient({
+    persistCache({
       cache,
-      link,
-      defaultOptions,
-      headers,
-    });
+      storage: new SessionStorageWrapper(window.sessionStorage),
+    })
+      .then(() => {
+        const newClient = new ApolloClient({
+          cache,
+          link,
+          defaultOptions,
+          headers,
+        });
 
-    setClient(newClient);
-    console.log('apollo client is loaded!');
+        setClient(newClient);
+        console.log('apollo client is loaded!');
+      })
+      .catch(() => console.log('error setting up apollo cache persist'));
   }, [authorizationToken]);
 
   return (
