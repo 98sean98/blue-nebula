@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import {
   ApolloClient,
   ApolloProvider,
@@ -9,6 +9,8 @@ import {
 } from '@apollo/client';
 
 import { serverUrl } from 'config/environment';
+
+import { useAuthContext } from 'utilities/hooks';
 
 const uri = serverUrl.graphql;
 
@@ -29,11 +31,26 @@ const defaultOptions: DefaultOptions = {
 export const ApolloLayer: FC = ({ children }) => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>();
 
+  const { isAuthenticated } = useAuthContext();
+
+  const authorizationToken: string | undefined = useMemo(() => {
+    if (isAuthenticated)
+      return localStorage.getItem('authorizationToken') ?? undefined;
+  }, [isAuthenticated]);
+
   useEffect(() => {
     // setup apollo client
+    const headers =
+      typeof authorizationToken !== 'undefined'
+        ? {
+            authorization: authorizationToken,
+          }
+        : undefined;
+
     const link = createHttpLink({
       uri,
       credentials: 'include',
+      headers,
     });
 
     const cache = new InMemoryCache();
@@ -42,11 +59,12 @@ export const ApolloLayer: FC = ({ children }) => {
       cache,
       link,
       defaultOptions,
+      headers,
     });
 
     setClient(newClient);
     console.log('apollo client is loaded!');
-  }, []);
+  }, [authorizationToken]);
 
   return (
     <>

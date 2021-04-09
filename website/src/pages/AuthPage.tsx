@@ -1,12 +1,30 @@
 import React from 'react';
 import { AlertCircle } from 'react-feather';
 
+import { LoginCredentials } from 'models/auth';
+
+import { login } from 'api/auth';
+
 import { CredentialsInput } from 'components/auth';
 
+import { useAuthContext } from 'utilities/hooks';
+
+import { robot } from 'assets/images';
 import colors from 'styles/colors';
-import { robot } from '../assets/images';
 
 export const AuthPage = () => {
+  const { setIsAuthenticated } = useAuthContext();
+
+  const handleSubmit = async (loginCredentials: LoginCredentials) => {
+    try {
+      const authenticationToken = await login(loginCredentials);
+      localStorage.setItem('authorizationToken', authenticationToken);
+      setIsAuthenticated(true);
+    } catch (error) {
+      alert('An error occurred logging you in.');
+    }
+  };
+
   return (
     <div
       className={'w-screen h-screen flex flex-col justify-center items-center'}>
@@ -23,9 +41,7 @@ export const AuthPage = () => {
         </div>
 
         <div className={'mt-6'}>
-          <CredentialsInput
-            handleSubmit={(credentials) => console.log(credentials)}
-          />
+          <CredentialsInput handleSubmit={handleSubmit} />
         </div>
       </div>
     </div>

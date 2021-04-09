@@ -1,1 +1,1 @@
-export {};
+export { useAuthContext } from './useAuthContext';

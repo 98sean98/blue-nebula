@@ -1,14 +1,16 @@
 import React from 'react';
 
-import { ApolloLayer } from 'components/layer';
+import { ApolloLayer, AuthLayer } from 'components/layer';
 
 import { RootNavigation } from 'navigation/RootNavigation';
 
 function App() {
   return (
-    <ApolloLayer>
-      <RootNavigation />
-    </ApolloLayer>
+    <AuthLayer>
+      <ApolloLayer>
+        <RootNavigation />
+      </ApolloLayer>
+    </AuthLayer>
   );
 }
 
