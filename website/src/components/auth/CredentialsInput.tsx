@@ -28,12 +28,12 @@ export const CredentialsInput: FC<CredentialsInputProps> = ({
       className={combineClassNames('flex flex-col', props.className)}>
       <LabelledInput
         labelText={'Username'}
-        inputProps={{ className: 'border border-gray-200 rounded' }}
+        inputProps={{ className: 'border border-gray-200 rounded p-1' }}
         className={'mt-2'}
       />
       <LabelledInput
         labelText={'Password'}
-        inputProps={{ className: 'border border-gray-200 rounded' }}
+        inputProps={{ className: 'border border-gray-200 rounded p-1' }}
         className={'mt-2'}
       />
 
