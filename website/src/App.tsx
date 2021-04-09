@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ApolloLayer, AuthLayer } from 'components/layer';
+import { ApolloLayer, AuthLayer, UserLayer } from 'components/layer';
 
 import { RootNavigation } from 'navigation/RootNavigation';
 
@@ -8,7 +8,9 @@ function App() {
   return (
     <AuthLayer>
       <ApolloLayer>
-        <RootNavigation />
+        <UserLayer>
+          <RootNavigation />
+        </UserLayer>
       </ApolloLayer>
     </AuthLayer>
   );

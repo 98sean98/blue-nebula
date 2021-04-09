@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 
+import { User } from 'models/auth';
+
 import { checkIsAuthenticated } from 'api/auth';
 
 import { AuthContext } from 'utilities/context';
@@ -10,7 +12,9 @@ import {
 
 export const AuthLayer: FC = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User>();
 
+  // check if the token exists in the local storage, and validate it
   useEffect(() => {
     const token = getTokenFromStorage();
     if (token !== null)
@@ -23,7 +27,8 @@ export const AuthLayer: FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, setIsAuthenticated, user, setUser }}>
       {children}
     </AuthContext.Provider>
   );
