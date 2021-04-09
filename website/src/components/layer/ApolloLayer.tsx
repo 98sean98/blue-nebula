@@ -11,6 +11,7 @@ import {
 import { serverUrl } from 'config/environment';
 
 import { useAuthContext } from 'utilities/hooks';
+import { getTokenFromStorage } from 'utilities/functions';
 
 const uri = serverUrl.graphql;
 
@@ -34,8 +35,7 @@ export const ApolloLayer: FC = ({ children }) => {
   const { isAuthenticated } = useAuthContext();
 
   const authorizationToken: string | undefined = useMemo(() => {
-    if (isAuthenticated)
-      return localStorage.getItem('authorizationToken') ?? undefined;
+    if (isAuthenticated) return getTokenFromStorage() ?? undefined;
   }, [isAuthenticated]);
 
   useEffect(() => {

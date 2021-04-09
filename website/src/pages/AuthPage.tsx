@@ -9,6 +9,7 @@ import { login } from 'api/auth';
 import { CredentialsInput } from 'components/auth';
 
 import { useAuthContext } from 'utilities/hooks';
+import { setTokenIntoStorage } from 'utilities/functions';
 
 import { robot } from 'assets/images';
 import colors from 'styles/colors';
@@ -21,9 +22,9 @@ export const AuthPage = () => {
   const handleSubmit = async (loginCredentials: LoginCredentials) => {
     try {
       // send login request
-      const authenticationToken = await login(loginCredentials);
+      const token = await login(loginCredentials);
       // set token into local storage
-      localStorage.setItem('authorizationToken', authenticationToken);
+      setTokenIntoStorage(token);
       // set auth context isAuthenticated state
       setIsAuthenticated(true);
       // redirect
