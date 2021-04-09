@@ -1,10 +1,16 @@
-import React, { FC, HTMLAttributes } from 'react';
-import { combineClassNames } from '../../../utilities/functions';
+import React, {
+  FC,
+  HTMLAttributes,
+  InputHTMLAttributes,
+  LabelHTMLAttributes,
+} from 'react';
+
+import { combineClassNames } from 'utilities/functions';
 
 interface LabelledInputProps extends HTMLAttributes<HTMLDivElement> {
   labelText: string;
-  labelProps?: HTMLAttributes<HTMLLabelElement>;
-  inputProps?: HTMLAttributes<HTMLInputElement>;
+  labelProps?: LabelHTMLAttributes<HTMLLabelElement>;
+  inputProps?: InputHTMLAttributes<HTMLInputElement>;
 }
 
 export const LabelledInput: FC<LabelledInputProps> = ({

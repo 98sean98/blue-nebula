@@ -1,43 +1,60 @@
-import React, { FC, HTMLAttributes, useState } from 'react';
-import { combineClassNames } from '../../utilities/functions';
-import { LabelledInput } from '../shared/actionable';
+import React, { ChangeEventHandler, FC, HTMLAttributes, useState } from 'react';
 
-type Credentials = {
-  username: string;
-  password: string;
-};
+import { LoginCredentials } from 'models/auth';
+
+import { LabelledInput } from 'components/shared/actionable';
+
+import { combineClassNames } from 'utilities/functions';
 
 interface CredentialsInputProps extends HTMLAttributes<HTMLFormElement> {
-  handleSubmit: (credentials: Credentials) => void;
+  handleSubmit: (credentials: LoginCredentials) => void;
 }
 
 export const CredentialsInput: FC<CredentialsInputProps> = ({
   handleSubmit,
   ...props
 }) => {
-  const [credentials] = useState<Credentials>({
+  const [credentials, setCredentials] = useState<LoginCredentials>({
     username: '',
     password: '',
   });
 
   const onButtonClick = () => handleSubmit(credentials);
 
+  const fields: Array<{ label: string; key: keyof LoginCredentials }> = [
+    { label: 'Username', key: 'username' },
+    { label: 'Password', key: 'password' },
+  ];
+
+  const getOnInputChangeFunction = (
+    key: keyof LoginCredentials,
+  ): ChangeEventHandler<HTMLInputElement> => (event) =>
+    setCredentials((currentCredentials) => ({
+      ...currentCredentials,
+      [key]: event.target.value,
+    }));
+
   return (
     <form
       {...props}
       className={combineClassNames('flex flex-col', props.className)}>
-      <LabelledInput
-        labelText={'Username'}
-        inputProps={{ className: 'border border-gray-200 rounded p-1' }}
-        className={'mt-2'}
-      />
-      <LabelledInput
-        labelText={'Password'}
-        inputProps={{ className: 'border border-gray-200 rounded p-1' }}
-        className={'mt-2'}
-      />
+      {fields.map(({ label, key }, index) => (
+        <LabelledInput
+          key={index}
+          labelText={label}
+          inputProps={{
+            className: 'border border-gray-200 rounded p-1',
+            value: credentials[key],
+            onChange: getOnInputChangeFunction(key),
+          }}
+          className={index !== 0 ? 'mt-2' : undefined}
+        />
+      ))}
 
-      <button className={'mt-4 btn btn-primary'} onClick={onButtonClick}>
+      <button
+        className={'mt-4 btn btn-primary'}
+        onClick={onButtonClick}
+        type={'submit'}>
         Login
       </button>
     </form>
