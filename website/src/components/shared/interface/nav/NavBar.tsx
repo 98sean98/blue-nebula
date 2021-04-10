@@ -51,7 +51,9 @@ export const NavBar: FC<NavBarProps> = ({ ...props }) => {
       <div
         className={'h-full flex flex-row items-center space-x-2 cursor-pointer'}
         onClick={onBrandClick}>
-        <img src={robot} alt={'robot'} className={'h-full m-1'} />
+        <div className={'h-full p-1'}>
+          <img src={robot} alt={'robot'} className={'h-full'} />
+        </div>
         <h1 className={'text-lg lg:text-2xl xl:text-3xl'}>Blue Nebula</h1>
       </div>
       <div>
