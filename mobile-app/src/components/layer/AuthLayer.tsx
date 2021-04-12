@@ -39,7 +39,11 @@ export const AuthLayer: FC = ({ children }) => {
     if (typeof authorizationToken !== 'undefined') fetchMe();
   }, [authorizationToken, fetchMe]);
   useEffect(() => {
-    if (typeof data !== 'undefined' && data?.me) {
+    if (
+      typeof data !== 'undefined' &&
+      data?.me &&
+      data.me.__typename === 'User'
+    ) {
       dispatch(setUser({ ...data.me }));
     }
   }, [dispatch, data]);

@@ -13,13 +13,18 @@ export const GET_USER = gql`
 `;
 
 export const GET_ME = gql`
-  query me {
-    me {
-      id
-      username
-      firstName
-      lastName
-      createdAt
+  query me($identifier: String) {
+    me(identifier: $identifier) {
+      ... on User {
+        id
+        username
+        firstName
+        lastName
+        createdAt
+      }
+      ... on SimpleUser {
+        id
+      }
     }
   }
 `;
