@@ -12,6 +12,7 @@ export const createServer = async () => {
     schema: applyMiddleware(schema, permissions),
     context: ({ req }) => createContext(req),
     playground: true,
+    introspection: true,
     debug: process.env.NODE_ENV === 'development',
   });
 };
