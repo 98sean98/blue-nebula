@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 
-import { User } from 'models/auth';
+import { User } from 'models/user';
 
 import { checkIsAuthenticated } from 'api/auth';
 

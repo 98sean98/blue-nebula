@@ -1,6 +1,6 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 
-import { User } from 'models/auth';
+import { User } from 'models/user';
 
 type AuthContextType = {
   isAuthenticated: boolean;
