@@ -35,6 +35,9 @@ export const NavBar: FC<NavBarProps> = ({ ...props }) => {
       // remove token from storage, and set is authenticated state
       removeTokenFromStorage();
       setIsAuthenticated(false);
+
+      // navigate to home page
+      history.push('/');
     } catch (error) {
       console.log(error);
       alert('There was an error logging you out. Please try again.');
