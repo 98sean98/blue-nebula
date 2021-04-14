@@ -93,7 +93,7 @@ class BLDCMotor(Motor):
         # actual running by gradually increasing pwm duty cycle from 0
         for i in range(pwm_duty_cycle_value + 1):
             motor_pwm.ChangeDutyCycle(i)
-            sleep(0.005)
+            sleep(0.025)
 
         # run duration
         sleep(duration_value)
