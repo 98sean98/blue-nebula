@@ -54,10 +54,14 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   const isFocused = useIsFocused();
 
   useLayoutEffect(() => {
-    if (isFocused)
-      read()
-        .then((value) => setIsRunning(value as boolean))
-        .catch((error) => console.log(error));
+    if (isFocused) {
+      const pollingInterval = setInterval(() => {
+        read()
+          .then((value) => setIsRunning(value as boolean))
+          .catch((error) => console.log(error));
+      }, 1000);
+      return () => clearInterval(pollingInterval);
+    }
   }, [read, shouldShowModal, isFocused]);
 
   // call parent on state change function as a side effect

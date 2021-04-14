@@ -17,7 +17,7 @@ import {
   BleLayer,
   AsyncStorageLayer,
   SettingsLayer,
-  TimerLayer,
+  StopwatchLayer,
   AppMakerLayer,
   PermissionsLayer,
   ApolloLayer,
@@ -57,13 +57,13 @@ export const App: FC = () => {
                       <AsyncStorageLayer>
                         <AuthLayer>
                           <MicroAppsLayer>
-                            <TimerLayer>
+                            <StopwatchLayer>
                               <AppMakerLayer>
                                 <NavigationContainer theme={themes.navigation}>
                                   <RootNavigator />
                                 </NavigationContainer>
                               </AppMakerLayer>
-                            </TimerLayer>
+                            </StopwatchLayer>
                           </MicroAppsLayer>
                         </AuthLayer>
                       </AsyncStorageLayer>

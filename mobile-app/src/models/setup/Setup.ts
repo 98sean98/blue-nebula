@@ -7,4 +7,5 @@ export type Setup = {
   createdAt: Date;
   updatedAt: Date;
   controlEntitiesState: ControlEntities;
+  countdownTimer?: number; // in seconds
 };

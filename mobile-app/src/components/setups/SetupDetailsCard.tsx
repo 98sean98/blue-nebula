@@ -10,11 +10,14 @@ import { ControlEntitySummary } from '@components/shared/interface';
 
 import { parseFromTypeToString } from '@utilities/functions/parse';
 import { formatDate } from '@utilities/functions/formatDate';
+import { getDurationMoment } from '@utilities/functions/getDurationMoment';
 
 interface SetupDetailsCardProps extends LayoutProps {
   setup: Setup;
   renderButton?: () => ReactNode;
 }
+
+const moment = getDurationMoment();
 
 export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
   setup: {
@@ -24,6 +27,7 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
     updatedAt,
     fields,
     controlEntitiesState,
+    countdownTimer,
   },
   renderButton,
   ...props
@@ -49,6 +53,16 @@ export const SetupDetailsCard: FC<SetupDetailsCardProps> = ({
           createdAt,
         )}`}</Text>
         <Text category={'c2'}>{`Last updated: ${formatDate(updatedAt)}`}</Text>
+        <View style={tailwind('mt-2 flex-row flex-wrap justify-between')}>
+          <Text appearance={'hint'}>{`Countdown timer:`}</Text>
+          <Text>
+            {countdownTimer
+              ? moment
+                  .duration(countdownTimer, 'seconds')
+                  .format('h [hr] m [min] s [sec]', { trim: 'all' })
+              : 'not set'}
+          </Text>
+        </View>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} style={tailwind('mt-2')}>

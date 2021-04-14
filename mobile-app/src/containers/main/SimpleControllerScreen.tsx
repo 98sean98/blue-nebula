@@ -38,14 +38,18 @@ import { Setup } from '@models/setup';
 import { PageCarouselData } from '@models/ui';
 
 import { RootState } from '@reduxApp';
-import { setControlEntities } from '@reduxApp/control/actions';
+import {
+  clearAllControlEntities,
+  setControlEntities,
+} from '@reduxApp/control/actions';
 
 import { PressableBoxWithText } from '@components/shared/actionable';
 import {
   BleRunIdleButton,
   RenderBleComponent,
 } from '@components/shared/bluetooth';
-import { LayoutDivider } from '@components/shared/interface';
+import { LayoutDivider, Timer } from '@components/shared/interface';
+import { AnimatedSlideContainer } from '@components/controller/simple';
 
 import { SimpleControllerContext } from '@utilities/context';
 import {
@@ -75,6 +79,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     makerConfig: { pages, actions, updatedAt },
   } = useSelector((state: RootState) => state.builder);
 
+  const [selectedSetup, setSelectedSetup] = useState<Setup>();
   const [focusedPageIndex, setFocusedPageIndex] = useState<number>(0);
   const [actionTreePath, setActionTreePath] = useState<ActionTreePath>([]);
   const [makerConfigUpdatedAt, setMakerConfigUpdatedAt] = useState<Date>(
@@ -82,6 +87,7 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   );
   const [isRunIdleDisabled, setIsRunIdleDisabled] = useState<boolean>(true);
   const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [shouldResetTimer, setShouldResetTimer] = useState<boolean>(false);
 
   const focusedPage: Page | undefined = useMemo(() => pages[focusedPageIndex], [
     pages,
@@ -129,11 +135,17 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
       if (typeof setupKey !== 'undefined') {
         const setup: Setup | undefined = setups[setupKey];
         if (typeof setup !== 'undefined') {
+          // clear all control entities, and set the state found in the setup
+          dispatch(clearAllControlEntities());
           dispatch(setControlEntities(setup.controlEntitiesState));
           // enable carousel scrolling on the last page as a setup is found
           setCarouselScrollEnabled(true);
           // enable run idle button
           setIsRunIdleDisabled(false);
+          // set selected setup
+          setSelectedSetup(setup);
+          // reset timer
+          setShouldResetTimer(true);
         } else renderAlert();
       } else renderAlert();
     } else {
@@ -143,6 +155,8 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
       setCarouselScrollEnabled(false);
       // disable run idle button
       setIsRunIdleDisabled(true);
+      // set selected setup to undefined
+      setSelectedSetup(undefined);
     }
 
     setActionTreePath(newPath);
@@ -236,21 +250,63 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
     authorizationToken,
   ]);
 
+  const showTimer = useMemo(
+    () =>
+      typeof selectedSetup !== 'undefined' &&
+      typeof selectedSetup.countdownTimer !== 'undefined' &&
+      selectedSetup.countdownTimer > 0,
+    [selectedSetup],
+  );
+
+  const initialTimerSeconds = useMemo(
+    () =>
+      typeof selectedSetup !== 'undefined'
+        ? selectedSetup.countdownTimer ?? 0
+        : 0,
+    [selectedSetup],
+  );
+
   return (
     <SimpleControllerContext.Provider value={{ actionTreePath }}>
       <RenderBleComponent allowDangerousOverride={isLoggedIn}>
         <View style={{ flex: 1, marginBottom: insets.bottom }}>
           {showController ? (
             <>
-              <Carousel
-                ref={carouselRef}
-                data={data}
-                renderItem={renderCarouselItem}
-                onSnapToItem={setFocusedPageIndex}
-                sliderWidth={carouselDimensions.slider}
-                itemWidth={carouselDimensions.item}
-                scrollEnabled={carouselScrollEnabled}
-              />
+              <View style={[{ flex: 1 }, tailwind('relative')]}>
+                <Carousel
+                  ref={carouselRef}
+                  data={data}
+                  renderItem={renderCarouselItem}
+                  onSnapToItem={setFocusedPageIndex}
+                  sliderWidth={carouselDimensions.slider}
+                  itemWidth={carouselDimensions.item}
+                  scrollEnabled={carouselScrollEnabled}
+                />
+                {/* countdown timer popup overlay */}
+                <AnimatedSlideContainer
+                  horizontalTranslation={{ from: -16, to: -160 }}
+                  shouldSlideIn={showTimer}
+                  style={[
+                    {
+                      bottom: 16,
+                      width: 160,
+                      right: -160,
+                      backgroundColor: theme['color-info-default'],
+                    },
+                    tailwind(
+                      'absolute z-10 p-2 rounded-l justify-center items-center',
+                    ),
+                  ]}>
+                  <Timer
+                    category={'h5'}
+                    style={{ color: theme['color-basic-100'] }}
+                    shouldRun={isRunning}
+                    initialTimerSeconds={initialTimerSeconds}
+                    shouldReset={shouldResetTimer}
+                    onResetComplete={() => setShouldResetTimer(false)}
+                  />
+                </AnimatedSlideContainer>
+              </View>
               <BleRunIdleButton
                 disabled={isRunIdleDisabled}
                 style={[tailwind('m-4')]}
