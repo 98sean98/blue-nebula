@@ -1,15 +1,44 @@
-import React, { FC, HTMLAttributes, useEffect, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
+import { DataGrid, GridColDef, GridRowData } from '@material-ui/data-grid';
 
 import { MicroAppDataUsageLog } from 'models/micro-app';
 
 import { GET_MICRO_APP_DATA_USAGE_LOGS } from 'api/graphql/microApp';
 
-import { UsageLog } from './UsageLog';
+import { formatDate } from 'utilities/functions';
 
-interface UsageProps extends HTMLAttributes<HTMLDivElement> {
+interface UsageProps {
   microAppId: string;
 }
+
+const tableColumns: GridColDef[] = [
+  { field: 'id', headerName: 'ID', flex: 1 },
+  {
+    field: 'timestamp',
+    headerName: 'Timestamp',
+    type: 'dateTime',
+    width: 200,
+    valueFormatter: (params) => formatDate(params.value as string),
+  },
+  {
+    field: 'simpleUserId',
+    headerName: 'User ID',
+    flex: 2,
+  },
+  {
+    field: 'locationLatitude',
+    headerName: 'Location Latitude',
+    sortable: false,
+    flex: 1,
+  },
+  {
+    field: 'locationLongitude',
+    headerName: 'Location Longitude',
+    sortable: false,
+    flex: 1,
+  },
+];
 
 export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
   const { data, error } = useQuery(GET_MICRO_APP_DATA_USAGE_LOGS, {
@@ -29,11 +58,14 @@ export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
     [data],
   );
 
+  const tableRows: GridRowData[] = useMemo(() => usageLogs, [usageLogs]);
+
   return (
-    <div {...props}>
-      {usageLogs.map((usageLog, index) => (
-        <UsageLog key={index} microAppDataUsageLog={usageLog} />
-      ))}
-    </div>
+    <DataGrid
+      pageSize={10}
+      {...props}
+      rows={tableRows}
+      columns={tableColumns}
+    />
   );
 };
