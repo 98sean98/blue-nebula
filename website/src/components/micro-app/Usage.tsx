@@ -41,7 +41,7 @@ const tableColumns: GridColDef[] = [
 ];
 
 export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
-  const { data, error } = useQuery(GET_MICRO_APP_DATA_USAGE_LOGS, {
+  const { data, loading, error } = useQuery(GET_MICRO_APP_DATA_USAGE_LOGS, {
     variables: { microAppId },
   });
 
@@ -63,6 +63,7 @@ export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
   return (
     <DataGrid
       pageSize={10}
+      loading={loading}
       {...props}
       rows={tableRows}
       columns={tableColumns}
