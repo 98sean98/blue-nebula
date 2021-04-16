@@ -12,8 +12,12 @@ export const HomePage: FC = () => {
   const { isAuthenticated } = useAuthContext();
 
   return (
-    <PageContainerWithNavBar>
-      {isAuthenticated ? <MicroApps /> : <ComingSoonPlaceholder />}
+    <PageContainerWithNavBar className={'h-screen flex flex-col'}>
+      {isAuthenticated ? (
+        <MicroApps className={'flex-grow my-4'} />
+      ) : (
+        <ComingSoonPlaceholder />
+      )}
     </PageContainerWithNavBar>
   );
 };

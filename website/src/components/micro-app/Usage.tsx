@@ -28,13 +28,13 @@ const tableColumns: GridColDef[] = [
   },
   {
     field: 'locationLatitude',
-    headerName: 'Location Latitude',
+    headerName: 'Location latitude',
     sortable: false,
     flex: 1,
   },
   {
     field: 'locationLongitude',
-    headerName: 'Location Longitude',
+    headerName: 'Location longitude',
     sortable: false,
     flex: 1,
   },
