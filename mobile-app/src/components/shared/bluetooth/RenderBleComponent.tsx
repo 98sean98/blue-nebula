@@ -58,7 +58,7 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
               status={'warning'}
               accessoryLeft={renderIcon('alert-triangle-outline')}
               onPress={onDangerousButtonPress}
-              style={tailwind('mt-4')}>
+              style={tailwind('mt-8')}>
               Dangerously render
             </Button>
           ) : null}
