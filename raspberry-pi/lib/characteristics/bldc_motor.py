@@ -22,7 +22,7 @@ class BLDCMotorsCharacteristic(Characteristic):
 
     def WriteValue(self, value, options):
         decoded = utilities.decode_motor_info(value, BLDCMotor.parameters_keys)
-        print("Write bldc motor:", decoded)
+        print("write bldc motor:", decoded)
         self.service.set_motor('bldc_motor', decoded['motor_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method, dictionary_keys):

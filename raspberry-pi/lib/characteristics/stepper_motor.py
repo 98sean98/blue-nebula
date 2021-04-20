@@ -22,7 +22,7 @@ class StepperMotorsCharacteristic(Characteristic):
 
     def WriteValue(self, value, options):
         decoded = utilities.decode_motor_info(value, StepperMotor.parameters_keys)
-        print("Write stepper motor:", decoded)
+        print("write stepper motor:", decoded)
         self.service.set_motor('stepper_motor', decoded['motor_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method, dictionary_keys):
