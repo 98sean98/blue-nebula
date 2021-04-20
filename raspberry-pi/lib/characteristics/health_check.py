@@ -23,8 +23,7 @@ class HealthCheckCharacteristic(Characteristic):
         decoded = utilities.decode_base64(value)
         is_device_connected = utilities.parse_string_to_number(decoded) == 1
         self.service.set_is_device_connected(is_device_connected)
-        if is_device_connected:
-            self.service.set_buzzer(False)
+        self.service.set_buzzer(not is_device_connected)
         print(f"write health_check.is_device_connected = {is_device_connected}")
 
     def ReadValue(self, options):
