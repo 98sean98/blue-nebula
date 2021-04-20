@@ -8,7 +8,10 @@ import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp';
 
-import { renderIcon } from '@components/shared/interface';
+import {
+  renderIcon,
+  BleConnectingAnimation,
+} from '@components/shared/interface';
 
 interface RenderBleComponent {
   overrideShouldShow?: boolean;
@@ -24,8 +27,8 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
 }) => {
   const { t } = useTranslation('bluetooth');
 
-  const isBleRpiDeviceConnected = useSelector(
-    (state: RootState) => state.bluetooth.isBleRpiDeviceConnected,
+  const { isBleRpiDeviceConnected, isScanningAndConnecting } = useSelector(
+    (state: RootState) => state.bluetooth,
   );
 
   const shouldShow = overrideShouldShow ?? isBleRpiDeviceConnected;
@@ -43,9 +46,13 @@ export const RenderBleComponent: FC<RenderBleComponent> = ({
       ) : shouldShowHelperText ? (
         <View
           style={[{ flex: 1 }, tailwind('m-4 justify-center items-center')]}>
-          <Text style={tailwind('text-center')}>
-            {t('connection.connect to bluetooth device') as string}
-          </Text>
+          {isScanningAndConnecting ? (
+            <BleConnectingAnimation />
+          ) : (
+            <Text style={tailwind('text-center')}>
+              {t('connection.connect to bluetooth device') as string}
+            </Text>
+          )}
           {allowDangerousOverride ? (
             <Button
               status={'warning'}
