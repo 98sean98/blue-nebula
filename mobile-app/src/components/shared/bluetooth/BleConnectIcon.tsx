@@ -9,6 +9,7 @@ import {
   setIsBleRpiDeviceConnected,
 } from '@reduxApp/bluetooth/actions';
 import { State } from 'react-native-ble-plx';
+import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 
 interface BleConnectIconProps extends Omit<ButtonProps, 'onPress'> {
   iconProps?: IconProps;
@@ -25,14 +26,22 @@ export const BleConnectIcon: FC<BleConnectIconProps> = ({
     isBleRpiDeviceConnected,
   } = useSelector((state: RootState) => state.bluetooth);
 
+  const { write: writeHealthCheck } = useBleRpiDeviceCharacteristic(
+    'healthCheck',
+    'string',
+  );
+
   const onPress = () => {
     if (!isScanningAndConnecting) dispatch(connectAsync());
     else dispatch(cancelConnect());
   };
 
-  const onLongPress = () => {
+  const onLongPress = async () => {
     if (isScanningAndConnecting) dispatch(cancelConnect());
-    if (isBleRpiDeviceConnected) dispatch(setIsBleRpiDeviceConnected(false));
+    if (isBleRpiDeviceConnected) {
+      await writeHealthCheck('0');
+      dispatch(setIsBleRpiDeviceConnected(false));
+    }
   };
 
   // disable the button if ble state is not powered on
