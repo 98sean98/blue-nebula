@@ -39,7 +39,11 @@ export const BleConnectIcon: FC<BleConnectIconProps> = ({
   const onLongPress = async () => {
     if (isScanningAndConnecting) dispatch(cancelConnect());
     if (isBleRpiDeviceConnected) {
-      await writeHealthCheck('0');
+      try {
+        await writeHealthCheck('0');
+      } catch (error) {
+        console.log(error);
+      }
       dispatch(setIsBleRpiDeviceConnected(false));
     }
   };
