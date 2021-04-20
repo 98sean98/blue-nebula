@@ -52,9 +52,9 @@ class Buzzer(GenericControlEntity):
         super().run(is_running)
 
     def stop_running(self, run_arguments = None):
+        sleep(1) # pause in-case it is buzzing
         # disable the buzzer
         self.stop_buzzing()
-        sleep(0.5) # pause for a while
 
         # call parent method
         super().stop_running(run_arguments)
