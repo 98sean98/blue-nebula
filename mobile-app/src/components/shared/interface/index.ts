@@ -1,3 +1,5 @@
+export { BleConnectingAnimation } from './BleConnectingAnimation';
+
 export { ControlEntityCard } from './ControlEntityCard';
 export { ControlEntitySummary } from './ControlEntitySummary';
 
