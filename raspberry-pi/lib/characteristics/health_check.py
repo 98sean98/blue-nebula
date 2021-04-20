@@ -29,10 +29,12 @@ class HealthCheckCharacteristic(Characteristic):
         self.service.set_is_device_connected(is_device_connected)
         if is_device_connected:
             self.buzzer.set_is_running(False)
+        print(f"write health_check.is_device_connected = {is_device_connected}")
 
     def ReadValue(self, options):
-        is_device_connected = self.buzzer.get_is_running()
-        health_string = f"{is_device_connected}"
+        is_device_connected_string = '1' if self.buzzer.get_is_running() else '0'
+        health_string = f"{is_device_connected_string}"
+        print("read health check:", health_string)
         return utilities.encode_base64(health_string)
 
 class HealthCheckDescriptor(Descriptor):
