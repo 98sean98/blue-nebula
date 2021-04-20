@@ -5,7 +5,7 @@ import React, { FC, useMemo } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
 import { enableScreens } from 'react-native-screens';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, Platform } from 'react-native';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
@@ -37,7 +37,7 @@ export const App: FC = () => {
 
   const themes = useMemo(
     () =>
-      deviceTheme === 'dark'
+      Platform.OS !== 'android' && deviceTheme === 'dark'
         ? { navigation: darkTheme, eva: eva.dark }
         : { navigation: lightTheme, eva: eva.light },
     [deviceTheme],
