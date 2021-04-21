@@ -28,7 +28,7 @@ try:
 
         f.close()
 
-        sleep(1)
+        sleep(5)
 
 except KeyboardInterrupt:
     print('keyboard interrupt exit!')
