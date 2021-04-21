@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { DrawerContentComponentProps } from '@react-navigation/drawer/lib/typescript/src/types';
 import { Drawer, DrawerItem, IndexPath } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
@@ -22,8 +22,16 @@ export const CustomDrawer: FC<DrawerContentComponentProps> = ({
 
   const navigationItems = getNavigationItems(applicationMode);
 
+  const selectedIndex = useMemo(() => {
+    const stateRouteName = state.routeNames[state.index];
+    const index = navigationItems.findIndex(
+      ({ routeName }) => routeName === stateRouteName,
+    );
+    return new IndexPath(index);
+  }, [state, navigationItems]);
+
   return (
-    <Drawer selectedIndex={new IndexPath(state.index)}>
+    <Drawer selectedIndex={selectedIndex}>
       {navigationItems.map(({ routeName, iconName, screenParams }) => (
         <DrawerItem
           key={routeName}
