@@ -24,7 +24,14 @@ try:
         ct = get_ct()
 
         file_writer = csv.writer(f, delimiter=',', quotechar='"')
-        file_writer.writerow([ct, temperature])
+
+        csv_row = [ct, temperature]
+        if temperature >= 80: csv_row.append('!!!')
+        elif temperature >= 70: csv_row.append('**')
+        elif temperature >= 60: csv_row.append('o')
+        else: csv_row.append('')
+
+        file_writer.writerow(csv_row)
 
         f.close()
 
