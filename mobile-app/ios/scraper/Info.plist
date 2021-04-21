@@ -40,7 +40,7 @@
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>This app requires Bluetooth to connect to a the raspberry pi on the robot.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This app requires your location in order to track your app usage. This data is used for debugging purposes, and for improving future app experience.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>Launch Screen</string>
 	<key>UIRequiredDeviceCapabilities</key>
