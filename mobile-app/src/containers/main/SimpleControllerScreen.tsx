@@ -21,6 +21,10 @@ import { getUniqueId } from 'react-native-device-info';
 import Carousel from 'react-native-snap-carousel';
 import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
+import Geolocation, {
+  GeoError,
+  GeoPosition,
+} from 'react-native-geolocation-service';
 import { IterableElement } from 'type-fest';
 import moment from 'moment';
 import { useThrottledCallback } from 'use-debounce';
@@ -286,21 +290,44 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   );
 
   useEffect(() => {
+    const create = async (variables: Record<string, any>): Promise<void> => {
+      try {
+        await throttledCreateMicroAppDataUsageLog({ variables });
+        console.log('usage log added!');
+      } catch (error) {
+        console.log(error);
+      }
+    };
     if (
       applicationMode === ApplicationMode.NORMAL &&
       isRunning &&
       typeof focusedMicroAppHeaders !== 'undefined'
     ) {
-      const variables = {
+      const variables: {
+        simpleUserIdentifier: string;
+        microAppId: string;
+        version: number;
+        locationLatitude?: number;
+        locationLongitude?: number;
+      } = {
         simpleUserIdentifier: getUniqueId(),
         microAppId: focusedMicroAppHeaders.id,
         version: focusedMicroAppHeaders.activeVersion,
-        // locationLatitude: 123.123,
-        // locationLongitude: 123.123,
       };
-      throttledCreateMicroAppDataUsageLog({ variables })
-        .then(() => console.log('usage log added!'))
-        .catch((error) => console.log(error));
+      Geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }: GeoPosition) => {
+          variables.locationLatitude = latitude;
+          variables.locationLongitude = longitude;
+          console.log('creating the usage log with location information...');
+          create(variables).then();
+        },
+        (error: GeoError) => {
+          console.log('error getting the current location:', error);
+          console.log('creating the usage log without location information...');
+          create(variables).then();
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
     }
   }, [
     applicationMode,
