@@ -100,3 +100,33 @@ export const UPDATE_MICRO_APP = gql`
     }
   }
 `;
+
+export const CREATE_MICRO_APP_DATA_USAGE_LOG = gql`
+  mutation createMicroAppDataUsageLog(
+    $simpleUserIdentifier: String!
+    $microAppId: String!
+    $version: Int!
+    $locationLatitude: Float
+    $locationLongitude: Float
+  ) {
+    createMicroAppDataUsageLog(
+      data: {
+        simpleUser: {
+          connectOrCreate: {
+            where: { identifier: $simpleUserIdentifier }
+            create: { identifier: $simpleUserIdentifier }
+          }
+        }
+        microAppData: {
+          connect: {
+            microAppId_version: { microAppId: $microAppId, version: $version }
+          }
+        }
+        locationLatitude: $locationLatitude
+        locationLongitude: $locationLongitude
+      }
+    ) {
+      id
+    }
+  }
+`;
