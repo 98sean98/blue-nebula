@@ -1,0 +1,10 @@
+[Unit]
+Description=Bluetooth Main Program
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/Documents/blue-nebula/raspberry-pi/main.py
+Restart=always
+
+[Install]
+WantedBy=blue-nebula.target

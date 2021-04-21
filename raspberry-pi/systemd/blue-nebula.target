@@ -1,0 +1,8 @@
+[Unit]
+Description=Blue Nebula Control Program
+Requires=multi-user.target bluetooth.service bluetooth.target
+After=multi-user.target bluetooth.service bluetooth.target
+AllowIsolate=yes
+
+[Install]
+WantedBy=multi-user.target

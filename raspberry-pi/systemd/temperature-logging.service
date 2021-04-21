@@ -1,0 +1,10 @@
+[Unit]
+Description=Temperature Logging Program
+
+[Service]
+Type=idle
+ExecStart=/usr/bin/python3 /home/pi/Documents/blue-nebula/raspberry-pi/temperature_logging/log_temperature.py
+Restart=always
+
+[Install]
+WantedBy=blue-nebula.target
