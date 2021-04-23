@@ -1,21 +1,26 @@
 import React, { FC, useEffect, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import { useTranslation } from 'react-i18next';
 
 export const PermissionsLayer: FC = ({ children }) => {
   const { t } = useTranslation('bluetooth');
 
-  const [
-    androidBluetoothPermissions,
-    setAndroidBluetoothPermissions,
-  ] = useState<boolean>(false);
+  const [permissions, setPermissions] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (Platform.OS === 'ios')
+      Geolocation.requestAuthorization('whenInUse').then((results) => {
+        if (results === 'granted') setPermissions(true);
+      });
+  }, [t]);
 
   useEffect(() => {
     if (Platform.OS === 'android')
       PermissionsAndroid.check(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       ).then((isGrantedAlready) => {
-        if (isGrantedAlready) setAndroidBluetoothPermissions(true);
+        if (isGrantedAlready) setPermissions(true);
         else
           PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -27,18 +32,11 @@ export const PermissionsLayer: FC = ({ children }) => {
               buttonPositive: t('permissions.buttonPositive'),
             },
           ).then((granted) => {
-            if (granted === 'granted') setAndroidBluetoothPermissions(true);
-            else setAndroidBluetoothPermissions(false);
+            if (granted === 'granted') setPermissions(true);
+            else setPermissions(false);
           });
       });
   }, [t]);
 
-  return (
-    <>
-      {Platform.OS === 'ios' ||
-      (Platform.OS === 'android' && androidBluetoothPermissions)
-        ? children
-        : null}
-    </>
-  );
+  return <>{permissions ? children : null}</>;
 };
