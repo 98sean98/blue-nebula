@@ -7,6 +7,7 @@ export const permissions = shield({
     simpleUser: isAuthenticated,
     microAppDataUsageLog: isAuthenticated,
     microAppDataUsageLogs: isAuthenticated,
+    reverseGeocoding: isAuthenticated,
   },
   Mutation: {
     createUser: isAuthenticated,

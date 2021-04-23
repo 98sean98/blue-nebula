@@ -24,6 +24,7 @@ import {
   MicroAppWithActiveDataResolver,
   UpdateMicroAppDataResolver,
 } from '@graphql-api/micro-app';
+import { ReverseGeocodingResolver } from '@graphql-api/geocoding';
 
 const selectedResolvers = [
   CreateUserResolver,
@@ -50,6 +51,7 @@ const customResolvers = [
   RegisterSimpleUserResolver,
   MicroAppWithActiveDataResolver,
   UpdateMicroAppDataResolver,
+  ReverseGeocodingResolver,
 ] as const;
 
 export const createSchema = async () =>
