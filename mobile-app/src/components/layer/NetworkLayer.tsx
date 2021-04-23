@@ -9,6 +9,14 @@ export const NetworkLayer: FC = ({ children }) => {
   const [isNetworkConnected, setIsNetworkConnected] = useState<boolean>(false);
 
   useEffect(() => {
+    NetInfo.fetch()
+      .then(({ isInternetReachable }) => {
+        setIsNetworkConnected(Boolean(isInternetReachable));
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(
       ({ type, isInternetReachable }) => {
         console.log('network info:', { type, isInternetReachable });
