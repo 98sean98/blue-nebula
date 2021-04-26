@@ -27,7 +27,7 @@ const tableColumns: GridColDef[] = [
     headerName: 'Timestamp',
     type: 'dateTime',
     width: 200,
-    valueFormatter: (params) => formatDate(params.value as string),
+    valueFormatter: (params) => formatDate(params.value as Date),
   },
   {
     field: 'simpleUserId',
@@ -96,12 +96,10 @@ export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
         {typeof selectedUsageLog !== 'undefined' ? (
           <div
             className={
-              'absolute top-1/2 left-1/2 w-2/3 transform -translate-x-1/2 -translate-y-1/2'
-            }>
-            <UsageLog
-              microAppDataUsageLog={selectedUsageLog}
-              className={'bg-white'}
-            />
+              'absolute top-1/2 left-1/2 w-2/3 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4'
+            }
+            style={{ minWidth: 300 }}>
+            <UsageLog microAppDataUsageLog={selectedUsageLog} />
           </div>
         ) : (
           <></>

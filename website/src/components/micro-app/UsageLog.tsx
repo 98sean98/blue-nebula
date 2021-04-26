@@ -99,7 +99,7 @@ export const UsageLog: FC<UsageLogProps> = ({
   const renderRow = useCallback(
     (key: string, value: string) => (
       <div className={'flex flex-row'}>
-        <p className={'w-1/3 font-semibold'}>{key}</p>
+        <p className={'w-1/3 text-basic-600'}>{key}</p>
         <p className={'ml-1'}>{value}</p>
       </div>
     ),
@@ -109,17 +109,17 @@ export const UsageLog: FC<UsageLogProps> = ({
   return (
     <div
       {...props}
-      className={combineClassNames('space-y-4', props?.className)}>
-      {renderRow('Usage Log ID:', id)}
-      {renderRow('Timestamp:', formatDate(timestamp))}
+      className={combineClassNames('space-y-3', props?.className)}>
+      {renderRow('Usage Log ID', id)}
+      {renderRow('Timestamp', formatDate(timestamp))}
       {typeof simpleUser !== 'undefined' ? (
-        renderRow('User ID:', simpleUser.identifier)
+        renderRow('User ID', simpleUser.identifier)
       ) : (
         <></>
       )}
       {typeof microAppData !== 'undefined' ? (
         renderRow(
-          'Micro App Data:',
+          'Micro App Data',
           `${microAppData.name ?? microAppData.id} (version ${
             microAppData.version
           })`,
@@ -128,7 +128,7 @@ export const UsageLog: FC<UsageLogProps> = ({
         <></>
       )}
       {typeof reverseGeocoding !== 'undefined' ? (
-        renderRow('Location:', reverseGeocoding.label)
+        renderRow('Location', reverseGeocoding.label)
       ) : (
         <></>
       )}

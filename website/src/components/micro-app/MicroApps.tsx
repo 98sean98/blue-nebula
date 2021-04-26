@@ -69,6 +69,7 @@ export const MicroApps: FC<MicroAppsProps> = ({ ...props }) => {
         props?.className,
       )}>
       <Select
+        placeholder={'Select micro app'}
         options={microAppSelectorOptions}
         value={selectValue}
         onChange={onMicroAppSelectorChange}

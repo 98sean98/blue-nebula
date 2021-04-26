@@ -16,7 +16,9 @@ export const HomePage: FC = () => {
       {isAuthenticated ? (
         <MicroApps className={'flex-grow my-4'} />
       ) : (
-        <ComingSoonPlaceholder />
+        <div className={'flex-grow flex justify-center items-center'}>
+          <ComingSoonPlaceholder />
+        </div>
       )}
     </PageContainerWithNavBar>
   );
