@@ -1,9 +1,6 @@
 import React, { FC } from 'react';
 
-import {
-  ComingSoonPlaceholder,
-  PageContainerWithNavBar,
-} from 'components/shared/interface';
+import { PageContainerWithNavBar } from 'components/shared/interface';
 import { MicroApps } from 'components/micro-app';
 
 import { useAuthContext } from 'utilities/hooks';
@@ -17,7 +14,7 @@ export const HomePage: FC = () => {
         <MicroApps className={'flex-grow my-4'} />
       ) : (
         <div className={'flex-grow flex justify-center items-center'}>
-          <ComingSoonPlaceholder />
+          <h1 className={'text-2xl'}>Please login.</h1>
         </div>
       )}
     </PageContainerWithNavBar>
