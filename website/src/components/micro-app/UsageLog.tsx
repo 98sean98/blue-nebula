@@ -55,10 +55,7 @@ export const UsageLog: FC<UsageLogProps> = ({
   return (
     <div
       {...props}
-      className={combineClassNames(
-        'flex flex-row space-x-4',
-        props?.className,
-      )}>
+      className={combineClassNames('space-y-4', props?.className)}>
       <p>{id}</p>
       {simpleUser ? <p>{simpleUser.id}</p> : null}
       {microAppData ? <p>{microAppData.id}</p> : null}

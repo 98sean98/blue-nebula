@@ -1,10 +1,18 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { DataGrid, GridColDef, GridRowData } from '@material-ui/data-grid';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowData,
+  GridRowParams,
+} from '@material-ui/data-grid';
+import { Modal } from '@material-ui/core';
 
 import { MicroAppDataUsageLog } from 'models/micro-app';
 
 import { GET_MICRO_APP_DATA_USAGE_LOGS } from 'api/graphql/microApp';
+
+import { UsageLog } from './UsageLog';
 
 import { formatDate } from 'utilities/functions';
 
@@ -28,13 +36,13 @@ const tableColumns: GridColDef[] = [
   },
   {
     field: 'locationLatitude',
-    headerName: 'Location latitude',
+    headerName: 'Location Latitude',
     sortable: false,
     flex: 1,
   },
   {
     field: 'locationLongitude',
-    headerName: 'Location longitude',
+    headerName: 'Location Longitude',
     sortable: false,
     flex: 1,
   },
@@ -60,13 +68,45 @@ export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
 
   const tableRows: GridRowData[] = useMemo(() => usageLogs, [usageLogs]);
 
+  const [selectedRowId, setSelectedRowId] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  const onRowClick = useCallback((param: GridRowParams) => {
+    setSelectedRowId(param.id as string);
+    setIsModalOpen(true);
+  }, []);
+
+  const selectedUsageLog = useMemo(
+    () => usageLogs.find(({ id }) => id === selectedRowId),
+    [usageLogs, selectedRowId],
+  );
+
   return (
-    <DataGrid
-      pageSize={10}
-      loading={loading}
-      {...props}
-      rows={tableRows}
-      columns={tableColumns}
-    />
+    <>
+      <DataGrid
+        pageSize={10}
+        loading={loading}
+        disableSelectionOnClick
+        onRowClick={onRowClick}
+        {...props}
+        rows={tableRows}
+        columns={tableColumns}
+      />
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        {typeof selectedUsageLog !== 'undefined' ? (
+          <div
+            className={
+              'absolute top-1/2 left-1/2 w-2/3 transform -translate-x-1/2 -translate-y-1/2'
+            }>
+            <UsageLog
+              microAppDataUsageLog={selectedUsageLog}
+              className={'bg-white'}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+      </Modal>
+    </>
   );
 };

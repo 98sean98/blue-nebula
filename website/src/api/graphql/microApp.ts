@@ -41,6 +41,7 @@ export const GET_MICRO_APP_DATA_USAGE_LOGS = gql`
           }
         }
       }
+      orderBy: { timestamp: desc }
     ) {
       id
       simpleUserId
