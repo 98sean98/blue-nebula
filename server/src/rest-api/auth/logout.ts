@@ -1,14 +1,23 @@
 import { Request, Response } from 'express';
 
-import { getUserFromRequest, invalidateUserTokens } from '@utilities/auth';
+import {
+  getTokenFromRequest,
+  getUserFromRequest,
+  invalidateUserToken,
+} from '@utilities/auth';
 
 export const logout = async (req: Request, res: Response) => {
   try {
+    // get the token
+    const token = await getTokenFromRequest(req);
+
+    if (!token) throw new Error('Token is not provided');
+
     // get user from the request object
     const user = await getUserFromRequest(req);
 
-    const invalidation = await invalidateUserTokens(user.id);
-    if (!invalidation) throw new Error('Tokens invalidation failed.');
+    const invalidation = await invalidateUserToken(token);
+    if (!invalidation) throw new Error('Token invalidation failed.');
 
     // resolve request
     console.log(`User ${user.username} has successfully logged out!`);

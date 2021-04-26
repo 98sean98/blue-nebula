@@ -16,26 +16,32 @@ export const generateToken = (session: Session): string => {
   return jwt.sign(session.id, secret);
 };
 
+const findSession = async (token: string): Promise<Session | undefined> => {
+  const secret = process.env.APPLICATION_SECRET;
+  if (typeof secret === 'undefined')
+    throw new Error(
+      'APPLICATION_SECRET is missing in the runtime environment.',
+    );
+
+  const sessionId = jwt.verify(token, secret) as string;
+
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+  });
+
+  return session ?? undefined;
+};
+
 export const verifyUserToken = async (
   token: string,
 ): Promise<User | undefined> => {
   try {
-    const secret = process.env.APPLICATION_SECRET;
-    if (typeof secret === 'undefined')
-      throw new Error(
-        'APPLICATION_SECRET is missing in the runtime environment.',
-      );
+    const session = await findSession(token);
 
-    const sessionId = jwt.verify(token, secret) as string;
-
-    const _session = await prisma.session.findUnique({
-      where: { id: sessionId },
-    });
-
-    if (!_session || !_session.userId) throw new Error('No session found.');
+    if (!session || !session.userId) throw new Error('No session found.');
 
     const user = await prisma.user.findUnique({
-      where: { id: _session.userId },
+      where: { id: session.userId },
     });
 
     if (!user) throw new Error('No unique user found.');
@@ -47,15 +53,17 @@ export const verifyUserToken = async (
   }
 };
 
-export const invalidateUserTokens = async (
-  userId: string,
-): Promise<boolean> => {
+export const invalidateUserToken = async (token: string): Promise<boolean> => {
   try {
-    // delete all user sessions so that all tokens related to this user cannot be found by virtue of sessions that do not exist
-    await prisma.session.deleteMany({ where: { userId } });
+    // delete the user session according to token
+    const session = await findSession(token);
+
+    if (!session) throw new Error('No session found.');
+
+    await prisma.session.delete({ where: { id: session.id } });
     return true;
   } catch (error) {
-    console.log(`Invalidating user tokens.`, error);
+    console.log(`Error invalidating user tokens:`, error);
     return false;
   }
 };
