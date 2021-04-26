@@ -12,13 +12,19 @@ import {
   DeleteMicroAppResolver,
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
+  FindManySimpleUserResolver,
+  FindUniqueSimpleUserResolver,
+  FindManyMicroAppDataUsageLogResolver,
+  FindUniqueMicroAppDataUsageLogResolver,
+  CreateMicroAppDataUsageLogResolver,
 } from '@artifacts/type-graphql';
 
-import { MeUserResolver } from '@graphql-api/user';
+import { MeResolver, RegisterSimpleUserResolver } from '@graphql-api/user';
 import {
   MicroAppWithActiveDataResolver,
   UpdateMicroAppDataResolver,
 } from '@graphql-api/micro-app';
+import { ReverseGeocodingResolver } from '@graphql-api/geocoding';
 
 const selectedResolvers = [
   CreateUserResolver,
@@ -33,12 +39,19 @@ const selectedResolvers = [
   DeleteMicroAppResolver,
   FindManyMicroAppDataResolver,
   FindUniqueMicroAppDataResolver,
+  FindManySimpleUserResolver,
+  FindUniqueSimpleUserResolver,
+  FindManyMicroAppDataUsageLogResolver,
+  FindUniqueMicroAppDataUsageLogResolver,
+  CreateMicroAppDataUsageLogResolver,
 ] as const;
 
 const customResolvers = [
-  MeUserResolver,
+  MeResolver,
+  RegisterSimpleUserResolver,
   MicroAppWithActiveDataResolver,
   UpdateMicroAppDataResolver,
+  ReverseGeocodingResolver,
 ] as const;
 
 export const createSchema = async () =>

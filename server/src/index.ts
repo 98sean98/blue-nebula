@@ -16,7 +16,9 @@ const main = async () => {
 
   // cors
   const corsOptions: CorsOptions = {
-    origin: [],
+    origin: ['https://blue-nebula.seanchok.com'].concat(
+      process.env.NODE_ENV !== 'production' ? ['http://localhost:3000'] : [],
+    ),
     credentials: true,
   };
   app.use(cors(corsOptions));

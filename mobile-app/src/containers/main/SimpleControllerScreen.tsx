@@ -17,10 +17,17 @@ import {
 import { Text, useTheme } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getUniqueId } from 'react-native-device-info';
 import Carousel from 'react-native-snap-carousel';
+import { useMutation } from '@apollo/client';
 import { useDispatch, useSelector } from 'react-redux';
+import Geolocation, {
+  GeoError,
+  GeoPosition,
+} from 'react-native-geolocation-service';
 import { IterableElement } from 'type-fest';
 import moment from 'moment';
+import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -36,6 +43,8 @@ import {
 } from '@models/app-maker';
 import { Setup } from '@models/setup';
 import { PageCarouselData } from '@models/ui';
+
+import { CREATE_MICRO_APP_DATA_USAGE_LOG } from '@api/graphql/microApp';
 
 import { RootState } from '@reduxApp';
 import {
@@ -56,6 +65,7 @@ import {
   checkIfActionTreeLeadsToSetup,
   traverseActionTree,
 } from '@utilities/functions/app-maker';
+import { ApplicationMode } from '@models/application';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
@@ -265,6 +275,66 @@ export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
         : 0,
     [selectedSetup],
   );
+
+  const [createMicroAppDataUsageLog] = useMutation(
+    CREATE_MICRO_APP_DATA_USAGE_LOG,
+  );
+  const {
+    callback: throttledCreateMicroAppDataUsageLog,
+  } = useThrottledCallback(createMicroAppDataUsageLog, 60 * 1000, {
+    leading: true,
+  });
+
+  const { applicationMode, focusedMicroAppHeaders } = useSelector(
+    (state: RootState) => state.application,
+  );
+
+  useEffect(() => {
+    const create = async (variables: Record<string, any>): Promise<void> => {
+      try {
+        await throttledCreateMicroAppDataUsageLog({ variables });
+        console.log('usage log added!');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (
+      applicationMode === ApplicationMode.NORMAL &&
+      isRunning &&
+      typeof focusedMicroAppHeaders !== 'undefined'
+    ) {
+      const variables: {
+        simpleUserIdentifier: string;
+        microAppId: string;
+        version: number;
+        locationLatitude?: number;
+        locationLongitude?: number;
+      } = {
+        simpleUserIdentifier: getUniqueId(),
+        microAppId: focusedMicroAppHeaders.id,
+        version: focusedMicroAppHeaders.activeVersion,
+      };
+      Geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }: GeoPosition) => {
+          variables.locationLatitude = latitude;
+          variables.locationLongitude = longitude;
+          console.log('creating the usage log with location information...');
+          create(variables).then();
+        },
+        (error: GeoError) => {
+          console.log('error getting the current location:', error);
+          console.log('creating the usage log without location information...');
+          create(variables).then();
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
+    }
+  }, [
+    applicationMode,
+    focusedMicroAppHeaders,
+    throttledCreateMicroAppDataUsageLog,
+    isRunning,
+  ]);
 
   return (
     <SimpleControllerContext.Provider value={{ actionTreePath }}>

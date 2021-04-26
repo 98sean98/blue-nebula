@@ -11,7 +11,8 @@ export const createServer = async () => {
   return new ApolloServer({
     schema: applyMiddleware(schema, permissions),
     context: ({ req }) => createContext(req),
-    playground: process.env.STAGE !== 'production',
+    playground: true,
+    introspection: true,
     debug: process.env.NODE_ENV === 'development',
   });
 };

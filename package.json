@@ -7,6 +7,7 @@
     "prepare": "husky install",
     "precommit:mobile-app": "cd mobile-app && npm run precommit",
     "precommit:server": "cd server && npm run precommit",
+    "precommit:website": "cd website && npm run precommit",
     "precommit": "npm-run-all precommit:*",
     "server:deploy:heroku": "git push heroku `git subtree split --prefix server master`:master --force"
   },
@@ -21,8 +22,12 @@
   },
   "homepage": "https://github.com/98sean98/scraper#readme",
   "devDependencies": {
+    "@types/react-router-dom": "^5.1.7",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",
     "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "react-router-dom": "^5.2.0"
   }
 }
