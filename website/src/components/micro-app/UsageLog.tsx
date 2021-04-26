@@ -113,7 +113,7 @@ export const UsageLog: FC<UsageLogProps> = ({
       {renderRow('Usage Log ID', id)}
       {renderRow('Timestamp', formatDate(timestamp))}
       {typeof simpleUser !== 'undefined' ? (
-        renderRow('User ID', simpleUser.identifier)
+        renderRow('User ID', simpleUser.id)
       ) : (
         <></>
       )}
@@ -127,8 +127,16 @@ export const UsageLog: FC<UsageLogProps> = ({
       ) : (
         <></>
       )}
+      {locationLatitude && locationLongitude ? (
+        renderRow(
+          'Location coordinates',
+          `${locationLatitude}, ${locationLongitude}`,
+        )
+      ) : (
+        <></>
+      )}
       {typeof reverseGeocoding !== 'undefined' ? (
-        renderRow('Location', reverseGeocoding.label)
+        renderRow('Location address', reverseGeocoding.label)
       ) : (
         <></>
       )}
