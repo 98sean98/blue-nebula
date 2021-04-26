@@ -43,9 +43,29 @@ export const dcMotorObjectKeys: Array<{
 }> = [
   { key: 'name', valueType: 'string', description: 'a unique name' },
   {
+    key: 'pwmDutyCycle',
+    valueType: 'number',
+    description: 'pwm output (0 - 100)',
+  },
+  {
+    key: 'pwmFrequency',
+    valueType: 'number',
+    description: 'cycle frequency (should be around 1000)',
+  },
+  {
+    key: 'direction',
+    valueType: 'number',
+    description: '0 - clockwise, 1 - counter-clockwise',
+  },
+  {
     key: 'enable',
     valueType: 'number',
     description: '0 - disable, 1 - enable',
+  },
+  {
+    key: 'duration',
+    valueType: 'number',
+    description: 'motor running duration',
   },
 ];
 

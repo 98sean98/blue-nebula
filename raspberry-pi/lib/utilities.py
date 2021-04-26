@@ -37,7 +37,20 @@ def decode_motor_info(encoded, parameters_keys):
 
     return {'motor_name': decoded_list[0], 'parameters': parameters}
 
-# motor: motor_1
+# example encoded: motor_1, ...parameters
 def encode_motor_info(motor_name, parameters, parameters_keys):
     string_value = f"{motor_name}, " + "".join([f"{parameters[key]}{', ' if i < len(parameters_keys) - 1 else ''}" for i, key in enumerate(parameters_keys)])
     return encode_base64(string_value)
+
+def bind_pwm_duty_cycle(raw_pwm_duty_cycle):
+    pwm_duty_cycle_value = 0
+    if raw_pwm_duty_cycle < 0: pwm_duty_cycle_value = 0
+    elif raw_pwm_duty_cycle > 100: pwm_duty_cycle_value = 100
+    else: pwm_duty_cycle_value = raw_pwm_duty_cycle
+    return pwm_duty_cycle_value
+
+def bind_pwm_frequency(raw_pwm_frequency):
+    pwm_frequency_value = raw_pwm_frequency
+    if raw_pwm_frequency < 0: pwm_frequency_value = 100
+    elif raw_pwm_frequency > 10000: pwm_frequency_value = 10000
+    return pwm_frequency_value

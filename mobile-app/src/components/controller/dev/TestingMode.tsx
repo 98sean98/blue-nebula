@@ -8,6 +8,7 @@ import { tailwind } from '@styles/tailwind';
 import {
   BLDCMotor,
   ControlEntityEnum,
+  DCMotor,
   StepperMotor,
 } from '@models/control-entity';
 import { DevControlInterface } from '@models/ui';
@@ -15,6 +16,7 @@ import { DevControlInterface } from '@models/ui';
 import { RootState } from '@reduxApp';
 
 import { StepperMotorCard } from './stepper-motor';
+import { DCMotorCard } from './dc-motor';
 import { BLDCMotorCard } from './bldc-motor';
 import {
   BleReadDeviceButton,
@@ -49,11 +51,18 @@ export const TestingMode: FC<TestingModeProps> = () => {
             entity={entity}
             controlEntity={controlEntity as StepperMotor}
             controlInterface={DevControlInterface.Testing}
-            style={[tailwind('my-2 mx-4')]}
+            style={tailwind('my-2 mx-4')}
           />
         );
       case ControlEntityEnum.DCMotor:
-        return <></>;
+        return (
+          <DCMotorCard
+            entity={entity}
+            controlEntity={controlEntity as DCMotor}
+            controlInterface={DevControlInterface.Testing}
+            style={tailwind('my-2 mx-4')}
+          />
+        );
       case ControlEntityEnum.BLDCMotor:
         return (
           <BLDCMotorCard
