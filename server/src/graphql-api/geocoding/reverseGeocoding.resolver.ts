@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ReverseGeocoding } from './reverseGeocoding.object';
 
 const url = 'http://api.positionstack.com/v1/reverse';
-const accessKey = process.env.POSITIION_STACK_API_KEY;
+const accessKey = process.env.POSITION_STACK_API_KEY;
 
 @InputType({ description: 'Latitude and longitude coordinates' })
 class ReverseGeocodingInput {
