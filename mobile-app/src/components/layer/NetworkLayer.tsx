@@ -3,6 +3,13 @@ import { Alert } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { useTranslation } from 'react-i18next';
 
+import { serverUrl } from '@config/environment';
+
+NetInfo.configure({
+  reachabilityUrl: serverUrl.main,
+  reachabilityTest: async (response) => response.status === 200,
+});
+
 export const NetworkLayer: FC = ({ children }) => {
   const { t } = useTranslation();
 
@@ -36,7 +43,7 @@ export const NetworkLayer: FC = ({ children }) => {
             t('network.not connected'),
             t('network.connect to the internet'),
           ),
-        1000,
+        3000,
       );
       return () => clearTimeout(timeout);
     }
