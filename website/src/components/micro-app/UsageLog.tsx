@@ -1,14 +1,21 @@
-import React, { FC, HTMLAttributes, useEffect, useMemo } from 'react';
+import React, {
+  FC,
+  HTMLAttributes,
+  useCallback,
+  useEffect,
+  useMemo,
+} from 'react';
 import { useLazyQuery, useQuery } from '@apollo/client';
 
 import { MicroAppDataUsageLog, MicroAppData } from 'models/micro-app';
 import { SimpleUser } from 'models/user';
+import { ReverseGeocoding } from 'models/geocoding';
 
 import { GET_SIMPLE_USER } from 'api/graphql/user';
 import { GET_MICRO_APP_DATA } from 'api/graphql/microApp';
 import { REVERSE_GEOCODING } from 'api/graphql/geocoding';
 
-import { combineClassNames } from 'utilities/functions';
+import { combineClassNames, formatDate } from 'utilities/functions';
 
 interface UsageLogProps extends HTMLAttributes<HTMLDivElement> {
   microAppDataUsageLog: MicroAppDataUsageLog;
@@ -19,6 +26,7 @@ export const UsageLog: FC<UsageLogProps> = ({
     id,
     simpleUserId,
     microAppDataId,
+    timestamp,
     locationLatitude,
     locationLongitude,
   },
@@ -64,7 +72,7 @@ export const UsageLog: FC<UsageLogProps> = ({
     [microAppDataData],
   );
 
-  const reverseGeocoding = useMemo(
+  const reverseGeocoding: ReverseGeocoding | undefined = useMemo(
     () =>
       typeof reverseGeocodingData !== 'undefined' &&
       reverseGeocodingData.reverseGeocoding !== null
@@ -88,14 +96,42 @@ export const UsageLog: FC<UsageLogProps> = ({
       );
   }, [simpleUserError, microAppDataError, reverseGeocodingError]);
 
+  const renderRow = useCallback(
+    (key: string, value: string) => (
+      <div className={'flex flex-row'}>
+        <p className={'w-1/3 font-semibold'}>{key}</p>
+        <p className={'ml-1'}>{value}</p>
+      </div>
+    ),
+    [],
+  );
+
   return (
     <div
       {...props}
       className={combineClassNames('space-y-4', props?.className)}>
-      <p>{id}</p>
-      {simpleUser ? <p>{simpleUser.id}</p> : null}
-      {microAppData ? <p>{microAppData.id}</p> : null}
-      {reverseGeocodingData ? <p>{reverseGeocoding.label}</p> : null}
+      {renderRow('Usage Log ID:', id)}
+      {renderRow('Timestamp:', formatDate(timestamp))}
+      {typeof simpleUser !== 'undefined' ? (
+        renderRow('User ID:', simpleUser.identifier)
+      ) : (
+        <></>
+      )}
+      {typeof microAppData !== 'undefined' ? (
+        renderRow(
+          'Micro App Data:',
+          `${microAppData.name ?? microAppData.id} (version ${
+            microAppData.version
+          })`,
+        )
+      ) : (
+        <></>
+      )}
+      {typeof reverseGeocoding !== 'undefined' ? (
+        renderRow('Location:', reverseGeocoding.label)
+      ) : (
+        <></>
+      )}
     </div>
   );
 };
