@@ -7,7 +7,8 @@ import { MicroAppHeaders } from 'models/micro-app';
 import { GET_ALL_MICRO_APPS_HEADERS } from 'api/graphql/microApp';
 
 import { Usage } from './Usage';
-import { combineClassNames } from '../../utilities/functions';
+
+import { combineClassNames } from 'utilities/functions';
 
 interface MicroAppsProps extends HTMLAttributes<HTMLDivElement> {}
 
@@ -76,8 +77,10 @@ export const MicroApps: FC<MicroAppsProps> = ({ ...props }) => {
       />
 
       {typeof selectedMicroAppId !== 'undefined' ? (
-        <div className={'flex-grow flex flex-col'}>
-          <Usage microAppId={selectedMicroAppId} />
+        <div className={'flex-grow flex flex-col w-full overflow-x-auto'}>
+          <div className={'flex-grow'} style={{ minWidth: 800 }}>
+            <Usage microAppId={selectedMicroAppId} />
+          </div>
         </div>
       ) : null}
     </div>

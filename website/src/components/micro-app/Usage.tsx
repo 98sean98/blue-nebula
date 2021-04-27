@@ -96,7 +96,7 @@ export const Usage: FC<UsageProps> = ({ microAppId, ...props }) => {
         {typeof selectedUsageLog !== 'undefined' ? (
           <div
             className={
-              'absolute top-1/2 left-1/2 w-2/3 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4'
+              'absolute top-1/2 left-1/2 w-5/6 md:w-4/5 lg:w-2/3 transform -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-4'
             }
             style={{ minWidth: 300 }}>
             <UsageLog microAppDataUsageLog={selectedUsageLog} />
