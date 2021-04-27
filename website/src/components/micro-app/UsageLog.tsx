@@ -98,9 +98,11 @@ export const UsageLog: FC<UsageLogProps> = ({
 
   const renderRow = useCallback(
     (key: string, value: string) => (
-      <div className={'flex flex-row'}>
-        <p className={'w-1/3 text-basic-600'}>{key}</p>
-        <p className={'ml-1'}>{value}</p>
+      <div className={'flex flex-row space-x-1'}>
+        <div className={'w-1/3 flex-none'}>
+          <p className={'text-basic-600'}>{key}</p>
+        </div>
+        <p>{value}</p>
       </div>
     ),
     [],
