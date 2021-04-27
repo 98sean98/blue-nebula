@@ -78,7 +78,7 @@ export const MicroApps: FC<MicroAppsProps> = ({ ...props }) => {
 
       {typeof selectedMicroAppId !== 'undefined' ? (
         <div className={'flex-grow flex flex-col w-full overflow-x-auto'}>
-          <div className={'flex-grow'} style={{ minWidth: 800 }}>
+          <div className={'flex-grow flex flex-col'} style={{ minWidth: 800 }}>
             <Usage microAppId={selectedMicroAppId} />
           </div>
         </div>
