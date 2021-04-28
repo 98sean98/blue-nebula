@@ -19,7 +19,6 @@ SERVICE_UUID = Config.UUID['robot_controller_service']
 class RobotControllerService(Service):
     def __init__(self, index, multiprocessing_manager):
         self.stepper_motors = {
-            'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22, multiprocessing_manager),
             'screw_motor': StepperMotor('screw_motor', 14, 15, 18, multiprocessing_manager)
         }
         self.dc_motors = {
