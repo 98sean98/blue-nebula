@@ -1,3 +1,8 @@
 __pycache__/
 
 temperature_logging/logs/*.csv
+
+.venv
+.env
+
+.python-version

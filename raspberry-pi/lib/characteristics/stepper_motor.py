@@ -1,13 +1,13 @@
 from ..bluetooth.service import Characteristic, Descriptor
 
-from ..config import Config
+from ..config.bluetooth_config import BluetoothConfig
 
 from ..control_entities.stepper_motor import StepperMotor
 
 from .. import utilities
 
-GATT_CHRC_IFACE = Config.GATT_CHRC_IFACE
-CHARACTERISTIC_UUID = Config.UUID['stepper_motors']
+GATT_CHRC_IFACE = BluetoothConfig.GATT_CHRC_IFACE
+CHARACTERISTIC_UUID = BluetoothConfig.UUID['stepper_motors']
 # this timeout cannot changed during run time
 NOTIFY_TIMEOUT = 50 # in milliseconds
 

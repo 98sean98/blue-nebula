@@ -1,11 +1,7 @@
 from .bluetooth.service import Service
 
-from .config import Config
-
-from .control_entities.stepper_motor import StepperMotor
-from .control_entities.dc_motor import DCMotor
-from .control_entities.bldc_motor import BLDCMotor
-from .control_entities.buzzer import Buzzer
+from .config.bluetooth_config import BluetoothConfig
+from .config.micro_apps.micro_app import MicroApp
 
 from .characteristics.health_check import HealthCheckCharacteristic
 from .characteristics.ip_address import IPAddressCharacteristic
@@ -14,20 +10,22 @@ from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
 from .characteristics.bldc_motor import BLDCMotorsCharacteristic
 
-SERVICE_UUID = Config.UUID['robot_controller_service']
+SERVICE_UUID = BluetoothConfig.UUID['robot_controller_service']
+
+def parse_entities(entity):
+    return entity if entity is not None else {}
 
 class RobotControllerService(Service):
     def __init__(self, index, multiprocessing_manager):
-        self.stepper_motors = {
-            'wheel_motor': StepperMotor('wheel_motor', 17, 27, 22, multiprocessing_manager),
-            'screw_motor': StepperMotor('screw_motor', 14, 15, 18, multiprocessing_manager)
-        }
-        self.dc_motors = {
-        }
-        self.bldc_motors = {
-            'bldc_motor': BLDCMotor('bldc_motor', 13, 6, 5, 0, multiprocessing_manager)
-        }
-        self.buzzer = Buzzer('buzzer', 23, multiprocessing_manager)
+        # get the control entities for the selected micro app
+        microApp = MicroApp()
+        control_entities = microApp.get_control_entities(multiprocessing_manager)
+
+        self.stepper_motors = parse_entities(control_entities['stepper_motors'])
+        self.dc_motors = parse_entities(control_entities['dc_motors'])
+        self.bldc_motors = parse_entities(control_entities['bldc_motors'])
+
+        self.buzzer = control_entities['buzzer'] # can be None
 
         # global states
         self.is_device_connected = False
@@ -68,7 +66,8 @@ class RobotControllerService(Service):
                 motor.set_is_running(is_running)
 
     def set_buzzer(self, is_running):
-        self.buzzer.set_is_running(is_running)
+        if self.buzzer is not None:
+            self.buzzer.set_is_running(is_running)
 
     def get_all_motors(self):
         return {

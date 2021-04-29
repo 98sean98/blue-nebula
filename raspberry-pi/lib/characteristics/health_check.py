@@ -1,11 +1,11 @@
 from ..bluetooth.service import Characteristic, Descriptor
 
-from ..config import Config
+from ..config.bluetooth_config import BluetoothConfig
 
 from .. import utilities
 
-GATT_CHRC_IFACE = Config.GATT_CHRC_IFACE
-CHARACTERISTIC_UUID = Config.UUID['health_check']
+GATT_CHRC_IFACE = BluetoothConfig.GATT_CHRC_IFACE
+CHARACTERISTIC_UUID = BluetoothConfig.UUID['health_check']
 
 class HealthCheckCharacteristic(Characteristic):
     def __init__(self, service):

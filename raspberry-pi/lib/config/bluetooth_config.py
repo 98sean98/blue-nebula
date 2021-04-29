@@ -1,4 +1,4 @@
-class Config:
+class BluetoothConfig:
     GATT_SERVICE_IFACE = 'org.bluez.GattService1'
     GATT_CHRC_IFACE = 'org.bluez.GattCharacteristic1'
     GATT_DESC_IFACE = 'org.bluez.GattDescriptor1'
