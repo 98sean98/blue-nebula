@@ -18,16 +18,14 @@ def parse_entities(entity):
 class RobotControllerService(Service):
     def __init__(self, index, multiprocessing_manager):
         # get the control entities for the selected micro app
-        microApp = MicroApp(multiprocessing_manager)
-        control_entities = microApp.get_control_entities()
-
-        print(control_entities)
+        microApp = MicroApp()
+        control_entities = microApp.get_control_entities(multiprocessing_manager)
 
         self.stepper_motors = parse_entities(control_entities['stepper_motors'])
         self.dc_motors = parse_entities(control_entities['dc_motors'])
         self.bldc_motors = parse_entities(control_entities['bldc_motors'])
 
-        self.buzzer = buzzer # can be None
+        self.buzzer = control_entities['buzzer'] # can be None
 
         # global states
         self.is_device_connected = False
