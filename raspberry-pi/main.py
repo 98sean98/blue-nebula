@@ -3,6 +3,7 @@
 import dbus
 import RPi.GPIO as GPIO
 from multiprocessing import Manager
+from dotenv import load_dotenv
 
 from lib.bluetooth.advertisement import Advertisement
 from lib.bluetooth.service import Application
@@ -16,6 +17,8 @@ class RobotControllerAdvertisement(Advertisement):
         self.include_tx_power = True
 
 def main():
+    load_dotenv()
+
     GPIO.setmode(GPIO.BCM)
     multiprocessing_manager = Manager()
 
