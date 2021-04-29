@@ -49,7 +49,7 @@ export const BLDCMotorCard: FC<BLDCMotorCardProps> = ({
     [entity, setControlEntityByParameter],
   );
 
-  const headerParams = { title: controlEntity.name };
+  const headerParams = { title: controlEntity.name, subtitle: 'BLDC motor' };
 
   const onConfirmDelete = () => dispatch(removeControlEntity(entity));
 

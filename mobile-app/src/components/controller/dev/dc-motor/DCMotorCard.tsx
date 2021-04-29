@@ -44,7 +44,7 @@ export const DCMotorCard: FC<DCMotorCardProps> = ({
     [entity, setControlEntityByParameter],
   );
 
-  const headerParams = { title: controlEntity.name };
+  const headerParams = { title: controlEntity.name, subtitle: 'DC motor' };
 
   const onConfirmDelete = () => dispatch(removeControlEntity(entity));
 

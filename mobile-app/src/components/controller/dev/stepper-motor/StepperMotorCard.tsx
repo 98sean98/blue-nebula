@@ -44,7 +44,7 @@ export const StepperMotorCard: FC<StepperMotorCardProps> = ({
     [entity, setControlEntityByParameter],
   );
 
-  const headerParams = { title: controlEntity.name };
+  const headerParams = { title: controlEntity.name, subtitle: 'Stepper motor' };
 
   const onConfirmDelete = () => dispatch(removeControlEntity(entity));
 
