@@ -3,11 +3,11 @@ import re
 
 from ..bluetooth.service import Characteristic, Descriptor
 
-from ..config import Config
+from ..config.bluetooth_config import BluetoothConfig
 
 from .. import utilities
 
-CHARACTERISTIC_UUID = Config.UUID['ip_address']
+CHARACTERISTIC_UUID = BluetoothConfig.UUID['ip_address']
 
 def check_if_ip_address(string):
     regex = re.compile('^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$')

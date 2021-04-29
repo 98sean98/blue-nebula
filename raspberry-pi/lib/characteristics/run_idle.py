@@ -1,10 +1,10 @@
 from ..bluetooth.service import Characteristic, Descriptor
 
-from ..config import Config
+from ..config.bluetooth_config import BluetoothConfig
 
 from .. import utilities
 
-CHARACTERISTIC_UUID = Config.UUID['run_idle']
+CHARACTERISTIC_UUID = BluetoothConfig.UUID['run_idle']
 
 class RunIdleCharacteristic(Characteristic):
     def __init__(self, service):

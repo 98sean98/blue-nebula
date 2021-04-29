@@ -1,6 +1,6 @@
 from .bluetooth.service import Service
 
-from .config import Config
+from .config.bluetooth_config import BluetoothConfig
 
 from .control_entities.stepper_motor import StepperMotor
 from .control_entities.dc_motor import DCMotor
@@ -14,7 +14,7 @@ from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
 from .characteristics.bldc_motor import BLDCMotorsCharacteristic
 
-SERVICE_UUID = Config.UUID['robot_controller_service']
+SERVICE_UUID = BluetoothConfig.UUID['robot_controller_service']
 
 class RobotControllerService(Service):
     def __init__(self, index, multiprocessing_manager):
