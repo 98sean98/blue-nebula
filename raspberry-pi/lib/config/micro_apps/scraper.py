@@ -11,7 +11,7 @@ def get_control_entities(multiprocessing_manager):
         'dc_motors': {
         },
         'bldc_motors': {
-            'bldc_motor': BLDCMotor('bldc_motor', 13, 6, 5, 0, multiprocessing_manager)
+            'bldc_motor': BLDCMotor('bldc_motor', 13, 6, 5, 0, 1, 4, 1/66, 0.0003, multiprocessing_manager)
         },
         'buzzer': Buzzer('buzzer', 23, multiprocessing_manager)
     }

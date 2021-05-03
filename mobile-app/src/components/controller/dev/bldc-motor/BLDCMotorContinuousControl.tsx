@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
-import { Button, ButtonProps } from '@ui-kitten/components';
+import { Button, ButtonProps, Text } from '@ui-kitten/components';
+import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -10,6 +11,8 @@ import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { mapControlEntityToString } from '@utilities/functions/map';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
+import { parseStringToNumber } from '@utilities/functions/parse';
+import { generateMethodToDecipherMonitorValue } from '@utilities/functions/generateMethodToDecipherMonitorValue';
 
 interface BLDCMotorContinuousControlProps extends ViewProps {
   controlEntity: BLDCMotor;
@@ -23,10 +26,10 @@ export const BLDCMotorContinuousControl: FC<BLDCMotorContinuousControlProps> = (
   controlEntity,
   ...props
 }) => {
-  const { write: writeBldcMotor } = useBleRpiDeviceCharacteristic(
-    'bldcMotors',
-    'string',
-  );
+  const {
+    write: writeBldcMotor,
+    monitor: monitorBLDCMotor,
+  } = useBleRpiDeviceCharacteristic('bldcMotors', 'string');
   const { write: writeRunIdle } = useBleRpiDeviceCharacteristic(
     'runIdle',
     'boolean',
@@ -46,9 +49,13 @@ export const BLDCMotorContinuousControl: FC<BLDCMotorContinuousControlProps> = (
           });
           await writeBldcMotor(stringValue);
           await writeRunIdle(true);
+          monitorBLDCMotor.start(
+            generateMethodToDecipherMonitorValue(controlEntity.name, 3),
+          );
         } else {
           // disable the controls for a short while
           setIsControlDisabled(true);
+          monitorBLDCMotor.stop();
           const stringValue = mapControlEntityToString({
             ...controlEntity,
             enable: Enable.Low,
@@ -65,7 +72,7 @@ export const BLDCMotorContinuousControl: FC<BLDCMotorContinuousControlProps> = (
         });
       }
     },
-    [controlEntity, writeBldcMotor, writeRunIdle],
+    [controlEntity, writeBldcMotor, monitorBLDCMotor, writeRunIdle],
   );
 
   useEffect(() => {
@@ -74,6 +81,37 @@ export const BLDCMotorContinuousControl: FC<BLDCMotorContinuousControlProps> = (
       return () => clearTimeout(timeout);
     }
   }, [isControlDisabled]);
+
+  const [speedRpm, setSpeedRpm] = useState<number>(0);
+  const throttledSetSpeedRpm = useThrottledCallback(setSpeedRpm, 100);
+  const [shouldStreamMonitor, setShouldStreamMonitor] = useState<boolean>(
+    false,
+  );
+
+  useEffect(() => {
+    if (monitorBLDCMotor.isMonitoring) {
+      const timeout = setTimeout(() => setShouldStreamMonitor(true), 1000);
+      return () => clearTimeout(timeout);
+    } else setShouldStreamMonitor(false);
+  }, [monitorBLDCMotor.isMonitoring]);
+
+  useEffect(() => {
+    if (shouldStreamMonitor && typeof monitorBLDCMotor.value !== 'undefined') {
+      const stringArray = (monitorBLDCMotor.value as string).split(', ');
+      const readSpeedRpm = parseStringToNumber(stringArray[1]);
+      if (typeof readSpeedRpm !== 'undefined')
+        throttledSetSpeedRpm.callback(readSpeedRpm);
+    } else {
+      // make sure to flush any pending calls first before updating the previous value
+      throttledSetSpeedRpm.flush();
+      setSpeedRpm(0);
+    }
+  }, [
+    shouldStreamMonitor,
+    monitorBLDCMotor.value,
+    setSpeedRpm,
+    throttledSetSpeedRpm,
+  ]);
 
   return (
     <View
@@ -89,6 +127,12 @@ export const BLDCMotorContinuousControl: FC<BLDCMotorContinuousControlProps> = (
         onPressOut={() => triggerContinuousRunning(false, Direction.CCW)}>
         CCW
       </StyledButton>
+      <View style={tailwind('w-1/4 flex-row justify-center items-end')}>
+        <Text category={'h6'}>{speedRpm}</Text>
+        <Text category={'s1'} style={tailwind('ml-1')}>
+          rpm
+        </Text>
+      </View>
       <StyledButton
         style={tailwind('w-1/3')}
         disabled={isControlDisabled}
