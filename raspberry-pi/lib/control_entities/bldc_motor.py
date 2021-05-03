@@ -116,7 +116,7 @@ class BLDCMotor(Motor):
             last_i = i
             duration = time() - debounce_time
             if duration >= debounce_interval:
-                rpm = (pulse_counter / duration) / self.pole_number * 20 * self.gear_ratio
+                rpm = (pulse_counter / duration) / self.pairs_of_poles * 20 * self.gear_ratio
                 tracked_parameters['speed_rpm'] = round(rpm, 2)
                 pulse_counter = 0
                 debounce_time = time()
