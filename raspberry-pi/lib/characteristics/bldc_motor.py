@@ -40,7 +40,7 @@ class BLDCMotorsCharacteristic(Characteristic):
 
     def notify_callback(self):
         if self.notifying:
-            value = self.get_value(lambda motor: motor.get_parameters(), BLDC.tracked_parameters_keys)
+            value = self.get_value(lambda motor: motor.get_tracked_parameters(), BLDCMotor.tracked_parameters_keys)
             self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
         return self.notifying
 
@@ -49,7 +49,7 @@ class BLDCMotorsCharacteristic(Characteristic):
             return
 
         self.notifying = True
-        value = self.get_value(lambda motor: motor.get_parameters(), BLDC.tracked_parameters_keys)
+        value = self.get_value(lambda motor: motor.get_tracked_parameters(), BLDCMotor.tracked_parameters_keys)
         self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
         self.add_timeout(NOTIFY_TIMEOUT, self.notify_callback)
 
