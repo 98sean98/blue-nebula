@@ -12,6 +12,7 @@ import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';
 import { parseStringToNumber } from '@utilities/functions/parse';
+import { generateMethodToDecipherMonitorValue } from '@utilities/functions/generateMethodToDecipherMonitorValue';
 
 interface StepperMotorContinuousControlProps extends ViewProps {
   controlEntity: StepperMotor;
@@ -20,14 +21,6 @@ interface StepperMotorContinuousControlProps extends ViewProps {
 const GhostButton = (props: ButtonProps) => (
   <Button appearance={'ghost'} {...props} />
 );
-
-const generateMethodToDecipherMonitorValue = (entityName: string) => (
-  rawValue: string,
-): string => {
-  const stringArray = rawValue.split(', ');
-  const entityNameIndex = stringArray.findIndex((e) => e === entityName);
-  return stringArray.slice(entityNameIndex, entityNameIndex + 3).join(', ');
-};
 
 export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProps> = ({
   controlEntity,
@@ -57,7 +50,7 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
           await writeStepperMotor(stringValue);
           await writeRunIdle(true);
           monitorStepperMotor.start(
-            generateMethodToDecipherMonitorValue(controlEntity.name),
+            generateMethodToDecipherMonitorValue(controlEntity.name, 3),
           );
         } else {
           // disable the controls for a short while
