@@ -17,7 +17,7 @@ class BLDCMotorsCharacteristic(Characteristic):
 
         Characteristic.__init__(
                 self, CHARACTERISTIC_UUID,
-                ["read", "write"], service)
+                ["notify", "read", "write"], service)
         self.add_descriptor(BLDCMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
@@ -37,6 +37,24 @@ class BLDCMotorsCharacteristic(Characteristic):
         value = self.get_value(lambda motor: motor.get_parameters(), BLDCMotor.parameters_keys)
         print("read bldc motors:", utilities.decode_base64(value))
         return value
+
+    def notify_callback(self):
+        if self.notifying:
+            value = self.get_value(lambda motor: motor.get_parameters(), BLDC.tracked_parameters_keys)
+            self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        return self.notifying
+
+    def StartNotify(self):
+        if self.notifying:
+            return
+
+        self.notifying = True
+        value = self.get_value(lambda motor: motor.get_parameters(), BLDC.tracked_parameters_keys)
+        self.PropertiesChanged(GATT_CHRC_IFACE, {"Value": value}, [])
+        self.add_timeout(NOTIFY_TIMEOUT, self.notify_callback)
+
+    def StopNotify(self):
+        self.notifying = False
 
 class BLDCMotorsDescriptor(Descriptor):
     DESCRIPTOR_UUID = "2901"
