@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
 import { useSelector } from 'react-redux';
 
@@ -82,25 +83,27 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
 
   const { writeAll, setControlEntityByParameter } = useControlEntities();
 
-  useEffect(() => {
-    if (isFocused) {
-      const isEveryEnableLow = Object.values(controlEntities).every(
-        (controlEntity) => controlEntity.enable === Enable.Low,
-      );
-      if (!isEveryEnableLow) {
-        Object.entries(controlEntities).forEach(([entity, { enable }]) => {
-          if (enable !== Enable.Low)
-            setControlEntityByParameter(
-              entity,
-              'enable',
-              Enable.Low.toString(),
-              'number',
-            );
-        });
-        setShouldShowModal(true);
+  useFocusEffect(
+    useCallback(() => {
+      if (isFocused) {
+        const isEveryEnableLow = Object.values(controlEntities).every(
+          (controlEntity) => controlEntity.enable === Enable.Low,
+        );
+        if (!isEveryEnableLow) {
+          Object.entries(controlEntities).forEach(([entity, { enable }]) => {
+            if (enable !== Enable.Low)
+              setControlEntityByParameter(
+                entity,
+                'enable',
+                Enable.Low.toString(),
+                'number',
+              );
+          });
+          setShouldShowModal(true);
+        }
       }
-    }
-  }, [isFocused, controlEntities, setControlEntityByParameter]);
+    }, [isFocused, controlEntities, setControlEntityByParameter]),
+  );
 
   const onEnablePinOff = async () => {
     try {
