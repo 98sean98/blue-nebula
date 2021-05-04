@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useBleRpiDeviceCharacteristic } from './useBleRpiDeviceCharacteristic';
 
 import { RootState } from '@reduxApp';
-import { setControlEntities } from '@reduxApp/control/actions';
+import {
+  clearAllControlEntities,
+  setControlEntities,
+} from '@reduxApp/control/actions';
 
 import { ControlEntityEnum } from '@models/control-entity';
 import { DeclarableValueType } from '@models/ValueType';
@@ -69,6 +72,7 @@ export const useControlEntities = (): UseControlEntities => {
       ...newBLDCMotors,
     };
 
+    dispatch(clearAllControlEntities());
     dispatch(setControlEntities(newControlEntities));
   }, [dispatch, readStepperMotors, readDCMotors, readBLDCMotors]);
 
