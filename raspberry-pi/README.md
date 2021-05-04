@@ -52,30 +52,30 @@ cd Documents
 git clone https://github.com/98sean98/blue-nebula.git
 ```
 
-4. Enable experimental features for `bluez`
+5. Enable experimental features for `bluez`
 ```sh
 sudo nano /etc/systemd/system/dbus-org.bluez.service
 ```
 
   Add `-E` to `ExecStart` line -> `ExecStart=/usr/lib/bluetooth/bluetoothd -E`.
 
-5. Install python packages
+6. Install python packages
 ```sh
 cd blue-nebula/raspberry-pi
 pip3 install -r requirements.txt
 ```
 
-6. Setup the micro app name in the environment
+7. Setup the micro app name in the environment
 ```sh
 echo "MICRO_APP_NAME = foo_bar" > .env
 ```
 
-7. Move services into systemctl
+8. Move services into systemctl
 ```sh
 sudo cp services/* /etc/systemd/system/
 ```
 
-8. Start and enable services
+9. Start and enable services
 ```sh
 sudo systemctl daemon-reload
 sudo systemctl enable main.service

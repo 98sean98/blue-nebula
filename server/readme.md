@@ -39,14 +39,16 @@ docker compose up -d
 
 ### Installation
 
-Install node modules, and migrate the database, and generate prisma artifacts.
+Install node modules, migrate the database, and generate prisma bindings.
 
 ```sh
-# with npm
+# install node_modules
 npm i
 
-# with prisma
+# migrate database
 npm run prisma:migrate
+
+# generate prisma bindings
 npm run prisma:generate
 ```
 
