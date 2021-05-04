@@ -1,4 +1,4 @@
-# [Name of Application]
+# Mobile App
 
 This is a bare [React Native](https://reactnative.dev/) Project, not managed through [Expo](https://expo.io/).
 
