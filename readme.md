@@ -24,3 +24,8 @@ This repository manages a suite of sub-directories relevant to each area of Blue
 - raspberry-pi: python program on the raspberry pi controller
 - server: nodejs server
 - website: react website
+
+## High Level Abstraction
+The following shows a high level abstraction between different areas of Blue Nebula.
+
+![Image of Yaktocat](docs/module-relations.png)
