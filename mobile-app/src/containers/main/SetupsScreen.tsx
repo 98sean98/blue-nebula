@@ -148,6 +148,8 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ navigation }) => {
     </Button>
   );
 
+  const ListFooterComponent = <View style={tailwind('h-16')} />;
+
   return (
     <>
       <View style={[{ flex: 1 }, tailwind('relative')]}>
@@ -156,6 +158,7 @@ export const SetupsScreen: FC<SetupsScreenProps> = ({ navigation }) => {
           renderItem={renderItem}
           keyExtractor={keyExtractor}
           ItemSeparatorComponent={Divider}
+          ListFooterComponent={ListFooterComponent}
         />
 
         {/* save new setup */}
