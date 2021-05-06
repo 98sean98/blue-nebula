@@ -9,8 +9,8 @@ from .. import utilities
 CHARACTERISTIC_UUID = BluetoothConfig.UUID['relays']
 
 class RelaysCharacteristic(Characteristic):
-    def __inti__(self, service):
-        Charactersitic.__init__(
+    def __init__(self, service):
+        Characteristic.__init__(
             self, CHARACTERISTIC_UUID,
             ['read', 'write'], service)
         self.add_descriptor(RelaysDescriptor(self))
