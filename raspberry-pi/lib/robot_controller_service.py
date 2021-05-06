@@ -9,6 +9,7 @@ from .characteristics.run_idle import RunIdleCharacteristic
 from .characteristics.stepper_motor import StepperMotorsCharacteristic
 from .characteristics.dc_motor import DCMotorsCharacteristic
 from .characteristics.bldc_motor import BLDCMotorsCharacteristic
+from .characteristics.relay import RelaysCharacteristic
 
 SERVICE_UUID = BluetoothConfig.UUID['robot_controller_service']
 
@@ -42,6 +43,7 @@ class RobotControllerService(Service):
         self.add_characteristic(StepperMotorsCharacteristic(self))
         self.add_characteristic(DCMotorsCharacteristic(self))
         self.add_characteristic(BLDCMotorsCharacteristic(self))
+        self.add_characteristic(RelaysCharacteristic(self))
 
     def get_is_device_connected(self):
         return self.is_device_connected
