@@ -41,7 +41,7 @@ export class UpdateMicroAppDataResolver {
       max: { version: true },
     });
 
-    const newVersion = version + 1;
+    const newVersion = (version ?? 0) + 1;
 
     // update the micro app, and create new data
     const updatedMicroApp = await prisma.microApp.update({
