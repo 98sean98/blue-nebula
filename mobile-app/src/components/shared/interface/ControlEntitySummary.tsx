@@ -7,6 +7,8 @@ import { tailwind } from '@styles/tailwind';
 
 import { ControlEntities } from '@models/control-entity';
 
+import { parseFromTypeToString } from '@utilities/functions/parse';
+
 interface ControlEntitySummaryProps extends LayoutProps {
   controlEntities: ControlEntities;
 }
@@ -29,7 +31,7 @@ export const ControlEntitySummary: FC<ControlEntitySummaryProps> = memo(
                     key={j}
                     style={tailwind('flex-row flex-wrap justify-between')}>
                     <Text appearance={'hint'}>{`${sentenceCase(param)}:`}</Text>
-                    <Text>{value}</Text>
+                    <Text>{parseFromTypeToString(value)}</Text>
                   </View>
                 ))
               : null}

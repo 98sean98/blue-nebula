@@ -9,6 +9,7 @@ import {
   BLDCMotor,
   ControlEntityEnum,
   DCMotor,
+  Relay,
   StepperMotor,
 } from '@models/control-entity';
 import { DevControlInterface } from '@models/ui';
@@ -18,6 +19,7 @@ import { RootState } from '@reduxApp';
 import { StepperMotorCard } from './stepper-motor';
 import { DCMotorCard } from './dc-motor';
 import { BLDCMotorCard } from './bldc-motor';
+import { RelayCard } from './relay';
 import {
   BleReadDeviceButton,
   BleRunIdleButton,
@@ -68,6 +70,15 @@ export const TestingMode: FC<TestingModeProps> = () => {
           <BLDCMotorCard
             entity={entity}
             controlEntity={controlEntity as BLDCMotor}
+            controlInterface={DevControlInterface.Testing}
+            style={tailwind('my-2 mx-4')}
+          />
+        );
+      case ControlEntityEnum.Relay:
+        return (
+          <RelayCard
+            entity={entity}
+            controlEntity={controlEntity as Relay}
             controlInterface={DevControlInterface.Testing}
             style={tailwind('my-2 mx-4')}
           />

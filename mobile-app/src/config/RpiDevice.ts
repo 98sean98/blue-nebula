@@ -12,5 +12,6 @@ export class RpiDevice {
     stepperMotors: '00000005-710e-4a5b-8d75-3e5b444bc3cf',
     dcMotors: '00000006-710e-4a5b-8d75-3e5b444bc3cf',
     bldcMotors: '00000007-710e-4a5b-8d75-3e5b444bc3cf',
+    relays: '00000008-710e-4a5b-8d75-3e5b444bc3cf',
   };
 }

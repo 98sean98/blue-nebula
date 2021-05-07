@@ -47,12 +47,17 @@ export const useControlEntities = (): UseControlEntities => {
     read: readBLDCMotors,
     write: writeBLDCMotor,
   } = useBleRpiDeviceCharacteristic('bldcMotors', 'string');
+  const { read: readRelays, write: writeRelay } = useBleRpiDeviceCharacteristic(
+    'relays',
+    'string',
+  );
 
   const readAll: UseControlEntities['readAll'] = useCallback(async () => {
     // decipher strings into control entity objects
     const stepperMotorString = (await readStepperMotors()) as string;
     const dcMotorString = (await readDCMotors()) as string;
     const bldcMotorString = (await readBLDCMotors()) as string;
+    const relayString = (await readRelays()) as string;
     const newStepperMotors = mapStringToControlEntities(
       stepperMotorString,
       ControlEntityEnum.StepperMotor,
@@ -65,21 +70,27 @@ export const useControlEntities = (): UseControlEntities => {
       bldcMotorString,
       ControlEntityEnum.BLDCMotor,
     );
+    const newRelays = mapStringToControlEntities(
+      relayString,
+      ControlEntityEnum.Relay,
+    );
 
     const newControlEntities = {
       ...newStepperMotors,
       ...newDCMotors,
       ...newBLDCMotors,
+      ...newRelays,
     };
 
     dispatch(clearAllControlEntities());
     dispatch(setControlEntities(newControlEntities));
-  }, [dispatch, readStepperMotors, readDCMotors, readBLDCMotors]);
+  }, [dispatch, readStepperMotors, readDCMotors, readBLDCMotors, readRelays]);
 
   const writeAll: UseControlEntities['writeAll'] = useCallback(async () => {
     const stepperMotorStrings: Array<string> = [];
     const dcMotorStrings: Array<string> = [];
     const bldcMotorStrings: Array<string> = [];
+    const relayStrings: Array<string> = [];
 
     Object.values(controlEntities).forEach((controlEntity) => {
       if (checkIfObjectValuesAreDefined(controlEntity)) {
@@ -93,6 +104,9 @@ export const useControlEntities = (): UseControlEntities => {
             break;
           case ControlEntityEnum.BLDCMotor:
             bldcMotorStrings.push(string);
+            break;
+          case ControlEntityEnum.Relay:
+            relayStrings.push(string);
             break;
           default:
             break;
@@ -109,7 +123,16 @@ export const useControlEntities = (): UseControlEntities => {
     for (const string of bldcMotorStrings) {
       await writeBLDCMotor(string);
     }
-  }, [controlEntities, writeStepperMotor, writeDCMotor, writeBLDCMotor]);
+    for (const string of relayStrings) {
+      await writeRelay(string);
+    }
+  }, [
+    controlEntities,
+    writeStepperMotor,
+    writeDCMotor,
+    writeBLDCMotor,
+    writeRelay,
+  ]);
 
   const setControlEntityByParameter: UseControlEntities['setControlEntityByParameter'] = (
     entity,

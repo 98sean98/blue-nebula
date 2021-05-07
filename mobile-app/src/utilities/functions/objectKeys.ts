@@ -2,6 +2,7 @@ import {
   BLDCMotor,
   ControlEntityEnum,
   DCMotor,
+  Relay,
   StepperMotor,
 } from '@models/control-entity';
 import { DeclarableValueType } from '@models/ValueType';
@@ -33,7 +34,7 @@ export const stepperMotorObjectKeys: Array<{
     valueType: 'number',
     description: '0 - clockwise, 1 - counter-clockwise',
   },
-  { key: 'enable', valueType: 'number', description: '0 - Low, 1 - High' },
+  { key: 'enable', valueType: 'number', description: '0 - low, 1 - high' },
 ];
 
 export const dcMotorObjectKeys: Array<{
@@ -90,8 +91,8 @@ export const bldcMotorObjectKeys: Array<{
     valueType: 'number',
     description: '0 - clockwise, 1 - counter-clockwise',
   },
-  { key: 'enable', valueType: 'number', description: '0 - Low, 1 - High' },
-  { key: 'brake', valueType: 'number', description: '0 - Low, 1 - High' },
+  { key: 'enable', valueType: 'number', description: '0 - low, 1 - high' },
+  { key: 'brake', valueType: 'number', description: '0 - low, 1 - high' },
   {
     key: 'duration',
     valueType: 'number',
@@ -99,10 +100,39 @@ export const bldcMotorObjectKeys: Array<{
   },
 ];
 
+export const relayObjectKeys: Array<{
+  key: keyof Relay;
+  valueType: DeclarableValueType;
+  description: string;
+}> = [
+  { key: 'name', valueType: 'string', description: 'a unique name' },
+  {
+    key: 'gpioState',
+    valueType: 'number',
+    description: 'gpio state: 0 - low, 1 - high',
+  },
+  {
+    key: 'enable',
+    valueType: 'number',
+    description: '0 - disable, 1 - enable',
+  },
+  {
+    key: 'permanentChange',
+    valueType: 'boolean',
+    description:
+      'if true, gpio state change does not revert to previous state after running is stopped',
+  },
+  {
+    key: 'duration',
+    valueType: 'number',
+    description: 'relay running duration',
+  },
+];
+
 export const getObjectKeys = (
   controlEntityType: ControlEntityEnum,
 ): Array<{
-  key: keyof StepperMotor | keyof DCMotor | keyof BLDCMotor;
+  key: keyof StepperMotor | keyof DCMotor | keyof BLDCMotor | keyof Relay;
   valueType: DeclarableValueType;
   description: string;
 }> => {
@@ -113,6 +143,8 @@ export const getObjectKeys = (
       return dcMotorObjectKeys;
     case ControlEntityEnum.BLDCMotor:
       return bldcMotorObjectKeys;
+    case ControlEntityEnum.Relay:
+      return relayObjectKeys;
     default:
       throw new Error(
         'unhandled control entity type while getting object keys',
