@@ -1,5 +1,5 @@
 {
-  "name": "scraper-server",
+  "name": "server",
   "version": "0.0.1",
   "description": "server to support the mobile app",
   "scripts": {
