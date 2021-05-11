@@ -29,7 +29,7 @@ class Relay(GenericControlEntity):
         # initialise gpio output
         GPIO.output(gpio_pin, self.parameters['gpio_state'])
 
-        super().__init__(motor_name, run_arguments, multiprocessing_manager)
+        super().__init__(relay_name, multiprocessing_manager = multiprocessing_manager)
 
     def get_pins(self):
         pins = {'gpio_pin': self.gpio_pin}
