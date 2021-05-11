@@ -9,7 +9,7 @@ class Relay(GenericControlEntity):
     # class attribute: list of parameters (order is important)
     parameters_keys = ['gpio_state', 'enable', 'permanent_change', 'duration']
 
-    def __init__(self, relay_name, gpio_pin, initial_parameters, multiprocessing_manager):
+    def __init__(self, relay_name, gpio_pin, multiprocessing_manager = None, initial_parameters = None):
         self.relay_name = relay_name
 
         # pins
