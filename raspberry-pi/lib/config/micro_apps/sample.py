@@ -1,6 +1,7 @@
 from ...control_entities.stepper_motor import StepperMotor
 from ...control_entities.dc_motor import DCMotor
 from ...control_entities.bldc_motor import BLDCMotor
+from ...control_entities.relay import Relay
 from ...control_entities.buzzer import Buzzer
 
 def get_control_entities(multiprocessing_manager):
@@ -36,6 +37,12 @@ def get_control_entities(multiprocessing_manager):
                 0.0003, # sampling_interval
                 multiprocessing_manager
             )
+        },
+        'relays': {
+            'relay_1': Relay(
+                'relay_1', # relay_name
+                3, # gpio_pin
+                multiprocessing_manager)
         },
         'buzzer': Buzzer(
             'buzzer', # buzzer_name
