@@ -7,10 +7,10 @@ on:
   pull_request:
 
 env:
-  DATABASE_URL: postgresql://prisma:scraper-test-secret@localhost:5432/scraper-test?schema=public
-  POSTGRES_USER: prisma
-  POSTGRES_PASSWORD: scraper-test-secret
-  POSTGRES_DB: scraper-test
+  DATABASE_URL: postgresql://postgres:secret@localhost:5432/test_db?schema=public
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secret
+  POSTGRES_DB: test_db
   HUSKY: 0
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up -d
           npm install
-          npm run prisma:migrate
+          npm run prisma:migrate:prod
 
       - name: Test
         run: npm run test
