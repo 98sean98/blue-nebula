@@ -8,4 +8,6 @@ dist
 
 src/artifacts
 
+*.sql
+
 .idea
