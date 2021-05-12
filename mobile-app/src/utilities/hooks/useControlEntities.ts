@@ -42,7 +42,7 @@ export const useControlEntities = (): UseControlEntities => {
   const {
     read: readDCMotors,
     write: writeDCMotor,
-  } = useBleRpiDeviceCharacteristic('stepperMotors', 'string');
+  } = useBleRpiDeviceCharacteristic('dcMotors', 'string');
   const {
     read: readBLDCMotors,
     write: writeBLDCMotor,
