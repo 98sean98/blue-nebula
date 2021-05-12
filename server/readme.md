@@ -46,7 +46,7 @@ Install node modules, migrate the database, and generate prisma bindings.
 npm i
 
 # migrate database
-npm run prisma:migrate
+npm run prisma:migrate:dev
 
 # generate prisma bindings
 npm run prisma:generate
@@ -70,6 +70,18 @@ Go to http://localhost:4000 to get the root url, which is useful as a health che
 
 ## Production setup
 
+### Installation
+
+Install node modules, and apply database migrations.
+
+```sh
+# install node_modules
+npm i
+
+# migrate database
+npm run prisma:migrate:prod
+```
+
 ### Build
 
 Build a `/dist` javascript output to run on a production server.
@@ -82,11 +94,22 @@ _This package script runs `prisma generate` before the actual typescript-javascr
 
 ### Start
 
-Start a built `/dist`.
+Start the server using the built `/dist`.
 
 ```sh
 npm start
 ```
+
+## API Endpoints
+
+These are the implemented api endpoints:
+
+- `/`: GET 200 OK health check
+- `/auth`: restful auth endpoints
+  - `/login`: POST login route
+  - `/logout`: POST logout route
+  - `/isAuthenticated`: GET is authenticated route
+- `/graphql`: POST graphql endpoint
 
 ## Project
 
