@@ -1,4 +1,4 @@
-const main = 'https://scraper-staging.herokuapp.com';
+const main = 'https://eisc.towngas.com/blue-nebula';
 
 export const serverUrl = {
   main,
