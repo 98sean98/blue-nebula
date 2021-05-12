@@ -1,6 +1,6 @@
 {
-  "name": "scraper",
-  "version": "0.0.1",
+  "name": "blue-nebula",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,14 +13,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/98sean98/scraper.git"
+    "url": "git+https://github.com/98sean98/blue-nebula.git"
   },
-  "author": "",
+  "author": "98sean98",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/98sean98/scraper/issues"
+    "url": "https://github.com/98sean98/blue-nebula/issues"
   },
-  "homepage": "https://github.com/98sean98/scraper#readme",
+  "homepage": "https://github.com/98sean98/blue-nebula#readme",
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
     "husky": "^5.1.3",
