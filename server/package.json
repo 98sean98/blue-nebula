@@ -9,7 +9,8 @@
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --fix --ext .ts",
-    "prisma:migrate": "npx prisma migrate dev --name migration --preview-feature",
+    "prisma:migrate:dev": "npx prisma migrate dev --name migration",
+    "prisma:migrate:prod": "npx prisma migrate deploy",
     "prisma:generate": "npx prisma generate",
     "precommit": "tsc --noEmit && lint-staged && npx prisma format"
   },
