@@ -64,7 +64,9 @@ class Relay(GenericControlEntity):
         super().run(is_running)
 
     def stop_running(self):
-        # set the gpio state to the opposite of what it is
-        gpio_state = GPIO.LOW if self.parameters['gpio_state'] == 1 else GPIO.HIGH
+        # if permenant_change is false, set the gpio state to the opposite of what it is
+        permanent_change = self.parameters['permanent_change'] == 1
+        if not permanent_change:
+            new_gpio_state = GPIO.LOW if self.parameters['gpio_state'] == 1 else GPIO.HIGH
 
-        GPIO.output(self.gpio_pin, gpio_state)
+            GPIO.output(self.gpio_pin, new_gpio_state)
