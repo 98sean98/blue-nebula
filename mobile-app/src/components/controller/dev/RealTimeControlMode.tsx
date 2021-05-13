@@ -12,6 +12,7 @@ import {
   ControlEntityEnum,
   DCMotor,
   Enable,
+  Relay,
   StepperMotor,
 } from '@models/control-entity';
 
@@ -20,6 +21,7 @@ import { RootState } from '@reduxApp';
 import { StepperMotorCard } from './stepper-motor';
 import { DCMotorCard } from './dc-motor';
 import { BLDCMotorCard } from './bldc-motor';
+import { RelayCard } from './relay';
 import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
@@ -70,6 +72,15 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
           <BLDCMotorCard
             entity={entity}
             controlEntity={controlEntity as BLDCMotor}
+            controlInterface={DevControlInterface.RealTimeControl}
+            style={tailwind('my-2 mx-4')}
+          />
+        );
+      case ControlEntityEnum.Relay:
+        return (
+          <RelayCard
+            entity={entity}
+            controlEntity={controlEntity as Relay}
             controlInterface={DevControlInterface.RealTimeControl}
             style={tailwind('my-2 mx-4')}
           />

@@ -3,6 +3,8 @@ import RPi.GPIO as GPIO
 
 from .motor import Motor
 
+from .. import utilities
+
 class BLDCMotor(Motor):
     '''A brushless dc motor instance connected to the device'''
 
@@ -65,12 +67,9 @@ class BLDCMotor(Motor):
 
     def run(self, is_running, run_arguments, tracked_parameters):
         # determine pwm duty cycle, pwm frequency, direction, enable, brake, duration
-        pwm_duty_cycle_value = 0
-        if self.parameters['pwm_duty_cycle'] < 0: pwm_duty_cycle_value = 0
-        elif self.parameters['pwm_duty_cycle'] > 100: pwm_duty_cycle_value = 100
-        else: pwm_duty_cycle_value = self.parameters['pwm_duty_cycle']
+        pwm_duty_cycle_value = utilities.bind_pwm_duty_cycle(self.parameters['pwm_duty_cycle'])
 
-        pwm_frequency_value = self.parameters['pwm_frequency'] if self.parameters['pwm_frequency'] > 0 else 1000
+        pwm_frequency_value = utilities.bind_pwm_frequency(self.parameters['pwm_frequency'])
 
         print(f"{self.motor_name}.pwm_duty_cycle = {pwm_duty_cycle_value}, pwm_frequency = {pwm_frequency_value}")
 
@@ -147,3 +146,6 @@ class BLDCMotor(Motor):
         motor_pwm.stop()
 
         sleep(0.5) # pause for a while
+
+        # call parent method
+        super().stop_running()

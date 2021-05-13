@@ -11,7 +11,7 @@ class StepperMotor(Motor):
     # class attribute: list of tracked parameters (order is important)
     tracked_parameters_keys = ['revolution', 'running_duration']
 
-    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager=None, initial_parameters=None):
+    def __init__(self, motor_name, pulse_pin, direction_pin, enable_pin, multiprocessing_manager = None, initial_parameters = None):
         # pins
         self.pulse_pin = pulse_pin
         self.direction_pin = direction_pin
@@ -78,7 +78,10 @@ class StepperMotor(Motor):
         # call parent method to finish running
         super().run(is_running)
 
-    def stop_running(self, run_arguments = None):
+    def stop_running(self):
         # disable the motor by setting enable to LOW
         GPIO.output(self.enable_pin, GPIO.LOW)
         sleep(0.5) # pause for a while
+
+        # call parent method
+        super().stop_running()

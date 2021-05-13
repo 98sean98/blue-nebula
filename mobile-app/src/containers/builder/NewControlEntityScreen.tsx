@@ -168,17 +168,39 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
         <View>
           {controlEntityObjectKeys.ordinary.map(
             ({ key, valueType, description }) => (
-              <ResponsiveInput
-                key={key}
-                label={capitalCase(key)}
-                caption={description}
-                storedValue={getCachedValue(key)}
-                onInputBlur={(value) =>
-                  onParameterChange(key, value, valueType)
-                }
-                keyboardType={getKeyboardType(valueType)}
-                style={tailwind('mt-3')}
-              />
+              <Fragment key={key}>
+                {valueType !== 'boolean' ? (
+                  <ResponsiveInput
+                    label={capitalCase(key)}
+                    caption={description}
+                    storedValue={getCachedValue(key)}
+                    onInputBlur={(value) =>
+                      onParameterChange(key, value, valueType)
+                    }
+                    keyboardType={getKeyboardType(valueType)}
+                    style={tailwind('mt-3')}
+                  />
+                ) : (
+                  <Select
+                    label={capitalCase(key)}
+                    caption={description}
+                    value={getCachedValue(key) ? 'True' : 'False'}
+                    selectedIndex={
+                      getCachedValue(key) ? new IndexPath(0) : new IndexPath(1)
+                    }
+                    onSelect={(index) =>
+                      onParameterChange(
+                        key,
+                        parseFromTypeToString((index as IndexPath).row === 0),
+                        valueType,
+                      )
+                    }
+                    style={tailwind('mt-3')}>
+                    <SelectItem title={'True'} />
+                    <SelectItem title={'False'} />
+                  </Select>
+                )}
+              </Fragment>
             ),
           )}
           {controlEntityObjectKeys.special.map(
@@ -211,7 +233,7 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
                 ) : null}
                 {key === 'enable' ? (
                   <Select
-                    label={capitalCase(key)}
+                    label={'Enable'}
                     caption={description}
                     value={getCachedValue(key) === Enable.Low ? 'Low' : 'High'}
                     selectedIndex={
@@ -230,8 +252,8 @@ export const NewControlEntityScreen: FC<NewControlEntityScreenProps> = ({
                       )
                     }
                     style={tailwind('mt-3')}>
-                    <SelectItem title={'Low'} />
-                    <SelectItem title={'High'} />
+                    <SelectItem title={'Low / Disable'} />
+                    <SelectItem title={'High / Enable'} />
                   </Select>
                 ) : null}
               </Fragment>

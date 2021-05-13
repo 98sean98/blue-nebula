@@ -53,7 +53,10 @@ class GenericControlEntity:
         self.processes = [main, duration]
 
     def terminate_processes(self):
-        self.stop_running(self.run_arguments)
+        if self.run_arguments is not None:
+            self.stop_running(self.run_arguments)
+        else:
+            self.stop_running()
         for p in self.processes:
             if p.is_alive():
                 p.terminate()
@@ -68,7 +71,7 @@ class GenericControlEntity:
         # reset running duration
         self.running_duration.value = 0.0
 
-    def run(self, is_running):
+    def run(self, is_running, run_arguments = None, tracked_parameters = None):
         is_running.value = False
         print(f"{self.name} has finished running!")
 

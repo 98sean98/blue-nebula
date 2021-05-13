@@ -21,15 +21,15 @@ class BLDCMotorsCharacteristic(Characteristic):
         self.add_descriptor(BLDCMotorsDescriptor(self))
 
     def WriteValue(self, value, options):
-        decoded = utilities.decode_motor_info(value, BLDCMotor.parameters_keys)
+        decoded = utilities.decode_control_entity_info(value, BLDCMotor.parameters_keys)
         print("write bldc motor:", decoded)
-        self.service.set_motor('bldc_motor', decoded['motor_name'], decoded['parameters'])
+        self.service.set_control_entity('bldc_motors', decoded['entity_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method, dictionary_keys):
         # encode the motor info for each bldc motor in the service
-        all_bldc_motors = self.service.get_all_motors()['bldc_motors']
+        all_bldc_motors = self.service.get_all_control_entities()['bldc_motors']
         list_of_motors = list(all_bldc_motors.items())
-        encoded_info_list = [utilities.encode_motor_info(motor.motor_name, get_parameters_method(motor), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
+        encoded_info_list = [utilities.encode_control_entity_info(motor.motor_name, get_parameters_method(motor), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_motors) - 1 else []) for i, [motor_name, motor] in enumerate(list_of_motors)]
         # combine motor info into one long list
         return [item for sublist in encoded_info_list for item in sublist]
 

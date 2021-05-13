@@ -94,9 +94,10 @@ class DCMotor(Motor):
             # run duration
             sleep(duration_value)
 
-            # stop the motor as it finished running the required duration
-            self.stop_running(run_arguments)
+        # stop running
+        self.stop_running(run_arguments)
 
+        # call parent method
         super().run(is_running)
 
     def stop_running(self, run_arguments):
@@ -112,3 +113,6 @@ class DCMotor(Motor):
         motor_pwm.stop()
 
         sleep(0.5) # pause for a while
+
+        # call parent method
+        super().stop_running()
