@@ -60,10 +60,13 @@ class Relay(GenericControlEntity):
             # sleep the duration only if permanent_change is false
             if not permanent_change:
                 sleep(duration)
+            else:
+                sleep(0.2) # sleep for a while
 
         # stop running
         self.stop_running()
 
+        # call parent method
         super().run(is_running)
 
     def stop_running(self):
@@ -73,3 +76,6 @@ class Relay(GenericControlEntity):
             new_gpio_state = GPIO.LOW if self.parameters['gpio_state'] == 1 else GPIO.HIGH
 
             GPIO.output(self.gpio_pin, new_gpio_state)
+
+        # call parent method
+        super().stop_running()

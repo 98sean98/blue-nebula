@@ -78,7 +78,10 @@ class StepperMotor(Motor):
         # call parent method to finish running
         super().run(is_running)
 
-    def stop_running(self, run_arguments = None):
+    def stop_running(self):
         # disable the motor by setting enable to LOW
         GPIO.output(self.enable_pin, GPIO.LOW)
         sleep(0.5) # pause for a while
+
+        # call parent method
+        super().stop_running()

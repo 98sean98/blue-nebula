@@ -53,7 +53,10 @@ class GenericControlEntity:
         self.processes = [main, duration]
 
     def terminate_processes(self):
-        self.stop_running(self.run_arguments)
+        if self.run_arguments is not None:
+            self.stop_running(self.run_arguments)
+        else:
+            self.stop_running()
         for p in self.processes:
             if p.is_alive():
                 p.terminate()

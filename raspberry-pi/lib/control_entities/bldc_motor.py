@@ -146,3 +146,6 @@ class BLDCMotor(Motor):
         motor_pwm.stop()
 
         sleep(0.5) # pause for a while
+
+        # call parent method
+        super().stop_running()
