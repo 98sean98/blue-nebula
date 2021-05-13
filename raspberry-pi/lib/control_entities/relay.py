@@ -61,6 +61,9 @@ class Relay(GenericControlEntity):
             if not permanent_change:
                 sleep(duration)
 
+        # stop running
+        self.stop_running()
+
         super().run(is_running)
 
     def stop_running(self):

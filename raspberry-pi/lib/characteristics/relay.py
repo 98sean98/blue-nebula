@@ -23,7 +23,7 @@ class RelaysCharacteristic(Characteristic):
     def get_value(self, get_parameters_method, dictionary_keys):
         # encode the relay info for each relay in the service
         all_relays = self.service.get_all_control_entities()['relays']
-        list_of_relays - list(all_relays.items())
+        list_of_relays = list(all_relays.items())
         encoded_info_list = [utilities.encode_control_entity_info(relay.relay_name, get_parameters_method(relay), dictionary_keys) + (utilities.encode_base64(', ') if i < len(list_of_relays) - 1 else []) for i, [relay_name, relay] in enumerate(list_of_relays)]
         # combine relay info into one long list
         return [item for sublist in encoded_info_list for item in sublist]

@@ -68,7 +68,7 @@ class GenericControlEntity:
         # reset running duration
         self.running_duration.value = 0.0
 
-    def run(self, is_running):
+    def run(self, is_running, run_arguments = None, tracked_parameters = None):
         is_running.value = False
         print(f"{self.name} has finished running!")
 
