@@ -3,6 +3,8 @@ import { isAuthenticated } from './rules';
 
 export const permissions = shield({
   Query: {
+    user: isAuthenticated,
+    users: isAuthenticated,
     simpleUsers: isAuthenticated,
     simpleUser: isAuthenticated,
     microAppDataUsageLog: isAuthenticated,
