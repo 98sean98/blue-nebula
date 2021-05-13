@@ -23,7 +23,7 @@ class StepperMotorsCharacteristic(Characteristic):
     def WriteValue(self, value, options):
         decoded = utilities.decode_control_entity_info(value, StepperMotor.parameters_keys)
         print("write stepper motor:", decoded)
-        self.service.set_control_entity('stepper_motors', decoded['motor_name'], decoded['parameters'])
+        self.service.set_control_entity('stepper_motors', decoded['entity_name'], decoded['parameters'])
 
     def get_value(self, get_parameters_method, dictionary_keys):
         # encode the motor info for each stepper motor in the service
