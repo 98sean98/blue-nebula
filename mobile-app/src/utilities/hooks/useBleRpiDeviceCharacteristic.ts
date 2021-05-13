@@ -49,8 +49,8 @@ export function useBleRpiDeviceCharacteristic(
       throw new Error('characteristic could not be read');
 
     const returnedCharacteristic = await characteristic.read();
-    if (!returnedCharacteristic?.value)
-      throw new Error('read value is undefined');
+    if (returnedCharacteristic.value === null)
+      throw new Error('read value is null');
 
     const decoded = base64.decode(returnedCharacteristic.value);
 
