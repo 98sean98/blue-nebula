@@ -9,6 +9,8 @@ export const mapStringToControlEntities = (
   string: string,
   controlEntityType: ControlEntityEnum,
 ) => {
+  if (string.length === 0) return {};
+
   const stringArray = string.split(', ');
 
   const objectKeysCount = getObjectKeys(controlEntityType).length;
