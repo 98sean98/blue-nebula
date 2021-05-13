@@ -94,8 +94,8 @@ class DCMotor(Motor):
             # run duration
             sleep(duration_value)
 
-            # stop the motor as it finished running the required duration
-            self.stop_running(run_arguments)
+        # stop running
+        self.stop_running(run_arguments)
 
         super().run(is_running)
 
