@@ -20,7 +20,7 @@ class StepperMotor(Motor):
         # parameters dictionary
         self.parameters = {
             'pulse_interval': 150, # in micro seconds
-            'revolution': 200, # number of revolutions
+            'revolution': 0, # number of revolutions
             'pulse_per_revolution': 500,
             'direction': 0, # 0 is LOW, 1 is HIGH
             'enable': 0 # 0 is LOW, 1 is HIGH

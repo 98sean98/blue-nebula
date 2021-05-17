@@ -67,8 +67,13 @@ pip3 install -r requirements.txt
 
 7. Setup the micro app name in the environment
 ```sh
-echo "MICRO_APP_NAME = foo_bar" > .env
+# replace sample with a name of your choice
+echo "MICRO_APP_NAME = sample" > .env
 ```
+
+  7a. [Optional] Create a new micro app
+
+  If you do not see the micro app you want to use, create it yourself. See [here](#new-micro-app).
 
 8. Move services into systemctl
 ```sh
@@ -86,7 +91,16 @@ sudo systemctl enable blue-nebula.target
 sudo systemctl start blue-nebula.target
 ```
 
-## Health check
+## Usage
+Once you manage to set everything up, simply reboot the raspberry pi.
+
+```sh
+sudo reboot
+```
+
+On the reboot and subsequent bootups, the python programs are executed automatically as start up scripts. If you have connected a buzzer to the designated buzzer pins, you should hear health check beeps which indicate the raspberry pi is working nominally, and you should connect to it via the mobile app. Once a bluetooth connection is established between the raspberry pi and a mobile device, the beeps will stop.
+
+## Program health checks
 There are a number of methods to perform health checks on the device.
 
 ### Main python program
@@ -132,22 +146,29 @@ cat "filename"
 # example: cat "2021-05-03 15:12:32.csv"
 ```
 
-## Setting up a new micro app
+## <a name="new-micro-app"></a> Setting up a new micro app
 If you are setting this up to work on a new robot project, you should create a new micro app setup that should be saved into version control.
+
+*Micro app names that are absolutely not permitted*
+- sample
+- micro_app
 
 ```sh
 # go into the micro apps directory
 cd ~/Documents/blue-nebula/raspberry-pi/lib/config/micro_apps
 
-# create a new file
-sudo nano new_micro_app_name.py
+# create a new file, replace new_micro_app_name with a name of your choice
+nano new_micro_app_name.py
 ```
 
 Make sure to write this file according to the [specifications](lib/control_entities) of the control entities you intend to use.
 
 Then, replace the `MICRO_APP_NAME` environment variable in `.env`.
 ```sh
+# go back to the raspberry pi directory
 cd ~/Documents/blue-nebula/raspberry-pi
+
+# replace new_micro_app_name with a name of your choice
 echo "MICRO_APP_NAME = new_micro_app_name" > .env
 ```
 
@@ -159,4 +180,4 @@ sudo systemctl start main.service
 ```
 
 ## Credits
-The GATT server source code is from [Douglass Otwell](https://github.com/douglas6/cputemp). All credit related to the design of the bluetooth interface belongs to him.
+The GATT server source code is from [Douglass Otwell's cpu temperature example](https://github.com/douglas6/cputemp). All credits related to the design of the bluetooth interface belong to him.
