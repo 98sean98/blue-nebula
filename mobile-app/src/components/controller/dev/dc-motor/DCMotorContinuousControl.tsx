@@ -1,12 +1,13 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { DCMotor, Direction, Enable } from '@models/control-entity';
 
-import { renderBleErrorAlert } from '@components/shared/bluetooth';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { mapControlEntityToString } from '@utilities/functions/map';
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
@@ -23,6 +24,8 @@ export const DCMotorContinuousControl: FC<DCMotorContinuousControlProps> = ({
   controlEntity,
   ...props
 }) => {
+  const dispatch = useDispatch();
+
   const { write: writeDcMotor } = useBleRpiDeviceCharacteristic(
     'dcMotors',
     'string',
@@ -58,14 +61,16 @@ export const DCMotorContinuousControl: FC<DCMotorContinuousControlProps> = ({
         }
       } catch (error) {
         console.log(error);
-        renderBleErrorAlert({
-          title: 'Continuous Running Trigger Error',
-          message:
-            'There was an error with sending data to instantaneous start and stop.',
-        });
+        dispatch(
+          setApplicationAlert({
+            title: 'Continuous Running Trigger Error',
+            message:
+              'There was an error with sending data to instantaneous start and stop.',
+          }),
+        );
       }
     },
-    [controlEntity, writeDcMotor, writeRunIdle],
+    [dispatch, controlEntity, writeDcMotor, writeRunIdle],
   );
 
   useEffect(() => {

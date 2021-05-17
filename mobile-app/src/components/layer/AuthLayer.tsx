@@ -5,7 +5,7 @@ import { useLazyQuery } from '@apollo/client';
 import { RootState } from '@reduxApp';
 import { checkIsAuthenticatedAsync, setUser } from '@reduxApp/auth/actions';
 import {
-  setApplicationError,
+  setApplicationAlert,
   setApplicationMode,
 } from '@reduxApp/application/actions';
 
@@ -50,7 +50,7 @@ export const AuthLayer: FC = ({ children }) => {
   useEffect(() => {
     if (typeof error !== 'undefined')
       dispatch(
-        setApplicationError({
+        setApplicationAlert({
           title: 'Fetch User Error',
           message: 'There was an error fetching your user data.',
         }),

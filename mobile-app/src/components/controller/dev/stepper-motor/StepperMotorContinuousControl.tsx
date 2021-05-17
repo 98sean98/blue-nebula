@@ -1,13 +1,14 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { View, ViewProps } from 'react-native';
 import { Button, ButtonProps, Text } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 import { useThrottledCallback } from 'use-debounce';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Direction, Enable, StepperMotor } from '@models/control-entity';
 
-import { renderBleErrorAlert } from '@components/shared/bluetooth';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';
@@ -26,6 +27,8 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
   controlEntity,
   ...props
 }) => {
+  const dispatch = useDispatch();
+
   const {
     write: writeStepperMotor,
     monitor: monitorStepperMotor,
@@ -65,14 +68,22 @@ export const StepperMotorContinuousControl: FC<StepperMotorContinuousControlProp
         }
       } catch (error) {
         console.log(error);
-        renderBleErrorAlert({
-          title: 'Continuous Running Trigger Error',
-          message:
-            'There was an error with sending data to instantaneous start and stop.',
-        });
+        dispatch(
+          setApplicationAlert({
+            title: 'Continuous Running Trigger Error',
+            message:
+              'There was an error with sending data to instantaneous start and stop.',
+          }),
+        );
       }
     },
-    [controlEntity, monitorStepperMotor, writeStepperMotor, writeRunIdle],
+    [
+      dispatch,
+      controlEntity,
+      monitorStepperMotor,
+      writeStepperMotor,
+      writeRunIdle,
+    ],
   );
 
   useEffect(() => {

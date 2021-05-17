@@ -2,7 +2,7 @@ import React, { FC, useCallback, useMemo, useState } from 'react';
 import { FlatList, ListRenderItem } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { Button, Card, Modal, Text } from '@ui-kitten/components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
@@ -17,12 +17,12 @@ import {
 } from '@models/control-entity';
 
 import { RootState } from '@reduxApp';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { StepperMotorCard } from './stepper-motor';
 import { DCMotorCard } from './dc-motor';
 import { BLDCMotorCard } from './bldc-motor';
 import { RelayCard } from './relay';
-import { renderBleErrorAlert } from '@components/shared/bluetooth';
 import { PlatformKeyboardAvoidingView } from '@components/shared/interface';
 
 import { useControlEntities } from '@utilities/hooks';
@@ -34,6 +34,7 @@ interface RealTimeControlModeProps {
 export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
   isFocused,
 }) => {
+  const dispatch = useDispatch();
   const { controlEntities } = useSelector((state: RootState) => state.control);
 
   const data = useMemo(
@@ -121,11 +122,13 @@ export const RealTimeControlMode: FC<RealTimeControlModeProps> = ({
       await writeAll();
     } catch (error) {
       console.log(error);
-      renderBleErrorAlert({
-        title: 'Initialising Real Time Control Error',
-        message:
-          'There was an error while sending LOW signals to the enable pins.',
-      });
+      dispatch(
+        setApplicationAlert({
+          title: 'Initialising Real Time Control Error',
+          message:
+            'There was an error while sending LOW signals to the enable pins.',
+        }),
+      );
     } finally {
       setShouldShowModal(false);
     }

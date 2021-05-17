@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, FlatList, FlatListProps, ListRenderItem } from 'react-native';
+import { FlatList, FlatListProps, ListRenderItem } from 'react-native';
 import {
   Divider,
   ListItem,
@@ -14,6 +14,7 @@ import moment from 'moment';
 import { tailwind } from '@styles/tailwind';
 
 import {
+  setApplicationAlert,
   setFocusedMicroAppHeaders,
   setShouldFetchMicroApp,
 } from '@reduxApp/application/actions';
@@ -206,9 +207,11 @@ export const DataVersionList: FC<DataVersionListProps> = ({ ...props }) => {
       dispatch(setShouldFetchMicroApp(true));
 
       if (typeof response.data !== 'undefined') {
-        Alert.alert(
-          `${microAppName} Version Activation Success`,
-          `This micro app's version has been successfully activated to ${selectedData?.version}!`,
+        dispatch(
+          setApplicationAlert({
+            title: `${microAppName} Version Activation Success`,
+            message: `This micro app's version has been successfully activated to ${selectedData?.version}!`,
+          }),
         );
       }
     } catch (e) {

@@ -4,13 +4,16 @@ import { useTheme } from '@ui-kitten/components';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import semver from 'semver';
+import { useTranslation } from 'react-i18next';
 
 import { tailwind } from '@styles/tailwind';
 
 import { releaseTag } from '@config/environment';
 
+import { ApplicationMode } from '@models/application';
+
 import { RootState } from '@reduxApp';
-import { setApplicationError } from '@reduxApp/application/actions';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { AppDownloadPrompt } from '@components/shared/actionable';
 
@@ -19,19 +22,33 @@ import { getBackdropStyle } from '@utilities/functions/ui';
 export const ApplicationLayer: FC = ({ children }) => {
   const theme = useTheme();
 
+  const { t } = useTranslation('error');
+
   const dispatch = useDispatch();
 
-  const { isLoading, applicationError } = useSelector(
+  const { isLoading, applicationAlert, applicationMode } = useSelector(
     (state: RootState) => state.application,
   );
 
   useEffect(() => {
-    if (typeof applicationError !== 'undefined') {
-      const { title, message } = applicationError;
-      Alert.alert(title, message);
-      dispatch(setApplicationError(undefined));
+    if (typeof applicationAlert !== 'undefined') {
+      if (
+        !applicationAlert.isError ||
+        applicationMode === ApplicationMode.GAME_MASTER
+      ) {
+        // alert is not an error, or application mode is game master
+        const { title, message } = applicationAlert;
+        Alert.alert(title, message);
+      } else {
+        // override the application error alert, and just show a simple generic error from locales
+        const title = t('simple.title'),
+          message = t('simple.message');
+        Alert.alert(title, message);
+      }
+
+      dispatch(setApplicationAlert(undefined));
     }
-  }, [dispatch, applicationError]);
+  }, [dispatch, t, applicationAlert, applicationMode]);
 
   const [
     requiresApplicationUpdate,

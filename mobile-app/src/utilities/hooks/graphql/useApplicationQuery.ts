@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 
 import {
-  setApplicationError,
+  setApplicationAlert,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
@@ -32,7 +32,7 @@ export const useApplicationQuery = (
   useEffect(() => {
     if (typeof returnObject.error !== 'undefined')
       dispatch(
-        setApplicationError({
+        setApplicationAlert({
           title: 'Query Error',
           message: 'There was an error querying for data from the server.',
           ...errorConfig,

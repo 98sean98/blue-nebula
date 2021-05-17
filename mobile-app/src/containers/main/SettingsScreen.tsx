@@ -1,28 +1,27 @@
 import React, { FC, useEffect, useState } from 'react';
-import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text, Toggle } from '@ui-kitten/components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
 
 import { SettingsScreenProps } from '@navigation/main';
 
 import { tailwind } from '@styles/tailwind';
 
+import { releaseTag } from '@config/environment';
+
 import { RootState } from '@reduxApp';
 import { setSettings } from '@reduxApp/settings/actions';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
-import {
-  RenderBleComponent,
-  renderBleErrorAlert,
-} from '@components/shared/bluetooth';
+import { RenderBleComponent } from '@components/shared/bluetooth';
 import { UserAuth, LanguageSelector } from '@components/settings';
 import { MicroAppDownload } from '@components/micro-app';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { checkIfIpAddress } from '@utilities/functions/checkIfIpAddress';
-import { useTranslation } from 'react-i18next';
-import { releaseTag } from '@config/environment';
 
 const styles = StyleSheet.create({
   text: { maxWidth: '75%' },
@@ -47,12 +46,15 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
       console.log('successfully wrote settings data into storage!');
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        'Write Storage Error',
-        'There was an error writing app settings data into your phone storage.',
+      dispatch(
+        setApplicationAlert({
+          title: 'Write Storage Error',
+          message:
+            'There was an error writing app settings data into your phone storage.',
+        }),
       );
     }
-  }, [settings]);
+  }, [dispatch, settings]);
 
   const { shouldMonitorDeviceConnection } = settings;
 
@@ -81,10 +83,12 @@ export const SettingsScreen: FC<SettingsScreenProps> = () => {
       setIpAddress(newIpAddress);
     } catch (e) {
       console.log(e);
-      renderBleErrorAlert({
-        title: 'Read Ip Address Error',
-        message: `There was an error trying to read the device's ip address.`,
-      });
+      dispatch(
+        setApplicationAlert({
+          title: 'Read Ip Address Error',
+          message: `There was an error trying to read the device's ip address.`,
+        }),
+      );
     }
   };
 

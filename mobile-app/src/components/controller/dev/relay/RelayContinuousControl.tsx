@@ -6,13 +6,15 @@ import React, {
   useState,
 } from 'react';
 import { View, ViewProps } from 'react-native';
+import { useDispatch } from 'react-redux';
 
 import { tailwind } from '@styles/tailwind';
 
 import { Enable, GPIOState, Relay } from '@models/control-entity';
 
+import { setApplicationAlert } from '@reduxApp/application/actions';
+
 import { ResponsiveButton } from '@components/shared/actionable';
-import { renderBleErrorAlert } from '@components/shared/bluetooth';
 
 import { useBleRpiDeviceCharacteristic } from '@utilities/hooks';
 import { mapControlEntityToString } from '@utilities/functions/map';
@@ -29,6 +31,8 @@ export const RelayContinuousControl: FC<RelayContinuousControlProps> = ({
   controlEntity,
   ...props
 }) => {
+  const dispatch = useDispatch();
+
   const { write: writeRelays } = useBleRpiDeviceCharacteristic(
     'relays',
     'string',
@@ -57,14 +61,16 @@ export const RelayContinuousControl: FC<RelayContinuousControlProps> = ({
         setGPIOState(newGPIOState);
       } catch (error) {
         console.log(error);
-        renderBleErrorAlert({
-          title: 'Continuous Running Trigger Error',
-          message:
-            'There was an error with sending data to instantaneous start and stop.',
-        });
+        dispatch(
+          setApplicationAlert({
+            title: 'Continuous Running Trigger Error',
+            message:
+              'There was an error with sending data to instantaneous start and stop.',
+          }),
+        );
       }
     },
-    [controlEntity, writeRelays, writeRunIdle],
+    [dispatch, controlEntity, writeRelays, writeRunIdle],
   );
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
-import { Alert, Linking, View, ViewProps } from 'react-native';
+import { Linking, View, ViewProps } from 'react-native';
 import { Button, Layout, Text } from '@ui-kitten/components';
+import { useDispatch } from 'react-redux';
 import { useClipboard } from '@react-native-clipboard/clipboard';
 import { useTranslation } from 'react-i18next';
 
@@ -8,12 +9,16 @@ import { tailwind } from '@styles/tailwind';
 
 import { appDownloadLink } from '@config/environment';
 
+import { setApplicationAlert } from '@reduxApp/application/actions';
+
 import { renderIcon } from '@components/shared/interface';
 
 interface AppDownloadPromptProps extends ViewProps {}
 
 export const AppDownloadPrompt: FC<AppDownloadPromptProps> = ({ ...props }) => {
   const { t } = useTranslation();
+
+  const dispatch = useDispatch();
 
   const [data, setString] = useClipboard();
 
@@ -28,13 +33,16 @@ export const AppDownloadPrompt: FC<AppDownloadPromptProps> = ({ ...props }) => {
         Linking.openURL(url).then();
       } else {
         console.log('unable to open app download url');
-        Alert.alert(
-          'Download Link Error',
-          'There was an error opening the app download link on your device. Please close the app, and scan the QR code if found.',
+        dispatch(
+          setApplicationAlert({
+            title: 'Download Link Error',
+            message:
+              'There was an error opening the app download link on your device. Please close the app, and scan the QR code if found.',
+          }),
         );
       }
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <View {...props} style={[tailwind('items-center'), props?.style ?? {}]}>
