@@ -17,7 +17,15 @@ i18n
     resources,
     lng: 'en',
     fallbackLng: 'en',
-    ns: ['auth', 'bluetooth', 'common', 'control', 'microApp', 'settings'],
+    ns: [
+      'auth',
+      'bluetooth',
+      'common',
+      'control',
+      'error',
+      'microApp',
+      'settings',
+    ],
     defaultNS: 'common',
     fallbackNS: 'common',
     interpolation: {

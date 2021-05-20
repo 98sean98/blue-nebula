@@ -9,15 +9,15 @@ import React, {
 import { Dimensions, ScrollView } from 'react-native';
 import { Button, ButtonProps, Card, Modal, Text } from '@ui-kitten/components';
 import { useIsFocused } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { sentenceCase } from 'change-case';
 
 import { tailwind } from '@styles/tailwind';
 
 import { RootState } from '@reduxApp';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
-import { renderBleErrorAlert } from '@components/shared/bluetooth/renderBleErrorAlert';
 import { ControlEntitySummary } from '@components/shared/interface';
 import { ConfirmationButtonGroup } from '@components/shared/actionable';
 import { ActionTreePathSummary } from '@components/controller/simple';
@@ -39,6 +39,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
   onStateChange,
   ...props
 }) => {
+  const dispatch = useDispatch();
   const { t } = useTranslation('control');
 
   const { controlEntities } = useSelector((state: RootState) => state.control);
@@ -69,7 +70,7 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
     if (typeof onStateChange !== 'undefined') onStateChange(isRunning);
   }, [isRunning, onStateChange]);
 
-  const onButtonPress = async () => {
+  const onButtonPress = useCallback(async () => {
     try {
       // write all control entities to device if the next state is to run
       if (!isRunning) await writeAll();
@@ -77,12 +78,14 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
       setShouldShowModal(true);
     } catch (error) {
       console.log(error);
-      renderBleErrorAlert({
-        title: 'Data Communication Error',
-        message: 'There was something wrong with communicating the device.',
-      });
+      dispatch(
+        setApplicationAlert({
+          title: 'Data Communication Error',
+          message: 'There was something wrong with communicating the device.',
+        }),
+      );
     }
-  };
+  }, [dispatch, writeAll, isRunning]);
 
   const onConfirmPress = useCallback(async () => {
     try {
@@ -90,15 +93,17 @@ export const BleRunIdleButton: FC<BleRunIdleButtonProps> = ({
       await write(nextRunningState);
     } catch (error) {
       console.log(error);
-      renderBleErrorAlert({
-        title: `Confirm ${isRunning ? 'Stop' : 'Start'} Error`,
-        message:
-          'There was something wrong with confirming to start the device.',
-      });
+      dispatch(
+        setApplicationAlert({
+          title: `Confirm ${isRunning ? 'Stop' : 'Start'} Error`,
+          message:
+            'There was something wrong with confirming to start the device.',
+        }),
+      );
     } finally {
       setShouldShowModal(false);
     }
-  }, [write, isRunning]);
+  }, [dispatch, write, isRunning]);
 
   const text = useMemo(
     () => ({

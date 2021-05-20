@@ -1,5 +1,4 @@
 import React, { FC, useCallback, useEffect } from 'react';
-import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { capitalCase } from 'change-case';
@@ -19,12 +18,7 @@ import {
   ConvertibleObject,
   convertObjectWithTimestampKeys,
 } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
-
-const renderAlert = (type: 'reading' | 'writing') =>
-  Alert.alert(
-    `${capitalCase(type)} Storage Error`,
-    `There was an error ${type} app data into your phone storage. Please close and open this app again.`,
-  );
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 export const AsyncStorageLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -33,6 +27,17 @@ export const AsyncStorageLayer: FC = ({ children }) => {
   const { controlEntities } = useSelector((state: RootState) => state.control);
   const { setups, makerConfig } = useSelector(
     (state: RootState) => state.builder,
+  );
+
+  const renderAlert = useCallback(
+    (type: 'reading' | 'writing') =>
+      dispatch(
+        setApplicationAlert({
+          title: `${capitalCase(type)} Storage Error`,
+          message: `There was an error ${type} app data into your phone storage. Please close and open this app again.`,
+        }),
+      ),
+    [dispatch],
   );
 
   const readStorage = useCallback(
@@ -86,7 +91,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(error);
       renderAlert('reading');
     }
-  }, [dispatch, readStorage]);
+  }, [dispatch, renderAlert, readStorage]);
 
   const writeStorage = useCallback(
     async (storageKey: string, storageValue: unknown) => {
@@ -112,7 +117,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(error);
       renderAlert('writing');
     }
-  }, [writeStorage, authorizationToken]);
+  }, [writeStorage, renderAlert, authorizationToken]);
 
   // --- write control entities data when it is updated ---
   useEffect(() => {
@@ -129,7 +134,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(error);
       renderAlert('writing');
     }
-  }, [writeStorage, controlEntities]);
+  }, [writeStorage, renderAlert, controlEntities]);
 
   // --- write setups data when it is updated ---
   useEffect(() => {
@@ -144,7 +149,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(error);
       renderAlert('writing');
     }
-  }, [writeStorage, setups]);
+  }, [writeStorage, renderAlert, setups]);
 
   // --- write setups data when it is updated ---
   useEffect(() => {
@@ -159,7 +164,7 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       console.log(error);
       renderAlert('writing');
     }
-  }, [writeStorage, makerConfig]);
+  }, [writeStorage, renderAlert, makerConfig]);
 
   return <>{children}</>;
 };

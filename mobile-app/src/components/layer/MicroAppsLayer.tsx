@@ -11,7 +11,7 @@ import {
 
 import { RootState } from '@reduxApp';
 import {
-  setApplicationError,
+  setApplicationAlert,
   setFocusedMicroAppHeaders,
   setIsLoading,
   setShouldFetchMicroApp,
@@ -97,7 +97,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
   useEffect(() => {
     if (typeof microAppDataError !== 'undefined')
       dispatch(
-        setApplicationError({
+        setApplicationAlert({
           title: `${microAppName} Data Query Error`,
           message: `There was an error fetching this micro app's data from the server.`,
         }),

@@ -1,4 +1,4 @@
-export * from './ApplicationError';
+export * from './ApplicationAlert';
 export * from './ApplicationMode';
 export * from './MicroApp';
 export * from './MicroAppHeaders';

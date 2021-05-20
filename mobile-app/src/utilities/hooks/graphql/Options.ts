@@ -1,6 +1,6 @@
-import { SetApplicationError } from '@reduxApp/application/types';
+import { SetApplicationAlert } from '@reduxApp/application/types';
 
 export type Options = {
   shouldSetIsLoading?: boolean;
-  errorConfig?: Partial<SetApplicationError>;
+  errorConfig?: Partial<SetApplicationAlert>;
 };

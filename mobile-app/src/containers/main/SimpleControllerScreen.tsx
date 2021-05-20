@@ -7,13 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  Alert,
-  Dimensions,
-  ListRenderItem,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
 import { Text, useTheme } from '@ui-kitten/components';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -43,6 +37,7 @@ import {
 } from '@models/app-maker';
 import { Setup } from '@models/setup';
 import { PageCarouselData } from '@models/ui';
+import { ApplicationMode } from '@models/application';
 
 import { CREATE_MICRO_APP_DATA_USAGE_LOG } from '@api/graphql/microApp';
 
@@ -51,6 +46,7 @@ import {
   clearAllControlEntities,
   setControlEntities,
 } from '@reduxApp/control/actions';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { PressableBoxWithText } from '@components/shared/actionable';
 import {
@@ -65,24 +61,29 @@ import {
   checkIfActionTreeLeadsToSetup,
   traverseActionTree,
 } from '@utilities/functions/app-maker';
-import { ApplicationMode } from '@models/application';
 
 const carouselDimensions = {
   slider: Dimensions.get('window').width,
   item: Dimensions.get('window').width,
 };
 
-const renderAlert = () =>
-  Alert.alert(
-    'Setup Not Found Error',
-    'There was an error while looking for the setup according to the boxes you have pressed. Please contact the app developer about this issue.',
-  );
-
 export const SimpleControllerScreen: FC<SimpleControllerScreenProps> = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
 
   const dispatch = useDispatch();
+
+  const renderAlert = useCallback(
+    () =>
+      dispatch(
+        setApplicationAlert({
+          title: 'Setup Not Found Error',
+          message:
+            'There was an error while looking for the setup according to the boxes you have pressed. Please contact the app developer about this issue.',
+        }),
+      ),
+    [dispatch],
+  );
 
   const {
     setups,

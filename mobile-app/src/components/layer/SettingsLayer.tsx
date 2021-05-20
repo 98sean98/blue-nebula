@@ -1,5 +1,4 @@
 import React, { FC, useEffect } from 'react';
-import { Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import {
   startMonitoringConnectionAsync,
   stopMonitoringConnection,
 } from '@reduxApp/bluetooth/actions';
+import { setApplicationAlert } from '@reduxApp/application/actions';
 
 import { getDeviceLanguage } from '@utilities/functions/ux';
 
@@ -29,9 +29,12 @@ export const SettingsLayer: FC = ({ children }) => {
       readStorage().then();
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        'Read Storage Error',
-        'There was an error retrieving app settings data from your phone storage.',
+      dispatch(
+        setApplicationAlert({
+          title: 'Read Storage Error',
+          message:
+            'There was an error retrieving app settings data from your phone storage.',
+        }),
       );
     }
   }, [dispatch]);

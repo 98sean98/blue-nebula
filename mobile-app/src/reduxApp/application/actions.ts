@@ -1,7 +1,7 @@
 import { ApplicationConstants } from './constants';
 
 import {
-  SetApplicationError,
+  SetApplicationAlert,
   SetApplicationMode,
   SetFocusedMicroAppHeaders,
   SetIsLoading,
@@ -16,12 +16,15 @@ export const setIsLoading = (
     payload,
   } as const);
 
-export const setApplicationError = (
-  payload: SetApplicationError, // required action arg
+export const setApplicationAlert = (
+  payload: SetApplicationAlert, // required action arg
 ) =>
   ({
-    type: ApplicationConstants.SET_APPLICATION_ERROR,
-    payload,
+    type: ApplicationConstants.SET_APPLICATION_ALERT,
+    payload: payload && {
+      isError: payload.isError ?? true, // all alerts are errors unless specified otherwise
+      ...payload,
+    },
   } as const);
 
 export const setApplicationMode = (
@@ -53,8 +56,8 @@ export const setShouldFetchMicroApp = (
  * @guide https://www.carlrippon.com/managing-app-state-with-redux-and-typescript-p1/
  */
 export type SetIsLoadingApplicationAction = ReturnType<typeof setIsLoading>;
-export type SetApplicationErrorApplicationAction = ReturnType<
-  typeof setApplicationError
+export type SetApplicationAlertApplicationAction = ReturnType<
+  typeof setApplicationAlert
 >;
 export type SetApplicationModeApplicationAction = ReturnType<
   typeof setApplicationMode
@@ -68,7 +71,7 @@ export type SetShouldFetchMicroAppApplicationAction = ReturnType<
 
 export type ApplicationActionTypes =
   | SetIsLoadingApplicationAction
-  | SetApplicationErrorApplicationAction
+  | SetApplicationAlertApplicationAction
   | SetApplicationModeApplicationAction
   | SetFocusedMicroAppHeadersApplicationAction
   | SetShouldFetchMicroAppApplicationAction;

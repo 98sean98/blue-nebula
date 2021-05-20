@@ -19,7 +19,7 @@ import { isAuthenticated, login, logout } from '@api/auth';
 
 import { RootState } from '@reduxApp';
 import {
-  setApplicationError,
+  setApplicationAlert,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
@@ -45,7 +45,7 @@ function* loginAsync({
     yield put(setIsLoading(false));
     // set application error
     yield put(
-      setApplicationError({
+      setApplicationAlert({
         title: 'Login Error',
         message: 'There was an error logging you into the server.',
       }),
@@ -86,7 +86,7 @@ function* logoutAsync(): Generator<StrictEffect, void> {
     yield put(setIsLoading(false));
     // set application error
     yield put(
-      setApplicationError({
+      setApplicationAlert({
         title: 'Logout Error',
         message:
           'There was an error logging you out of the server. Please close the app, and restart.',

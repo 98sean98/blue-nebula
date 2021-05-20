@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 
 import {
-  setApplicationError,
+  setApplicationAlert,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
@@ -34,7 +34,7 @@ export const useApplicationMutation = (
   useEffect(() => {
     if (typeof returnObject.error !== 'undefined')
       dispatch(
-        setApplicationError({
+        setApplicationAlert({
           title: 'Mutation Error',
           message: 'There was an error mutating the data in the server.',
           ...errorConfig,

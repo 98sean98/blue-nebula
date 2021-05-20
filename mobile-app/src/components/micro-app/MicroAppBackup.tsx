@@ -12,7 +12,7 @@ import {
 
 import { RootState } from '@reduxApp';
 import {
-  setApplicationError,
+  setApplicationAlert,
   setIsLoading,
 } from '@reduxApp/application/actions';
 
@@ -65,7 +65,7 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
   const dispatchError = useCallback(
     () =>
       dispatch(
-        setApplicationError({
+        setApplicationAlert({
           title: `${microAppName} Backup Error`,
           message:
             'There was an error backing this micro app up to the server.',
@@ -109,9 +109,12 @@ export const MicroAppBackup: FC<MicroAppBackupProps> = ({ ...props }) => {
           variables,
         });
         if (response.data?.updateMicroApp !== null)
-          Alert.alert(
-            `${microAppName} Backup Success`,
-            `This micro app's data has been backed up successfully!`,
+          dispatch(
+            setApplicationAlert({
+              title: `${microAppName} Backup Success`,
+              message: `This micro app's data has been backed up successfully!`,
+              isError: false,
+            }),
           );
 
         setDataName(undefined);
