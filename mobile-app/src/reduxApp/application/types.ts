@@ -5,9 +5,6 @@ import {
 } from '@models/application';
 
 // types and interfaces for feature
-export type Settings = {
-  shouldMonitorDeviceConnection: boolean;
-};
 
 // action payload
 export type SetIsLoading = boolean;
@@ -20,6 +17,8 @@ export type SetFocusedMicroAppHeaders = MicroAppHeaders;
 
 export type SetShouldFetchMicroApp = boolean;
 
+export type SetShouldForceMicroAppUpdate = boolean;
+
 // feature state
 export type ApplicationState = {
   readonly isLoading: boolean;
@@ -27,4 +26,5 @@ export type ApplicationState = {
   readonly applicationMode: ApplicationMode;
   readonly focusedMicroAppHeaders: MicroAppHeaders | undefined;
   readonly shouldFetchMicroApp: boolean;
+  readonly shouldForceMicroAppUpdate: boolean;
 };

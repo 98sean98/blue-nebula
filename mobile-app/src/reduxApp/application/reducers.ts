@@ -11,6 +11,7 @@ const initialState: ApplicationState = {
   // todo: set headers to undefined when first loaded screen showing a dropdown to choose a micro app is built
   focusedMicroAppHeaders: { id: 'some-id', name: 'scraper', activeVersion: 1 },
   shouldFetchMicroApp: false,
+  shouldForceMicroAppUpdate: true, // by default: force updates through micro apps layer
 };
 
 export const applicationReducer = (
@@ -28,6 +29,8 @@ export const applicationReducer = (
       return { ...state, focusedMicroAppHeaders: action.payload };
     case ApplicationConstants.SET_SHOULD_FETCH_MICRO_APP:
       return { ...state, shouldFetchMicroApp: action.payload };
+    case ApplicationConstants.SET_SHOULD_FORCE_MICRO_APP_UPDATE:
+      return { ...state, shouldForceMicroAppUpdate: action.payload };
     default:
       // saga actions would just return the state
       return state;

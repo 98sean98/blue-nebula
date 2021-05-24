@@ -15,6 +15,7 @@ import {
   setFocusedMicroAppHeaders,
   setIsLoading,
   setShouldFetchMicroApp,
+  setShouldForceMicroAppUpdate,
 } from '@reduxApp/application/actions';
 
 import {
@@ -36,7 +37,6 @@ import {
 } from '@utilities/functions/object-convert';
 import { ConvertibleState } from '@utilities/functions/object-convert/convertStateWithTimestamps';
 import { ConvertibleObject } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
-import { useApplicationQuery } from '@utilities/hooks';
 
 export const MicroAppsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -44,9 +44,11 @@ export const MicroAppsLayer: FC = ({ children }) => {
   const authorizationToken = useSelector(
     (state: RootState) => state.auth.authorizationToken,
   );
-  const { focusedMicroAppHeaders, shouldFetchMicroApp } = useSelector(
-    (state: RootState) => state.application,
-  );
+  const {
+    focusedMicroAppHeaders,
+    shouldFetchMicroApp,
+    shouldForceMicroAppUpdate,
+  } = useSelector((state: RootState) => state.application);
 
   const microAppName = useMemo(
     () => focusedMicroAppHeaders?.name ?? 'Micro App',
@@ -61,48 +63,77 @@ export const MicroAppsLayer: FC = ({ children }) => {
     authorizationToken,
   ]);
 
-  const { data: microAppHeaders } = useApplicationQuery(
-    [
-      GET_MICRO_APP_HEADERS,
-      {
-        variables: microAppQueryVariables,
-        fetchPolicy: 'network-only',
-      },
-    ],
+  const [
+    loadAppHeaders,
     {
-      errorConfig: {
-        title: `${microAppName} Headers Query Error`,
-        message: `There was an error fetching this micro app's headers from the server.`,
-      },
+      data: microAppHeaders,
+      loading: microAppHeadersLoading,
+      error: microAppHeadersError,
+      called: microAppHeadersCalled,
     },
-  );
+  ] = useLazyQuery(GET_MICRO_APP_HEADERS, {
+    fetchPolicy: 'network-only',
+  });
+
   const [
     loadAppData,
     {
-      data: microAppData,
-      loading: microAppDataLoading,
-      error: microAppDataError,
-      called: microAppDataCalled,
+      data: microAppActiveDataData,
+      loading: microAppActiveDataLoading,
+      error: microAppActiveDataError,
+      called: microAppActiveDataCalled,
     },
   ] = useLazyQuery(GET_MICRO_APP_WITH_ACTIVE_DATA, {
     fetchPolicy: 'network-only',
   });
 
-  // loading effect
+  // loading effects
   useEffect(() => {
-    dispatch(setIsLoading(microAppDataLoading));
-  }, [dispatch, microAppDataLoading]);
+    dispatch(setIsLoading(microAppHeadersLoading));
+  }, [dispatch, microAppHeadersLoading]);
+  useEffect(() => {
+    dispatch(setIsLoading(microAppActiveDataLoading));
+  }, [dispatch, microAppActiveDataLoading]);
 
-  // error effect
+  // error effects, which are only thrown if shouldForceMicroAppUpdate is true, or that shouldFetchMicroApp is true
   useEffect(() => {
-    if (typeof microAppDataError !== 'undefined')
-      dispatch(
-        setApplicationAlert({
-          title: `${microAppName} Data Query Error`,
-          message: `There was an error fetching this micro app's data from the server.`,
-        }),
-      );
-  }, [dispatch, microAppDataError, microAppName]);
+    if (shouldForceMicroAppUpdate || shouldFetchMicroApp) {
+      if (typeof microAppHeadersError !== 'undefined') {
+        dispatch(
+          setApplicationAlert({
+            title: `${microAppName} Headers Query Error`,
+            message: `There was an error fetching this micro app's headers from the server.`,
+          }),
+        );
+      }
+
+      if (typeof microAppActiveDataError !== 'undefined')
+        dispatch(
+          setApplicationAlert({
+            title: `${microAppName} Data Query Error`,
+            message: `There was an error fetching this micro app's data from the server.`,
+          }),
+        );
+    }
+  }, [
+    dispatch,
+    shouldFetchMicroApp,
+    shouldForceMicroAppUpdate,
+    microAppHeadersError,
+    microAppActiveDataError,
+    microAppName,
+  ]);
+
+  // query the micro app headers lazily
+  useEffect(() => {
+    if (shouldFetchMicroApp || !microAppHeadersCalled)
+      loadAppHeaders({ variables: microAppQueryVariables });
+  }, [
+    shouldFetchMicroApp,
+    microAppHeadersCalled,
+    loadAppHeaders,
+    microAppQueryVariables,
+  ]);
 
   // set focused micro app headers
   useEffect(() => {
@@ -124,7 +155,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
     if (shouldFetchMicroApp) {
       loadAppData({ variables: microAppQueryVariables });
       dispatch(setShouldFetchMicroApp(false));
-    } else if (!microAppDataCalled) {
+    } else if (!microAppActiveDataCalled) {
       const timeout = setTimeout(() => {
         if (!isLoggedIn) loadAppData({ variables: microAppQueryVariables });
       }, 1000);
@@ -134,15 +165,18 @@ export const MicroAppsLayer: FC = ({ children }) => {
     dispatch,
     loadAppData,
     microAppQueryVariables,
-    microAppDataCalled,
+    microAppActiveDataCalled,
     isLoggedIn,
     shouldFetchMicroApp,
   ]);
 
   // destructure micro app data, and put into redux store
   useEffect(() => {
-    if (typeof microAppData !== 'undefined' && microAppData !== null) {
-      const microAppWithActiveData = microAppData.microAppWithActiveData as MicroAppWithActiveData;
+    if (
+      typeof microAppActiveDataData !== 'undefined' &&
+      microAppActiveDataData !== null
+    ) {
+      const microAppWithActiveData = microAppActiveDataData.microAppWithActiveData as MicroAppWithActiveData;
       // if null, escape function execution
       if (!microAppWithActiveData?.activeMicroAppData) return;
 
@@ -179,8 +213,11 @@ export const MicroAppsLayer: FC = ({ children }) => {
       }
 
       console.log(`finished loading the micro app's data into redux!`);
+
+      // set shouldForceMicroAppUpdate to false so that errors would not be thrown on non-first loads
+      dispatch(setShouldForceMicroAppUpdate(false));
     }
-  }, [dispatch, microAppData]);
+  }, [dispatch, microAppActiveDataData]);
 
   return <>{children}</>;
 };

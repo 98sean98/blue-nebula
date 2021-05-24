@@ -3,14 +3,6 @@ import { Alert } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { useTranslation } from 'react-i18next';
 
-import { serverUrl } from '@config/environment';
-
-NetInfo.configure({
-  reachabilityUrl: serverUrl.main,
-  reachabilityTest: async (response) => response.status === 200,
-  reachabilityRequestTimeout: 10 * 1000, // 10 seconds
-});
-
 export const NetworkLayer: FC = ({ children }) => {
   const { t } = useTranslation();
 

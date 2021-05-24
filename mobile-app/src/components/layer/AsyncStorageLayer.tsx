@@ -5,6 +5,15 @@ import { capitalCase } from 'change-case';
 
 import { RootState } from '@reduxApp';
 import { setAuthorizationToken } from '@reduxApp/auth/actions';
+import {
+  setApplicationAlert,
+  setFocusedMicroAppHeaders,
+  setShouldForceMicroAppUpdate,
+} from '@reduxApp/application/actions';
+import {
+  SetFocusedMicroAppHeaders,
+  SetShouldForceMicroAppUpdate,
+} from '@reduxApp/application/types';
 import { setControlEntities } from '@reduxApp/control/actions';
 import { SetControlEntities } from '@reduxApp/control/types';
 import { setMakerConfig, setSetups } from '@reduxApp/builder/actions';
@@ -18,12 +27,14 @@ import {
   ConvertibleObject,
   convertObjectWithTimestampKeys,
 } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
-import { setApplicationAlert } from '@reduxApp/application/actions';
 
 export const AsyncStorageLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const { authorizationToken } = useSelector((state: RootState) => state.auth);
+  const { focusedMicroAppHeaders, shouldForceMicroAppUpdate } = useSelector(
+    (state: RootState) => state.application,
+  );
   const { controlEntities } = useSelector((state: RootState) => state.control);
   const { setups, makerConfig } = useSelector(
     (state: RootState) => state.builder,
@@ -62,6 +73,25 @@ export const AsyncStorageLayer: FC = ({ children }) => {
               (state as { authorizationToken: string }).authorizationToken,
             ),
           );
+      });
+      readStorage('application').then((state) => {
+        if (typeof state !== 'undefined') {
+          if (typeof (state as any).focusedMicroAppHeaders !== 'undefined')
+            dispatch(
+              setFocusedMicroAppHeaders(
+                (state as { focusedMicroAppHeaders: SetFocusedMicroAppHeaders })
+                  .focusedMicroAppHeaders,
+              ),
+            );
+          if (typeof (state as any).shouldForceMicroAppUpdate !== 'undefined')
+            dispatch(
+              setShouldForceMicroAppUpdate(
+                (state as {
+                  shouldForceMicroAppUpdate: SetShouldForceMicroAppUpdate;
+                }).shouldForceMicroAppUpdate,
+              ),
+            );
+        }
       });
       readStorage('controlEntities').then((state) => {
         if (typeof state !== 'undefined')
@@ -118,6 +148,27 @@ export const AsyncStorageLayer: FC = ({ children }) => {
       renderAlert('writing');
     }
   }, [writeStorage, renderAlert, authorizationToken]);
+
+  // --- write application data when it is updated ---
+  useEffect(() => {
+    try {
+      // artificially delay updates to async storage by 500ms to avoid writing empty state on initial load
+      const timeout = setTimeout(() => {
+        const state = { focusedMicroAppHeaders, shouldForceMicroAppUpdate };
+        writeStorage('application', state).then();
+        console.log('successfully wrote app application data into storage!');
+      }, 500);
+      return () => clearTimeout(timeout);
+    } catch (error) {
+      console.log(error);
+      renderAlert('writing');
+    }
+  }, [
+    writeStorage,
+    renderAlert,
+    focusedMicroAppHeaders,
+    shouldForceMicroAppUpdate,
+  ]);
 
   // --- write control entities data when it is updated ---
   useEffect(() => {
