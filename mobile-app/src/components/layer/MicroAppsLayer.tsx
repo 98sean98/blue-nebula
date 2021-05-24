@@ -36,7 +36,6 @@ import {
 } from '@utilities/functions/object-convert';
 import { ConvertibleState } from '@utilities/functions/object-convert/convertStateWithTimestamps';
 import { ConvertibleObject } from '@utilities/functions/object-convert/convertObjectWithTimestampKeys';
-import { useApplicationQuery } from '@utilities/hooks';
 
 export const MicroAppsLayer: FC = ({ children }) => {
   const dispatch = useDispatch();
@@ -61,48 +60,57 @@ export const MicroAppsLayer: FC = ({ children }) => {
     authorizationToken,
   ]);
 
-  const { data: microAppHeaders } = useApplicationQuery(
-    [
-      GET_MICRO_APP_HEADERS,
-      {
-        variables: microAppQueryVariables,
-        fetchPolicy: 'network-only',
-      },
-    ],
+  const [
+    loadAppHeaders,
     {
-      errorConfig: {
-        title: `${microAppName} Headers Query Error`,
-        message: `There was an error fetching this micro app's headers from the server.`,
-      },
+      data: microAppHeaders,
+      loading: microAppHeadersLoading,
+      error: microAppHeadersError,
     },
-  );
+  ] = useLazyQuery(GET_MICRO_APP_HEADERS, {
+    variables: microAppQueryVariables,
+    fetchPolicy: 'network-only',
+  });
+
   const [
     loadAppData,
     {
-      data: microAppData,
-      loading: microAppDataLoading,
-      error: microAppDataError,
-      called: microAppDataCalled,
+      data: microAppActiveDataData,
+      loading: microAppActiveDataLoading,
+      error: microAppActiveDataError,
+      called: microAppActiveDataCalled,
     },
   ] = useLazyQuery(GET_MICRO_APP_WITH_ACTIVE_DATA, {
     fetchPolicy: 'network-only',
   });
 
-  // loading effect
+  // loading effects
   useEffect(() => {
-    dispatch(setIsLoading(microAppDataLoading));
-  }, [dispatch, microAppDataLoading]);
+    dispatch(setIsLoading(microAppHeadersLoading));
+  }, [dispatch, microAppHeadersLoading]);
+  useEffect(() => {
+    dispatch(setIsLoading(microAppActiveDataLoading));
+  }, [dispatch, microAppActiveDataLoading]);
 
   // error effect
   useEffect(() => {
-    if (typeof microAppDataError !== 'undefined')
+    if (typeof microAppHeadersError !== 'undefined') {
+      dispatch(
+        setApplicationAlert({
+          title: `${microAppName} Headers Query Error`,
+          message: `There was an error fetching this micro app's headers from the server.`,
+        }),
+      );
+    }
+
+    if (typeof microAppActiveDataError !== 'undefined')
       dispatch(
         setApplicationAlert({
           title: `${microAppName} Data Query Error`,
           message: `There was an error fetching this micro app's data from the server.`,
         }),
       );
-  }, [dispatch, microAppDataError, microAppName]);
+  }, [dispatch, microAppHeadersError, microAppActiveDataError, microAppName]);
 
   // set focused micro app headers
   useEffect(() => {
@@ -118,13 +126,18 @@ export const MicroAppsLayer: FC = ({ children }) => {
     }
   }, [dispatch, microAppHeaders]);
 
+  // query the micro app headers lazily
+  useEffect(() => {
+    loadAppHeaders({ variables: microAppQueryVariables });
+  }, [loadAppHeaders, microAppQueryVariables]);
+
   // query the micro app data lazily based on the headers
   useEffect(() => {
     // delay the first call to check if the user is logged in; if the user is logged in, do not make first call
     if (shouldFetchMicroApp) {
       loadAppData({ variables: microAppQueryVariables });
       dispatch(setShouldFetchMicroApp(false));
-    } else if (!microAppDataCalled) {
+    } else if (!microAppActiveDataCalled) {
       const timeout = setTimeout(() => {
         if (!isLoggedIn) loadAppData({ variables: microAppQueryVariables });
       }, 1000);
@@ -134,15 +147,18 @@ export const MicroAppsLayer: FC = ({ children }) => {
     dispatch,
     loadAppData,
     microAppQueryVariables,
-    microAppDataCalled,
+    microAppActiveDataCalled,
     isLoggedIn,
     shouldFetchMicroApp,
   ]);
 
   // destructure micro app data, and put into redux store
   useEffect(() => {
-    if (typeof microAppData !== 'undefined' && microAppData !== null) {
-      const microAppWithActiveData = microAppData.microAppWithActiveData as MicroAppWithActiveData;
+    if (
+      typeof microAppActiveDataData !== 'undefined' &&
+      microAppActiveDataData !== null
+    ) {
+      const microAppWithActiveData = microAppActiveDataData.microAppWithActiveData as MicroAppWithActiveData;
       // if null, escape function execution
       if (!microAppWithActiveData?.activeMicroAppData) return;
 
@@ -180,7 +196,7 @@ export const MicroAppsLayer: FC = ({ children }) => {
 
       console.log(`finished loading the micro app's data into redux!`);
     }
-  }, [dispatch, microAppData]);
+  }, [dispatch, microAppActiveDataData]);
 
   return <>{children}</>;
 };
