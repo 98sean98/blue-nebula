@@ -13,7 +13,10 @@ import { releaseTag } from '@config/environment';
 import { ApplicationMode } from '@models/application';
 
 import { RootState } from '@reduxApp';
-import { setApplicationAlert } from '@reduxApp/application/actions';
+import {
+  setApplicationAlert,
+  setShouldForceMicroAppUpdate,
+} from '@reduxApp/application/actions';
 
 import { AppDownloadPrompt } from '@components/shared/actionable';
 
@@ -75,9 +78,13 @@ export const ApplicationLayer: FC = ({ children }) => {
     };
 
     getLatestReleaseTag().then((tag) => {
-      setRequiresApplicationUpdate(tag !== releaseTag);
+      const newRequiresApplicationUpdate = tag !== releaseTag;
+      setRequiresApplicationUpdate(newRequiresApplicationUpdate);
+      // if the mobile app needs to be updated, set the micro apps force update state to true as well to ensure that it will also be updated
+      if (newRequiresApplicationUpdate)
+        dispatch(setShouldForceMicroAppUpdate(true));
     });
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
