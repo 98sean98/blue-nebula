@@ -77,7 +77,7 @@ echo "MICRO_APP_NAME = sample" > .env
 
 8. Move services into systemctl
 ```sh
-sudo cp services/* /etc/systemd/system/
+sudo cp systemd/* /etc/systemd/system/
 ```
 
 9. Start and enable services
@@ -112,7 +112,7 @@ systemctl status main.service
 
 - If you see a `loaded` keyword highlighted in grey, that means the service is loaded but not started. Simply start the service by running
 ```sh
-sudo systemctl run main.service
+sudo systemctl start main.service
 ```
 You should also enable the service so that it runs automatically on rasperry pi startup.
 ```sh
