@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { tailwind } from '@styles/tailwind';
 
-import { releaseTag } from '@config/environment';
+import { githubTagsUrl, releaseTag } from '@config/environment';
 
 import { ApplicationMode } from '@models/application';
 
@@ -61,7 +61,7 @@ export const ApplicationLayer: FC = ({ children }) => {
   useEffect(() => {
     const getLatestReleaseTag = async (): Promise<string> => {
       try {
-        const url = `https://api.github.com/repos/98sean98/blue-nebula/tags`;
+        const url = githubTagsUrl;
         const response = await axios.get(url);
 
         if (typeof response.data === 'undefined')
