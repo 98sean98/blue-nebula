@@ -7,6 +7,6 @@ export const serverUrl = {
 };
 
 // manually update the release tag in conjunction with the tag on the latest release on github repo
-export const releaseTag = 'v1.0.0';
+export const releaseTag = 'v1.0.1';
 
 export const appDownloadLink = 'https://eisc.towngas.com/APK/src.apk';
