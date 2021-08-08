@@ -77,8 +77,13 @@ export const ApplicationLayer: FC = ({ children }) => {
       }
     };
 
-    getLatestReleaseTag().then((tag) => {
-      const newRequiresApplicationUpdate = tag !== releaseTag;
+    getLatestReleaseTag().then((latestTag) => {
+      // check if the current app version satisfies latest tag up to the same minor version
+      const version = `v${semver.major(latestTag)}.${semver.minor(latestTag)}`;
+      const newRequiresApplicationUpdate = !semver.satisfies(
+        releaseTag,
+        version,
+      );
       setRequiresApplicationUpdate(newRequiresApplicationUpdate);
       // if the mobile app needs to be updated, set the micro apps force update state to true as well to ensure that it will also be updated
       if (newRequiresApplicationUpdate)
