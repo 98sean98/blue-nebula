@@ -7,7 +7,7 @@ export const serverUrl = {
 };
 
 // manually update the release tag in conjunction with the tag on the latest release on github repo
-export const releaseTag = 'v1.0.1';
+export const releaseTag = 'v1.0.2';
 export const githubTagsUrl =
   'https://api.github.com/repos/98sean98/blue-nebula/tags';
 

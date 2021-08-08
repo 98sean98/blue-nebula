@@ -2,6 +2,40 @@
 
 This is a bare [React Native](https://reactnative.dev/) Project, not managed through [Expo](https://expo.io/).
 
+## Available commands
+
+### Start
+
+Start the metro server.
+
+```shell
+npm start
+```
+
+#### Android
+
+On android studio, `Run` the application in a simulator.
+
+#### iOS
+
+On XCode, `Run` the application in a simulator.
+
+### Build
+
+#### Android
+
+Use android assemble release to build a signed apk.
+
+```shell
+npm run build:android:assembleRelease
+```
+
+The generated apk for release can be found as `android/app/build/outputs/apk/release/app-release.apk`.
+
+#### iOS
+
+Use XCode's app build tool.
+
 ### Renaming this application
 
 Consider renaming this application using [`react-native-rename`](https://www.npmjs.com/package/react-native-rename) tool.
