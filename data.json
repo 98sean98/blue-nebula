@@ -1,0 +1,449 @@
+{
+  "controlEntities": {
+    "screw_motor": {
+      "name": "screw_motor",
+      "pulseInterval": 880,
+      "revolution": 40,
+      "pulsePerRevolution": 3200,
+      "direction": 0,
+      "enable": 1,
+      "type": "StepperMotor"
+    },
+    "bldc_motor": {
+      "name": "bldc_motor",
+      "pwmDutyCycle": 100,
+      "pwmFrequency": 1000,
+      "direction": 1,
+      "enable": 1,
+      "brake": 0,
+      "duration": 300,
+      "type": "BLDCMotor"
+    }
+  },
+  "setups": {
+    "dn400 sdr17.6 (ok)": {
+      "name": "dn400 sdr17.6 (ok)",
+      "description": "400mm diameter pipe with sdr 17.6",
+      "createdAt": "2021-03-02T08:00:16.410Z",
+      "updatedAt": "2021-09-24T00:42:08.657Z",
+      "fields": {
+        "Diameter": "400",
+        "SDR": "17.6"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 880,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 360,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 300
+    },
+    "dn400 sdr11 (not yet)": {
+      "name": "dn400 sdr11 (not yet)",
+      "createdAt": "2021-04-16T10:40:41.035Z",
+      "updatedAt": "2021-04-16T10:45:28.299Z",
+      "fields": {},
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 700,
+          "revolution": 20000,
+          "pulsePerRevolution": 500,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 360,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 240
+    },
+    "dn315 sdr11 (not yet)": {
+      "name": "dn315 sdr11 (not yet)",
+      "createdAt": "2021-04-16T10:48:47.494Z",
+      "updatedAt": "2021-09-24T00:42:08.657Z",
+      "fields": {
+        "DN": "315",
+        "SDR": "11"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 820,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 320,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 300
+    },
+    "dn355 sdr17.6 (ok)": {
+      "name": "dn355 sdr17.6 (ok)",
+      "description": "",
+      "createdAt": "2021-04-16T10:49:36.077Z",
+      "updatedAt": "2021-09-24T00:50:33.640Z",
+      "fields": {
+        "dn": "355",
+        "sdr": "17.6"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 820,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 320,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 320
+    },
+    "dn355 sdr11 (not yet)": {
+      "name": "dn355 sdr11 (not yet)",
+      "createdAt": "2021-04-16T10:51:19.202Z",
+      "updatedAt": "2021-04-16T10:52:07.179Z",
+      "fields": {
+        "DN": "355",
+        "SDR": "11"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 700,
+          "revolution": 20000,
+          "pulsePerRevolution": 500,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 360,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 180
+    },
+    "dn250 sdr11 (not yet)": {
+      "name": "dn250 sdr11 (not yet)",
+      "createdAt": "2021-04-16T10:54:25.975Z",
+      "updatedAt": "2021-04-16T10:55:18.400Z",
+      "fields": {
+        "DN": "250",
+        "SDR": "11"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 700,
+          "revolution": 20000,
+          "pulsePerRevolution": 500,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 360,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 90
+    },
+    "dn250 sdr17.6 (ok)": {
+      "name": "dn250 sdr17.6 (ok)",
+      "createdAt": "2021-04-16T10:52:22.276Z",
+      "updatedAt": "2021-09-24T00:55:40.562Z",
+      "fields": {
+        "DN": "250",
+        "SDR": "17.6"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 790,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 80,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 280,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 280
+    },
+    "dn200 sdr17.6 (ok)": {
+      "name": "dn200 sdr17.6 (ok)",
+      "createdAt": "2021-04-16T10:55:51.979Z",
+      "updatedAt": "2021-09-24T00:56:57.132Z",
+      "fields": {
+        "DN": "200",
+        "SDR": "17.6"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 720,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 70,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 280,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 280
+    },
+    "dn200 sdr11 (not yet)": {
+      "name": "dn200 sdr11 (not yet)",
+      "createdAt": "2021-04-16T10:57:08.171Z",
+      "updatedAt": "2021-04-16T10:58:06.242Z",
+      "fields": {
+        "DN": "200",
+        "SDR": "11"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 700,
+          "revolution": 20000,
+          "pulsePerRevolution": 500,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 360,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 60
+    },
+    "dn315 sdr17.6 (ok)": {
+      "name": "dn315 sdr17.6 (ok)",
+      "createdAt": "2021-04-16T10:46:32.302Z",
+      "updatedAt": "2021-09-24T00:45:26.482Z",
+      "fields": {
+        "Dn": "315",
+        "SDR": "17.6"
+      },
+      "controlEntitiesState": {
+        "screw_motor": {
+          "name": "screw_motor",
+          "pulseInterval": 820,
+          "revolution": 47,
+          "pulsePerRevolution": 3200,
+          "direction": 0,
+          "enable": 1,
+          "type": "StepperMotor"
+        },
+        "bldc_motor": {
+          "name": "bldc_motor",
+          "pwmDutyCycle": 100,
+          "pwmFrequency": 1000,
+          "direction": 1,
+          "enable": 1,
+          "brake": 0,
+          "duration": 300,
+          "type": "BLDCMotor"
+        }
+      },
+      "countdownTimer": 300
+    }
+  },
+  "makerConfig": {
+    "pages": {
+      "0": {
+        "layout": {
+          "rows": 3,
+          "columns": 2,
+          "boxCount": 5
+        },
+        "boxes": {
+          "0": {
+            "title": "DN200"
+          },
+          "1": {
+            "title": "DN250"
+          },
+          "2": {
+            "title": "DN315"
+          },
+          "3": {
+            "title": "DN355"
+          },
+          "4": {
+            "title": "DN400"
+          }
+        },
+        "styles": {
+          "box": {
+            "text": {
+              "fontSize": 30
+            }
+          }
+        },
+        "title": "\u8acb\u9078\u64c7\u5589\u7ba1\u5c3a\u5bf8"
+      },
+      "1": {
+        "layout": {
+          "rows": 2,
+          "columns": 1,
+          "boxCount": 2
+        },
+        "boxes": {
+          "0": {
+            "title": "SDR 17.6"
+          },
+          "1": {
+            "title": "SDR 11"
+          }
+        },
+        "styles": {
+          "box": {
+            "text": {
+              "fontSize": 30
+            }
+          }
+        },
+        "title": "\u8acb\u9078\u64c7SDR"
+      }
+    },
+    "actions": {
+      "children": [
+        {
+          "boxKey": "0",
+          "fullChildrenCount": 2,
+          "children": [
+            {
+              "boxKey": "0",
+              "setupKey": "dn200 sdr17.6 (ok)"
+            }
+          ]
+        },
+        {
+          "boxKey": "1",
+          "fullChildrenCount": 2,
+          "children": [
+            {
+              "boxKey": "0",
+              "setupKey": "dn250 sdr17.6 (ok)"
+            }
+          ]
+        },
+        {
+          "boxKey": "2",
+          "fullChildrenCount": 2,
+          "children": [
+            {
+              "boxKey": "0",
+              "setupKey": "dn315 sdr17.6 (ok)"
+            }
+          ]
+        },
+        {
+          "boxKey": "3",
+          "fullChildrenCount": 2,
+          "children": [
+            {
+              "boxKey": "0",
+              "setupKey": "dn355 sdr17.6 (ok)"
+            }
+          ]
+        },
+        {
+          "boxKey": "4",
+          "fullChildrenCount": 2,
+          "children": [
+            {
+              "boxKey": "0",
+              "setupKey": "dn400 sdr17.6 (ok)"
+            }
+          ]
+        }
+      ],
+      "fullChildrenCount": 5
+    },
+    "updatedAt": "2021-09-24T00:57:17.393Z"
+  }
+}
