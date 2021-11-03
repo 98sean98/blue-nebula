@@ -30,6 +30,8 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
   }
   ```
 
+  To save the changes in this file, press `Ctrl + X`, followed by `y`, then hit `Enter`.
+
   Then, run
   ```sh
   wpa_cli -i wlan0 reconfigure
