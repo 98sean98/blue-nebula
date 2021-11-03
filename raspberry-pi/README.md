@@ -18,15 +18,15 @@ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
   update_config=1
   country=HK
 
-  network = {
-  	ssid = "WIFI_NAME"
-  	psk = "WIFI_PASSWORD"
+  network={
+  	ssid="WIFI_NAME"
+  	psk="WIFI_PASSWORD"
   }
 
   // example (do not write the following)
-  network = {
-  	ssid = "Sean's iPhone"
-  	psk = "Iamawesome"
+  network={
+  	ssid="Sean's iPhone"
+  	psk="Iamawesome"
   }
   ```
 
