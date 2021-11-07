@@ -5,82 +5,113 @@ Python GATT bluetooth server for the Raspberry Pi.
 ## Setup
 There are a number of steps required to setup the Raspberry Pi. Please read this document very carefully.
 
-0. Open a terminal
+### Prerequisite
+Open a **terminal** program.
 
-1. Setup wifi
+Setup wifi
 ```sh
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 ```
 
-  Write the following
-  ```text
-  ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-  update_config=1
-  country=HK
+Write the following
+```text
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=HK
 
-  network = {
-  	ssid = "WIFI_NAME"
-  	psk = "WIFI_PASSWORD"
-  }
+network={
+  ssid="WIFI_NAME"
+  psk="WIFI_PASSWORD"
+}
 
-  // example (do not write the following)
-  network = {
-  	ssid = "Sean's iPhone"
-  	psk = "Iamawesome"
-  }
-  ```
+// example (do not write the following)
+network={
+  ssid="Sean's iPhone"
+  psk="Iamawesome"
+}
+```
 
-  Then, run
-  ```sh
-  wpa_cli -i wlan0 reconfigure
-  ```
+To save the changes in this file, press `Ctrl + X`, followed by `y`, then hit `Enter`.
 
-2. Enable ssh
+Then, run
+```sh
+wpa_cli -i wlan0 reconfigure
+```
+
+### Installation script (recommended)
+
+Setup which micro app to use.
+
+```sh
+export MIRCO_APP_NAME=sample
+
+# for example
+export MICRO_APP_NAME=scraper
+```
+
+If you do not see the micro app you want to use, create it yourself. See [here](#new-micro-app).
+
+Then run the following, without closing the terminal.
+
+```sh
+curl -O https://raw.githubusercontent.com/98sean98/blue-nebula/master/raspberry-pi/install.sh
+chmod +x install.sh
+./install.sh
+```
+
+The raspberry pi should be good to go after the reboot.
+
+### Step-by-step installation (manual)
+
+1. Enable ssh
 ```sh
 sudo systemctl enable ssh
 sudo systemctl start ssh
 ```
 
-3. Install vim (optional)
+2. Install vim (optional)
 ```sh
 sudo apt install vim
 ```
 
-4. Clone the repository from Github
+3. Clone the repository from Github
 ```sh
-cd Documents
+cd ~/Documents
 git clone https://github.com/98sean98/blue-nebula.git
 ```
 
-5. Enable experimental features for `bluez`
+4. Enable experimental features for `bluez`
 ```sh
 sudo nano /etc/systemd/system/dbus-org.bluez.service
 ```
 
   Add `-E` to `ExecStart` line -> `ExecStart=/usr/lib/bluetooth/bluetoothd -E`.
 
-6. Install python packages
+5. Install python packages
 ```sh
 cd blue-nebula/raspberry-pi
 pip3 install -r requirements.txt
 ```
 
-7. Setup the micro app name in the environment
+6. Write the micro app name in the environment
 ```sh
 # replace sample with a name of your choice
-echo "MICRO_APP_NAME = sample" > .env
+echo "MICRO_APP_NAME=sample" > .env
+
+# for example
+echo "MICRO_APP_NAME=scraper" > .env
 ```
 
-  7a. [Optional] Create a new micro app
+  6a. [Optional] Create a new micro app
 
   If you do not see the micro app you want to use, create it yourself. See [here](#new-micro-app).
 
-8. Move services into systemctl
+7. Move services into systemctl
 ```sh
 sudo cp systemd/* /etc/systemd/system/
 ```
 
-9. Start and enable services
+8. Start and enable services
 ```sh
 sudo systemctl daemon-reload
 sudo systemctl enable main.service
@@ -99,6 +130,41 @@ sudo reboot
 ```
 
 On the reboot and subsequent bootups, the python programs are executed automatically as start up scripts. If you have connected a buzzer to the designated buzzer pins, you should hear health check beeps which indicate the raspberry pi is working nominally, and you should connect to it via the mobile app. Once a bluetooth connection is established between the raspberry pi and a mobile device, the beeps will stop.
+
+---
+
+## Updating
+Run the following to update blue-nebula.
+
+### Update script (recommended)
+```sh
+curl https://raw.githubusercontent.com/98sean98/blue-nebula/raspberry-pi/update.sh | bash
+```
+
+The update should happen automatically. You should reboot the raspberry pi.
+
+### Step-by-step update (manual)
+
+1. Stop running systemd services.
+```sh
+sudo systemctl stop main.service
+sudo systemctl stop temperature-logging.service
+```
+
+2. Pull source code from github
+```sh
+cd ~/Documents/blue-nebula
+git pull
+```
+
+3. Restart systemd services.
+```sh
+sudo systemctl daemon-reload
+sudo systemctl start main.service
+sudo systemctl start temperature_logging.service
+```
+
+---
 
 ## Program health checks
 There are a number of methods to perform health checks on the device.
@@ -178,6 +244,8 @@ sudo systemctl stop main.service
 sudo systemctl daemon-reload
 sudo systemctl start main.service
 ```
+
+---
 
 ## Credits
 The GATT server source code is from [Douglass Otwell's cpu temperature example](https://github.com/douglas6/cputemp). All credits related to the design of the bluetooth interface belong to him.
