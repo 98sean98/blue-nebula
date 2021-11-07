@@ -138,7 +138,7 @@ Run the following to update blue-nebula.
 
 ### Update script (recommended)
 ```sh
-curl https://raw.githubusercontent.com/98sean98/blue-nebula/raspberry-pi/update.sh | sudo bash
+curl https://raw.githubusercontent.com/98sean98/blue-nebula/raspberry-pi/update.sh | bash
 ```
 
 The update should happen automatically. You should reboot the raspberry pi.
