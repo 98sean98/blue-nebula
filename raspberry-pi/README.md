@@ -55,7 +55,9 @@ Then run the following, without closing the terminal.
 
 ```sh
 curl -O https://raw.githubusercontent.com/98sean98/blue-nebula/master/raspberry-pi/install.sh
+
 chmod +x install.sh
+
 ./install.sh
 ```
 
@@ -138,7 +140,11 @@ Run the following to update blue-nebula.
 
 ### Update script (recommended)
 ```sh
-curl https://raw.githubusercontent.com/98sean98/blue-nebula/raspberry-pi/update.sh | bash
+curl -O https://raw.githubusercontent.com/98sean98/blue-nebula/master/raspberry-pi/update.sh
+
+chmod +x update.sh
+
+./update.sh
 ```
 
 The update should happen automatically. You should reboot the raspberry pi.
