@@ -2,9 +2,9 @@
 Description=Temperature Logging Program
 
 [Service]
-User=pi
+User=$USER
 Type=idle
-ExecStart=/usr/bin/python3 /home/pi/Documents/blue-nebula/raspberry-pi/temperature_logging/log_temperature.py
+ExecStart=/usr/bin/python3 $HOME/Documents/blue-nebula/raspberry-pi/temperature_logging/log_temperature.py
 Restart=always
 
 [Install]
