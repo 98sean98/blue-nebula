@@ -24,6 +24,10 @@ echo "Silently installing vim using apt..."
 sudo apt install -y -q vim
 echo "Finished installing vim"
 
+echo "Silently installing gettext-base using apt..."
+sudo apt install -y -q gettext-base
+echo "Finished installing vim"
+
 # download source code from github
 echo "Downloading source code from github..."
 git clone https://github.com/98sean98/blue-nebula.git $SOURCE_CODE_DIRECTORY
@@ -47,9 +51,15 @@ echo "Writing MICRO_APP_NAME=$MICRO_APP_NAME in raspberry-pi/.env"
 echo "MICRO_APP_NAME=$MICRO_APP_NAME" > $SOURCE_CODE_DIRECTORY/raspberry-pi/.env
 echo "Finished writing raspberry-pi/.env"
 
+# use envsubst to substitute environment variables in systemd template files
+echo "Subsituting environment variables in systemd templates to generate systemd files..."
+cat $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/main.service.template | envsubst > $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/main.service
+cat $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/temperature-logging.service.template | envsubst > $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/temperature-logging.service
+echo "Finished generating systemd files"
+
 # move services into systemctl
 echo "Moving services into systemctl..."
-sudo cp $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/* /etc/systemd/system/
+sudo cp $SOURCE_CODE_DIRECTORY/raspberry-pi/systemd/*.service /etc/systemd/system/
 echo "Finished moving services into systemctl"
 
 # start and enable services
