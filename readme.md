@@ -1,6 +1,8 @@
 # Blue Nebula
 A robot controller built using a raspberry pi, integrating a `react-native` mobile app via bluetooth, supported by a `prisma`-`graphql` server, and a `react` website showing application usage.
 
+This is a project that was completed during my internship at Towngas in 2020-21.
+
 ### Why Blue Nebula
 The controller systems Blue Nebula aims to replace are microcontroller bluetooth solutions that are built specific to the robots they are integrated with. An example for such microcontrollers is Arduino.
 
